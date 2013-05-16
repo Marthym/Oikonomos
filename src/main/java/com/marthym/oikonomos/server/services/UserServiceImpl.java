@@ -12,15 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.client.services.UserService;
-import com.marthym.oikonomos.server.dao.UserDAO;
+import com.marthym.oikonomos.server.dao.IGenericDao;
 import com.marthym.oikonomos.shared.dto.UserDTO;
 
 @Service("userService")
 public class UserServiceImpl extends RemoteServiceServlet implements UserService{
 	private static final long serialVersionUID = 1L;
 
+	private IGenericDao<String, UserDTO> userDAO;
+	
 	@Autowired
-	private UserDAO userDAO;
+	public void setUserDAO (IGenericDao<String, UserDTO> daoToSet) {
+		userDAO = daoToSet;
+		userDAO.setClazz(UserDTO.class);
+	}
 
 	@PostConstruct
 	public void init() {
