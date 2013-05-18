@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.marthym.oikonomos.shared.dto.UserDTO;
+import com.marthym.oikonomos.shared.model.User;
 
 /**
  * The client side stub for the RPC service.
@@ -12,7 +12,7 @@ import com.marthym.oikonomos.shared.dto.UserDTO;
 @RemoteServiceRelativePath("springGwtServices/userService")
 public interface UserService extends RemoteService {
 	
-	public UserDTO findUser(String userId);
+	public User findUser(String userId);
 	public void saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;
 	public void updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception;
 	public void saveOrUpdateUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;

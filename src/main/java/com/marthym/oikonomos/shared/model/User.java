@@ -1,4 +1,4 @@
-package com.marthym.oikonomos.shared.dto;
+package com.marthym.oikonomos.shared.model;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER")
-public class UserDTO implements java.io.Serializable {
+public class User implements java.io.Serializable {
 	private static final long serialVersionUID = 8367354503151607136L;
 
 	@Id
@@ -27,14 +27,14 @@ public class UserDTO implements java.io.Serializable {
 	@Column(name = "user_lastlogin_date", nullable = false)
 	private Date userLastLoginDate;
 
-	public UserDTO() {
+	public User() {
 	}
 
-	public UserDTO(String userId) {
+	public User(String userId) {
 		this.userId = userId;
 	}
 
-	public UserDTO(String userId, String userFirstname, String userLastname,
+	public User(String userId, String userFirstname, String userLastname,
 			String userPassword, Date userRegistrationDate,
 			Date userLastLoginDate) {
 		this.userId = userId;
