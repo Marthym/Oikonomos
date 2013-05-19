@@ -6,6 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.marthym.oikonomos.shared.FieldVerifier;
 
 @Entity
 @Table(name = "USER")
@@ -14,11 +19,15 @@ public class User implements java.io.Serializable {
 
 	@Id
 	@Column(name = "user_id", nullable = false, length = 255)
+	@NotNull
+	@Pattern(regexp = FieldVerifier.EMAIL_REGEXP, message="{validator.message.user.email}")
 	private String userId;
 
 	@Column(name = "user_firstname", nullable = false, length = 80)
+	@NotNull
 	private String userFirstname;
 	@Column(name = "user_lastname", nullable = false, length = 80)
+	@Size(min = 3, max = 80, message="{validator.message.user.lastname}")
 	private String userLastname;
 	@Column(name = "user_password", nullable = false, length = 40)
 	private String userPassword;
