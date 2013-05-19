@@ -11,10 +11,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.marthym.oikonomos.client.components.AnonymousNavigationBar;
 
 public class WelcomePage extends Composite {
+	public static enum DeckWidgetIndex {CONNECT_WIDGET, REGISTER_WIDGET}
+	
+	private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
 
-	private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
-
-	interface LoginUiBinder extends UiBinder<Widget, WelcomePage> {}
+	interface WelcomePageUiBinder extends UiBinder<Widget, WelcomePage> {}
 
 	@UiField AnonymousNavigationBar navigationBar;
 	@UiField DeckLayoutPanel deck;
@@ -25,17 +26,17 @@ public class WelcomePage extends Composite {
 		navigationBar.addConnectHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				deck.showWidget(0);
+				deck.showWidget(DeckWidgetIndex.CONNECT_WIDGET.ordinal());
 			}
 		});
 		
 		navigationBar.addRegisterHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				deck.showWidget(1);
+				deck.showWidget(DeckWidgetIndex.REGISTER_WIDGET.ordinal());
 			}
 		});
 		
-		deck.showWidget(0);
+		deck.showWidget(DeckWidgetIndex.CONNECT_WIDGET.ordinal());
 	}
 }
