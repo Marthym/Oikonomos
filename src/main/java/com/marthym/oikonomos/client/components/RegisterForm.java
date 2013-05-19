@@ -1,6 +1,5 @@
 package com.marthym.oikonomos.client.components;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -26,7 +25,7 @@ import com.marthym.oikonomos.client.pages.WelcomePage.DeckWidgetIndex;
 import com.marthym.oikonomos.client.resources.WelcomeFormsRessource;
 import com.marthym.oikonomos.client.resources.WelcomeFormsRessource.WelcomeFormsCss;
 import com.marthym.oikonomos.client.services.UserServiceAsync;
-import com.marthym.oikonomos.shared.FieldVerifier;
+import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
 
 public class RegisterForm extends Composite {
@@ -58,7 +57,7 @@ public class RegisterForm extends Composite {
 
 	@UiHandler("btnRegister")
 	void onClick(ClickEvent event) {
-		User user = new User(email.getValue(), firstname.getValue(), lastname.getValue(), password.getValue(), new Date(), new Date());
+		User user = new User(email.getValue(), firstname.getValue(), lastname.getValue(), password.getValue());
 		
 		
 		 Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -80,9 +79,11 @@ public class RegisterForm extends Composite {
          }		
 		
 		final UserServiceAsync userService = UserServiceAsync.Util.getInstance();
-		userService.saveUser(email.getValue(), firstname.getValue(), lastname.getValue(), password.getValue(), new Date(), new Date(), new AsyncCallback<Void>() {
+		userService.saveUser(user, new AsyncCallback<Void>() {
 				public void onFailure(Throwable caught) {
-					Window.alert(caught.getClass()+": "+caught.getLocalizedMessage());
+					if (caught instanceof OikonomosException) {
+						Window.alert(((OikonomosException)caught).getLocalizedMessage());
+					}
 				}
 				public void onSuccess(Void noAnswer) {
 					Widget parent = getParent();

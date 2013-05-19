@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
 
 /**
@@ -13,6 +14,7 @@ import com.marthym.oikonomos.shared.model.User;
 public interface UserService extends RemoteService {
 	
 	public User findUser(String userId);
+	public void saveUser(User user) throws OikonomosException;
 	public void saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;
 	public void updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception;
 	public void saveOrUpdateUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;

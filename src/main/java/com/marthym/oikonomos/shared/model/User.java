@@ -4,7 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -18,48 +21,53 @@ public class User implements java.io.Serializable {
 	private static final long serialVersionUID = 8367354503151607136L;
 
 	@Id
-	@Column(name = "user_id", nullable = false, length = 255)
-	@NotNull
-	@Pattern(regexp = FieldVerifier.EMAIL_REGEXP, message="{validator.message.user.email}")
-	private String userId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+	
+	@Column(name = "user_email", unique = true, nullable = false, length = 255)
+	@NotNull @Pattern(regexp = FieldVerifier.EMAIL_REGEXP, message="{validator.message.user.email}")
+	private String userEmail;
 
 	@Column(name = "user_firstname", nullable = false, length = 80)
 	@NotNull
 	private String userFirstname;
+	
 	@Column(name = "user_lastname", nullable = false, length = 80)
 	@Size(min = 3, max = 80, message="{validator.message.user.lastname}")
 	private String userLastname;
+	
 	@Column(name = "user_password", nullable = false, length = 40)
 	private String userPassword;
+	
 	@Column(name = "user_registration_date", nullable = false)
 	private Date userRegistrationDate;
+	
 	@Column(name = "user_lastlogin_date", nullable = false)
 	private Date userLastLoginDate;
 
-	public User() {
-	}
+	public User() {}
 
-	public User(String userId) {
-		this.userId = userId;
-	}
-
-	public User(String userId, String userFirstname, String userLastname,
-			String userPassword, Date userRegistrationDate,
-			Date userLastLoginDate) {
-		this.userId = userId;
+	public User(String userEmail, String userFirstname, String userLastname,
+			String userPassword) {
+		this.userEmail = userEmail;
 		this.userFirstname = userFirstname;
 		this.userLastname = userLastname;
 		this.userPassword = userPassword;
-		this.userRegistrationDate = userRegistrationDate;
-		this.userLastLoginDate = userLastLoginDate;
 	}
+	
+	@PrePersist
+    public void prePersist() {
+        Date now = new Date();
+        userRegistrationDate = now;
+        userLastLoginDate = now;
+    }
 
-	public String getUserId() {
-		return userId;
+	public Long getUserId() {
+		return id;
 	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
+	
+	public String getUserEmail() {
+		return userEmail;
 	}
 
 	public String getUserFirstname() {
@@ -82,6 +90,10 @@ public class User implements java.io.Serializable {
 		return userPassword;
 	}
 
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
@@ -100,6 +112,10 @@ public class User implements java.io.Serializable {
 
 	public void setUserLastLoginDate(Date userLastLoginDate) {
 		this.userLastLoginDate = userLastLoginDate;
+	}
+
+	public void setUserId(Long userId) {
+		this.id = userId;
 	}
 
 }
