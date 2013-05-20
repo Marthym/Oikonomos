@@ -23,6 +23,7 @@ public class AnonymousNavigationBar extends Composite {
 	
 	@UiField InlineHyperlink linkConnect;
 	@UiField InlineHyperlink linkRegister;
+	
 	private ActivationType active;
 	private final AnonymousNavigationBarRessource res = AnonymousNavigationBarRessource.INSTANCE;
 	

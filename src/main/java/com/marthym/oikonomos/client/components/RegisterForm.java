@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.client.components;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -10,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -63,18 +64,12 @@ public class RegisterForm extends Composite {
 		 Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
          Set<ConstraintViolation<User>> violations = validator.validate(user);
          if(!violations.isEmpty()){
-             StringBuilder builder = new StringBuilder();
+             List<String> errors = new LinkedList<String>();
              for (ConstraintViolation<User> violation : violations) {
-                 builder.append(violation.getMessage());
-                 builder.append(" : <i>(");
-                 builder.append(violation.getPropertyPath().toString());
-                 builder.append(" = ");
-                 builder.append("" + violation.getInvalidValue());
-                 builder.append(")</i>");
-                 builder.append("<br/>");
+            	 errors.add(violation.getMessage());
              }
              //Affiche un message d'erreur avec les contraintes non respectées
-             Window.alert("Contraintes non respectées !\r" + builder.toString());
+             MessageFlyer.error(errors);
              return;
          }		
 		
@@ -82,7 +77,7 @@ public class RegisterForm extends Composite {
 		userService.saveUser(user, new AsyncCallback<Void>() {
 				public void onFailure(Throwable caught) {
 					if (caught instanceof OikonomosException) {
-						Window.alert(((OikonomosException)caught).getLocalizedMessage());
+						MessageFlyer.error(((OikonomosException)caught).getLocalizedMessage());
 					}
 				}
 				public void onSuccess(Void noAnswer) {
@@ -91,6 +86,8 @@ public class RegisterForm extends Composite {
 					if (Oikonomos.isAssignableFrom(parent, DeckLayoutPanel.class)) {
 						((DeckLayoutPanel)parent).showWidget(DeckWidgetIndex.CONNECT_WIDGET.ordinal());
 					}
+					
+					MessageFlyer.info("Utilisateur enregisté !");
 				}
 			});
 	}

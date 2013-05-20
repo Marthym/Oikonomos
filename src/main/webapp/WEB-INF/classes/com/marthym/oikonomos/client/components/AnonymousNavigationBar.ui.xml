@@ -6,8 +6,8 @@
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
 	<g:HTMLPanel height="36" styleName="{res.style.navAnonymous}">
-		<g:InlineHyperlink text="{constants.login}" targetHistoryToken="newHistoryToken" ui:field="linkConnect"/>
+		<g:InlineHyperlink text="{constants.login}" targetHistoryToken="login" ui:field="linkConnect"/>
 		<g:InlineHTML> | </g:InlineHTML>
-		<g:InlineHyperlink text="{constants.register}" targetHistoryToken="newHistoryToken" ui:field="linkRegister"/>
+		<g:InlineHyperlink text="{constants.register}" targetHistoryToken="register" ui:field="linkRegister"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 

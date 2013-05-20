@@ -1,0 +1,41 @@
+.messageFlyer {
+	background-color: black;
+	color: red;
+	border-radius: 10px 10px 10px 10px;
+	box-shadow: 2px 2px 8px #AAAAAA;
+	-moz-box-shadow: 2px 2px 8px #aaa;
+	-webkit-box-shadow: 2px 2px 8px #aaa;
+	font-size: 11px;
+	font-weight: bold;
+	position: fixed;
+	z-index: 1000;
+}
+
+.messageFlyer span {
+	float: right;
+	font-size: 9px;
+	font-weight: normal;
+	margin: 7px;
+}
+
+.messageFlyer a {
+	color: white;
+}
+
+.messageFlyer h3 {
+	color: white;
+	margin: 5px 5px 5px 15px;
+	text-transform: none;
+}
+
+.messageFlyer .messageFlyerBody {
+	background-color: white;
+	border-radius: 10px 10px 10px 10px;
+	padding: 15px;
+	max-height: 200px;
+}
+
+.messageFlyer ul {
+	max-height: 200px;
+	overflow: auto;
+}
