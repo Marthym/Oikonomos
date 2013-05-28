@@ -1,6 +1,5 @@
 package com.marthym.oikonomos.client;
 
-import com.marthym.oikonomos.client.pages.WelcomePage;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
@@ -9,7 +8,8 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
  */
 public class Oikonomos implements EntryPoint {
 	public void onModuleLoad() {
-		RootLayoutPanel.get().add(new WelcomePage());
+	    AppController appViewer = new AppController();
+	    appViewer.go(RootLayoutPanel.get());
 	}
 	
 	public static final boolean isAssignableFrom(Object object, Class<?> clazz) {

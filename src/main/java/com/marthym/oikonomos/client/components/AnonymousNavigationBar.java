@@ -1,11 +1,9 @@
 package com.marthym.oikonomos.client.components;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -51,29 +49,28 @@ public class AnonymousNavigationBar extends Composite {
 			break;
 		}
 	}
-
-	public void addConnectHandler(ClickHandler handler) {
-		linkConnect.addHandler(handler, ClickEvent.getType());
-	}
-	public void addRegisterHandler(ClickHandler handler) {
-		linkRegister.addHandler(handler, ClickEvent.getType());
+	
+	public final HasClickHandlers getLoginLink() {
+		return linkConnect;
 	}
 	
-	@UiHandler("linkConnect")
-	void onClickConnect(ClickEvent e) {
-		if (active == ActivationType.CONNECT) return;
-		
-		linkRegister.removeStyleName(res.style().focus());
-		linkConnect.addStyleName(res.style().focus());
-		active = ActivationType.CONNECT;
-	}
-	
-	@UiHandler("linkRegister")
-	void onClickRegister(ClickEvent e) {
-		if (active == ActivationType.REGISTER) return;
-		linkConnect.removeStyleName(res.style().focus());
-		linkRegister.addStyleName(res.style().focus());
-		active = ActivationType.REGISTER;
+	public final HasClickHandlers getRegisterLink() {
+		return linkRegister;
 	}
 
+	public void toggleMenuActivation(ActivationType activation) {
+		switch (activation) {
+		case REGISTER:
+			linkConnect.removeStyleName(res.style().focus());
+			linkRegister.addStyleName(res.style().focus());
+			active = ActivationType.CONNECT;
+			break;
+		case CONNECT:
+			linkRegister.removeStyleName(res.style().focus());
+			linkConnect.addStyleName(res.style().focus());
+			active = ActivationType.REGISTER;
+			break;	
+			
+		}
+	}
 }

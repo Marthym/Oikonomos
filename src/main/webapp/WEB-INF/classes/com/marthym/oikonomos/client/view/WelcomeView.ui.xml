@@ -8,8 +8,8 @@
 		</g:north>
 		<g:center>
 			<g:DeckLayoutPanel ui:field="deck">
-				<nomos:ConnectionForm />
-				<nomos:RegisterForm />
+				<nomos:ConnectionForm ui:field="connectionForm"/>
+				<nomos:RegisterForm ui:field="registerForm"/>
 			</g:DeckLayoutPanel>
 		</g:center>
 	</g:DockLayoutPanel>
