@@ -17,13 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.marthym.oikonomos.client.services.UserService;
 import com.marthym.oikonomos.shared.model.User;
 
+/**TODO
+ * @author fcombes
+ * Re-pass the tests alls ares down since User Id has change from mail to ID
+ */
+
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestUserService {
-	public static final String USER_ID = "";
-	public static final String USER_FIRSTNAME = "";
-	public static final String USER_LASTNAME = "";
-	public static final String USER_PASSWORD = "";
 	public static final Date USER_REGISTERED = new Date();
 	public static final Date USER_LASTLOGIN = new Date();
 	
@@ -39,7 +40,14 @@ public class TestUserService {
 	@Test
 	public void testSaveUser() {
 		try {
-			userService.saveUser(USER_ID, USER_FIRSTNAME, USER_LASTNAME, USER_PASSWORD, USER_REGISTERED, USER_LASTLOGIN);
+			userService.saveUser("test@test.test", "test", "test", "test", USER_REGISTERED, USER_LASTLOGIN);
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getLocalizedMessage());
+		}
+		
+		try {
+			User testUser = new User("test2@test.test", "test", "test", "test");
+			userService.saveUser(testUser);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getLocalizedMessage());
 		}
@@ -49,7 +57,7 @@ public class TestUserService {
 	public void testFindUser() {
 		User user = userService.findUser("marthym");
 		assertNotNull(user);
-		assertEquals(user.getUserFirstname(), USER_FIRSTNAME);
+		assertEquals(user.getUserFirstname(), "marthym");
 		System.out.println(user);
 	}
 
@@ -59,7 +67,7 @@ public class TestUserService {
 			Calendar calendar = GregorianCalendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, 2);
 		
-			userService.updateUser(USER_ID, USER_FIRSTNAME, USER_LASTNAME, USER_PASSWORD, calendar.getTime());
+			userService.updateUser("test@test.test", "test", "test", "test", calendar.getTime());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getLocalizedMessage());
 		}
@@ -68,7 +76,7 @@ public class TestUserService {
 	@Test
 	public void testSaveOrUpdateUser() {
 		try {
-			userService.saveOrUpdateUser(USER_ID, USER_FIRSTNAME, USER_LASTNAME, USER_PASSWORD, USER_REGISTERED, USER_LASTLOGIN);
+			userService.saveOrUpdateUser("test@test.test", "test", "test", "test", USER_REGISTERED, USER_LASTLOGIN);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getLocalizedMessage());
 		}
@@ -77,7 +85,7 @@ public class TestUserService {
 	@Test
 	public void testDeleteUser() {
 		try {
-			userService.deleteUser(USER_ID);
+			userService.deleteUser("1");
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getLocalizedMessage());
 		}

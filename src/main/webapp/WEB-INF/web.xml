@@ -31,7 +31,7 @@
 
 	<servlet-mapping>
 		<servlet-name>springGwtRemoteServiceServlet</servlet-name>
-		<url-pattern>/oikonomos/springGwtServices/*</url-pattern>
+		<url-pattern>/springGwtServices/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

@@ -195,11 +195,6 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.tomcat.maven</groupId>
-					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.0</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<!-- Generate compiled stuff in the folder used for developing mode -->
@@ -262,16 +257,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<configuration>
-					<server>tomcat7</server>
-					<path>/oikonomos</path>
-					<url>http://localhost:8080/manager/text</url>
-					<update>true</update>
 				</configuration>
 			</plugin>
 		</plugins>

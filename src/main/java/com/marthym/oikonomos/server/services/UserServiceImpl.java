@@ -33,12 +33,18 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
-		User user = userRepository.findOne(userId);
+	public void saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
+		User user = userRepository.findByUserEmail(userMail);
 		if (user == null) {
-			user = new User(userId, firstName, lastName, password);
+			user = new User(userMail, firstName, lastName, password);
 			user = userRepository.saveAndFlush(user);
+			return;
 		}
+		user.setUserFirstname(firstName);
+		user.setUserLastname(lastName);
+		user.setUserPassword(password);
+		user.setUserLastLoginDate(lastlogin);
+		user = userRepository.saveAndFlush(user);
 	}
 	
 	@Override
