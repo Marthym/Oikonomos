@@ -20,18 +20,10 @@ public class WelcomeView extends Composite implements WelcomePresenter.Display {
 	
 	interface WelcomeViewUiBinder extends UiBinder<Widget, WelcomeView> {}
 
-	@UiField AnonymousNavigationBar navigationBar;
-	@UiField DeckLayoutPanel deck;
 	@UiField ConnectionForm connectionForm;
-	@UiField RegisterForm registerForm;
 	
 	public WelcomeView() {
 		initWidget(uiBinder.createAndBindUi(this));				
-	}
-
-	@Override
-	public HasClickHandlers getRegisterButton() {
-		return registerForm.getRegisterButton();
 	}
 
 	@Override
@@ -40,47 +32,13 @@ public class WelcomeView extends Composite implements WelcomePresenter.Display {
 	}
 
 	@Override
-	public HasClickHandlers getLoginLink() {
-		return navigationBar.getLoginLink();
-	}
-
-	@Override
-	public HasClickHandlers getRegisterLink() {
-		return navigationBar.getRegisterLink();
-	}
-
-	@Override
-	public HasValue<String> getFirstName() {
-		return registerForm.getFirstname();
-	}
-
-	@Override
-	public HasValue<String> getLastName() {
-		return registerForm.getLastname();
-	}
-
-	@Override
 	public HasValue<String> getEmailAddress() {
-		return registerForm.getEmail();
+		return connectionForm.getEmail();
 	}
 
 	@Override
 	public HasValue<String> getPassword() {
-		return registerForm.getPassword();
+		return connectionForm.getPassword();
 	}
 
-	@Override
-	public HasValue<String> getPasswordConfirm() {
-		return registerForm.getPasswordConfirm();
-	}
-
-	@Override
-	public DeckLayoutPanel getDeckLayoutPanel() {
-		return deck;
-	}
-
-	@Override
-	public AnonymousNavigationBar getNavigationBar() {
-		return navigationBar;
-	}
 }

@@ -2,15 +2,5 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:nomos="urn:import:com.marthym.oikonomos.client.components"
 	xmlns:w="urn:import:com.google.gwt.widget.client">
-	<g:DockLayoutPanel unit="PX">
-		<g:north size="36">
-			<nomos:AnonymousNavigationBar ui:field="navigationBar"/>
-		</g:north>
-		<g:center>
-			<g:DeckLayoutPanel ui:field="deck">
-				<nomos:ConnectionForm ui:field="connectionForm"/>
-				<nomos:RegisterForm ui:field="registerForm"/>
-			</g:DeckLayoutPanel>
-		</g:center>
-	</g:DockLayoutPanel>
+	<nomos:ConnectionForm ui:field="connectionForm"/>
 </ui:UiBinder> 

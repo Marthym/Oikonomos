@@ -13,6 +13,12 @@
    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
    http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
 
+	<context:property-placeholder 
+		location="file:${catalina.home}/conf/oikonomos.properties"
+     	ignore-unresolvable="true" 
+     	ignore-resource-not-found="true"
+    />
+	
 	<context:component-scan base-package="com.marthym.oikonomos" />
 	<jpa:repositories base-package="com.marthym.oikonomos" />
 
@@ -20,8 +26,8 @@
 		class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="org.hsqldb.jdbcDriver" />
 		<property name="jdbcUrl" value="jdbc:hsqldb:file:${webApplicationRoot}WEB-INF/classes/data/oikonomos.db;shutdown=true" />
-		<property name="user" value="oikonomos" />
-		<property name="password" value="marthym" />
+		<property name="user" value="${jdbc.username:oikonomos}" />
+		<property name="password" value="${jdbc.password:marthym}" />
 	</bean>
 
 	<bean id="entityManagerFactory"

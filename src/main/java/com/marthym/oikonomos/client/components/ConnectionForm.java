@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,6 +45,14 @@ public class ConnectionForm extends Composite {
 	@UiHandler("btnConnect")
 	void onClick(ClickEvent e) {
 		Window.alert("Hello!");
+	}
+	
+	public HasValue<String> getEmail() {
+		return email;
+	}
+
+	public HasValue<String> getPassword() {
+		return password;
 	}
 
 }
