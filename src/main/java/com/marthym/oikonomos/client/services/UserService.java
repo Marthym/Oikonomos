@@ -13,11 +13,11 @@ import com.marthym.oikonomos.shared.model.User;
 @RemoteServiceRelativePath("springGwtServices/userService")
 public interface UserService extends RemoteService {
 	
-	public User findUser(String userId);
-	public void saveUser(User user) throws OikonomosException;
-	public void saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;
-	public void updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception;
-	public void saveOrUpdateUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;
+	public User findUserByMail(String userMail);
+	public User findUserById(Long userId);
+	public User saveUser(User user) throws OikonomosException;
+	public User saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception;
+	public User updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception;
 	public void deleteUser(String userId) throws Exception;
 
 }

@@ -19,7 +19,7 @@ import com.marthym.oikonomos.shared.model.User;
 
 @Repository
 @Service("userService")
-public class UserServiceImpl extends RemoteServiceServlet implements UserService{
+public class UserServiceImpl extends RemoteServiceServlet implements UserService {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -27,31 +27,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	private UserRepository userRepository;
 
 	@Override
-	public User findUser(String userId) {
+	public User findUserByMail(String userMail) {
+		return userRepository.findByUserEmail(userMail);
+	}
+	
+	@Override
+	public User findUserById(Long userId) {
 		return userRepository.findOne(userId);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
-		User user = userRepository.findByUserEmail(userMail);
-		if (user == null) {
-			user = new User(userMail, firstName, lastName, password);
-			user = userRepository.saveAndFlush(user);
-			return;
-		}
-		user.setUserFirstname(firstName);
-		user.setUserLastname(lastName);
-		user.setUserPassword(password);
-		user.setUserLastLoginDate(lastlogin);
-		user = userRepository.saveAndFlush(user);
+	public User saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
+		User user = new User(userMail, firstName, lastName, password);
+		return saveUser(user);
 	}
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void saveUser(User user) throws OikonomosException {
+	public User saveUser(User user) throws OikonomosException {
 		try {
-			userRepository.saveAndFlush(user);
+			return userRepository.saveAndFlush(user);
 		} catch (Exception e){
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(e.getClass()+": "+e.getLocalizedMessage());
@@ -64,30 +60,23 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception {
-		User user = userRepository.findOne(userId);
+	public User updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception {
+		User user = userRepository.findByUserEmail(userId);
 		if (user != null) {
 			user.setUserFirstname(firstName);
 			user.setUserLastname(lastName);
 			user.setUserPassword(password);
 			user.setUserLastLoginDate(lastlogin);
-			userRepository.save(user);
+			user = userRepository.save(user);
 		}
+		return user;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void deleteUser(String employeeId) throws Exception {
-		User user = userRepository.findOne(employeeId);
+	public void deleteUser(String userMail) throws Exception {
+		User user = userRepository.findByUserEmail(userMail);
 		if (user != null)
 			userRepository.delete(user);
 	}
-
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void saveOrUpdateUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
-		User user = new User(userId, firstName, lastName, password);
-		userRepository.save(user);
-	}
-
 }

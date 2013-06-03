@@ -124,15 +124,15 @@ public class WelcomePresenter implements Presenter {
 			return;
 		}	
 		
-		rpcService.saveUser(user, new AsyncCallback<Void>() {
+		rpcService.saveUser(user, new AsyncCallback<User>() {
 				public void onFailure(Throwable caught) {
 					if (caught instanceof OikonomosException) {
 						MessageFlyer.error(((OikonomosException)caught).getLocalizedMessage());
 					}
 				}
-				public void onSuccess(Void noAnswer) {
+				public void onSuccess(User user) {
 					displayLogin();
-					MessageFlyer.info("Utilisateur enregisté !");
+					MessageFlyer.info("Utilisateur "+user.getUserEmail()+" enregisté !");
 				}
 			});
 
