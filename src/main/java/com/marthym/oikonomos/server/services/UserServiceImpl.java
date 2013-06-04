@@ -3,6 +3,7 @@ package com.marthym.oikonomos.server.services;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,34 +39,30 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public User saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws Exception {
-		User user = new User(userMail, firstName, lastName, password);
-		return saveUser(user);
-	}
-	
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public User saveUser(User user) throws OikonomosException {
+	public User saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws OikonomosException {
 		try {
+			String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			User user = new User(userMail, firstName, lastName, hashPassword);
 			return userRepository.saveAndFlush(user);
+			
 		} catch (Exception e){
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(e.getClass()+": "+e.getLocalizedMessage());
 				LOGGER.trace("STACKTRACE", e);
 			}
-			throw new OikonomosException("error.message.user.unique", Arrays.asList(new String[]{user.getUserEmail()}), "");
+			throw new OikonomosException("error.message.user.unique", Arrays.asList(new String[]{userMail}), "");
 		}
 	}
 
-	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public User updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws Exception {
+	public User updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws OikonomosException {
 		User user = userRepository.findByUserEmail(userId);
 		if (user != null) {
 			user.setUserFirstname(firstName);
 			user.setUserLastname(lastName);
-			user.setUserPassword(password);
+			String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			user.setUserPassword(hashPassword);
 			user.setUserLastLoginDate(lastlogin);
 			user = userRepository.save(user);
 		}
@@ -74,9 +71,25 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void deleteUser(String userMail) throws Exception {
+	public void deleteUser(String userMail) throws OikonomosException {
 		User user = userRepository.findByUserEmail(userMail);
 		if (user != null)
 			userRepository.delete(user);
 	}
+
+	@Override
+	public String loginUser(String mail, String password) throws OikonomosException {
+		long count = userRepository.count();
+		if (count == 0) {
+			LOGGER.warn("First user login ! Create administrateur : "+mail);
+			String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			User newUser = new User(mail, "", mail.split("@")[0], hashPassword);
+			userRepository.saveAndFlush(newUser);
+		}
+		User currentUser = userRepository.findByUserEmail(mail);
+		if (currentUser == null || !BCrypt.checkpw(password, currentUser.getUserHashPassword())) throw new OikonomosException("error.message.user.unauthorized", "User not found !");
+		
+		return currentUser.toString();
+	}
+
 }

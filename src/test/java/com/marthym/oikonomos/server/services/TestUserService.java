@@ -39,13 +39,6 @@ public class TestUserService {
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getLocalizedMessage());
 		}
-		
-		try {
-			User testUser = new User("test2@test.test", "test", "test", "test");
-			userService.saveUser(testUser);
-		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getLocalizedMessage());
-		}
 	}
 
 	@Test

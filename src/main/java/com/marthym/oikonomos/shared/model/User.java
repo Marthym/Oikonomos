@@ -36,8 +36,9 @@ public class User implements java.io.Serializable {
 	@Size(min = 3, max = 80, message="{validator.message.user.lastname}")
 	private String userLastname;
 	
-	@Column(name = "user_password", nullable = false, length = 40)
-	private String userPassword;
+	@Column(name = "user_password", nullable = false, length = 60)
+	@NotNull
+	private String userHashPassword;
 	
 	@Column(name = "user_registration_date", nullable = false)
 	private Date userRegistrationDate;
@@ -52,7 +53,7 @@ public class User implements java.io.Serializable {
 		this.userEmail = userEmail;
 		this.userFirstname = userFirstname;
 		this.userLastname = userLastname;
-		this.userPassword = userPassword;
+		this.userHashPassword = userPassword;
 	}
 	
 	@PrePersist
@@ -61,7 +62,7 @@ public class User implements java.io.Serializable {
         userRegistrationDate = now;
         userLastLoginDate = now;
     }
-
+	
 	public Long getUserId() {
 		return id;
 	}
@@ -86,8 +87,8 @@ public class User implements java.io.Serializable {
 		this.userLastname = userLastname;
 	}
 
-	public String getUserPassword() {
-		return userPassword;
+	public String getUserHashPassword() {
+		return userHashPassword;
 	}
 
 	public void setUserEmail(String userEmail) {
@@ -95,7 +96,7 @@ public class User implements java.io.Serializable {
 	}
 	
 	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
+		this.userHashPassword = userPassword;
 	}
 
 	public Date getUserRegistrationDate() {

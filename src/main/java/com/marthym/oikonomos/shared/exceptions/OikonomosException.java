@@ -1,6 +1,7 @@
 package com.marthym.oikonomos.shared.exceptions;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
@@ -15,6 +16,12 @@ public class OikonomosException extends Exception implements Serializable {
 
 	public OikonomosException() {
 		super();
+	}
+	
+	public OikonomosException(String key, String serverMessage) {
+		super(serverMessage);
+		this.key = key.replaceAll("\\.+","_");
+		this.parameters = new LinkedList<String>();
 	}
 	
 	public OikonomosException(String key, List<String> parameters, String serverMessage) {
