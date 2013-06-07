@@ -79,6 +79,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
 	@Override
 	public String loginUser(String mail, String password) throws OikonomosException {
+		if (password == null || password.length() < 8) {
+			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
+		}
+		
 		long count = userRepository.count();
 		if (count == 0) {
 			LOGGER.warn("First user login ! Create administrateur : "+mail);

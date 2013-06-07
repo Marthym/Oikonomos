@@ -31,12 +31,12 @@
 
 	<servlet-mapping>
 		<servlet-name>springGwtRemoteServiceServlet</servlet-name>
-		<url-pattern>/springGwtServices/*</url-pattern>
+		<url-pattern>/oikonomos/springGwtServices/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>
-		<welcome-file>oikonomos.html</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
 </web-app>

@@ -10,7 +10,7 @@ import com.marthym.oikonomos.shared.model.User;
 /**
  * The client side stub for the RPC service.
  */
-@RemoteServiceRelativePath("springGwtServices/userService")
+@RemoteServiceRelativePath("../oikonomos/springGwtServices/userService")
 public interface UserService extends RemoteService {
 	
 	public User findUserByMail(String userMail);
