@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,6 +41,11 @@ public class User implements java.io.Serializable {
 	@Column(name = "user_password", nullable = false, length = 60)
 	@NotNull
 	private String userHashPassword;
+
+	@Column(name = "user_profile", nullable = false, length = 5)
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private UserProfile userProfile;
 	
 	@Column(name = "user_registration_date", nullable = false)
 	private Date userRegistrationDate;
@@ -54,6 +61,7 @@ public class User implements java.io.Serializable {
 		this.userFirstname = userFirstname;
 		this.userLastname = userLastname;
 		this.userHashPassword = userPassword;
+		this.userProfile = UserProfile.USER;
 	}
 	
 	@PrePersist
@@ -117,6 +125,14 @@ public class User implements java.io.Serializable {
 
 	public void setUserId(Long userId) {
 		this.id = userId;
+	}
+
+	public UserProfile getUserProfile() {
+		return userProfile;
+	}
+
+	public void setUserProfile(UserProfile userProfile) {
+		this.userProfile = userProfile;
 	}
 
 }

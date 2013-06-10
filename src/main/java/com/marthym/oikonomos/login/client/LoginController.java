@@ -19,10 +19,10 @@ import com.google.gwt.validation.client.impl.Validation;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.client.services.UserServiceAsync;
 import com.marthym.oikonomos.login.client.event.LoginEvent;
 import com.marthym.oikonomos.login.client.event.LoginEventHandler;
 import com.marthym.oikonomos.login.client.presenter.WelcomePresenter;
+import com.marthym.oikonomos.login.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.login.client.view.WelcomeView;
 import com.marthym.oikonomos.shared.model.User;
 
@@ -33,10 +33,10 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 	private final HandlerManager eventBus;
 	private HasWidgets container;
 	private Presenter welcomePresenter;
-	private final UserServiceAsync rpcService;
+	private final AuthenticationServiceAsync rpcService;
 
 	public LoginController() {
-		this.rpcService = UserServiceAsync.Util.getInstance();
+		this.rpcService = AuthenticationServiceAsync.Util.getInstance();
 		this.eventBus = new HandlerManager(null);
 		bind();
 	}
@@ -89,10 +89,10 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 			return null;
 		}
 		
-		rpcService.loginUser(login, password, new AsyncCallback<String>() {
+		rpcService.authenticate(login, password, new AsyncCallback<User>() {
 			
 			@Override
-			public void onSuccess(String result) {
+			public void onSuccess(User result) {
 				 String path = Window.Location.getPath();
                  String modulePath = CURRENT_MODULE_PATH;
                  int index = path.indexOf(modulePath);

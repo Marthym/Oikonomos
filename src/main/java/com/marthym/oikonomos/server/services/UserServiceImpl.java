@@ -77,23 +77,4 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 			userRepository.delete(user);
 	}
 
-	@Override
-	public String loginUser(String mail, String password) throws OikonomosException {
-		if (password == null || password.length() < 8) {
-			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
-		}
-		
-		long count = userRepository.count();
-		if (count == 0) {
-			LOGGER.warn("First user login ! Create administrateur : "+mail);
-			String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-			User newUser = new User(mail, "", mail.split("@")[0], hashPassword);
-			userRepository.saveAndFlush(newUser);
-		}
-		User currentUser = userRepository.findByUserEmail(mail);
-		if (currentUser == null || !BCrypt.checkpw(password, currentUser.getUserHashPassword())) throw new OikonomosException("error.message.user.unauthorized", "User not found !");
-		
-		return currentUser.toString();
-	}
-
 }
