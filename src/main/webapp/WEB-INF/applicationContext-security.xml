@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<security:http pattern="/index/**" security="none" />
+	<security:http pattern="/index.html" security="none" />
+
+	<security:http auto-config='true'>
+		<security:intercept-url pattern="/rpc/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
+		<security:form-login login-page="/index.html" />
+	</security:http>
+	
+	<!--
+		An AuthenticationProvider must be present in order to specify Spring
+		Security declaratively using the security namespace, even though this
+		provider will never be used as we are not relying on the filter chain
+		mechanism for authentication - we have not defined any
+		"authenticating" SpringSecurityFilter in the filter chain.
+		Furthermore, Spring Method Security interceptor does not
+		reauthenticate by default; it will happily accept any authenticated
+		"Authentication" found in the security context, which our own
+		authentication mechanism will have created.
+	-->
+	<bean id="dummyAuthenticationProvider"
+		class="com.marthym.oikonomos.server.utils.DummyAuthenticationProvider" />
+	<security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="dummyAuthenticationProvider" />
+    </security:authentication-manager>
+    
+	<security:global-method-security
+		secured-annotations="enabled" jsr250-annotations="disabled">
+		<security:protect-pointcut expression="execution(* com.marthym.oikonomos.main.client.services.*Service.*(..))" access="ROLE_USER"/>
+	</security:global-method-security>
+
+</beans>

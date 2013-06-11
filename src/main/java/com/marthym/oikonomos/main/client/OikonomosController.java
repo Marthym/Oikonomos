@@ -10,8 +10,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.client.services.UserServiceAsync;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
+import com.marthym.oikonomos.main.client.services.UserServiceAsync;
 import com.marthym.oikonomos.main.client.view.DashboardView;
 
 public class OikonomosController implements Presenter, ValueChangeHandler<String> {

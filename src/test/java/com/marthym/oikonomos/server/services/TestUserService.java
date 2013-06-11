@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.marthym.oikonomos.client.services.UserService;
+import com.marthym.oikonomos.main.client.services.UserService;
 import com.marthym.oikonomos.shared.model.User;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})

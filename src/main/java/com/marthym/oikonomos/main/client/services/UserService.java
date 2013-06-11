@@ -1,4 +1,4 @@
-package com.marthym.oikonomos.client.services;
+package com.marthym.oikonomos.main.client.services;
 
 import java.util.Date;
 

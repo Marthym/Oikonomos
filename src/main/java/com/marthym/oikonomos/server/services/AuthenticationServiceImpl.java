@@ -63,17 +63,17 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
 			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
 		}
 
-		org.springframework.security.core.userdetails.User user = 
-				new org.springframework.security.core.userdetails.User(
-						currentUser.getUserEmail(), 
-						currentUser.getUserHashPassword(), 
-						true, true, true, true, 
-						authorities);
-		Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), authorities);
+//		org.springframework.security.core.userdetails.User user = 
+//				new org.springframework.security.core.userdetails.User(
+//						currentUser.getUserEmail(), 
+//						currentUser.getUserHashPassword(), 
+//						true, true, true, true, 
+//						authorities);
+		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, password, authorities);
 		SecurityContext sc = new SecurityContextImpl();
 		sc.setAuthentication(auth);
 		SecurityContextHolder.setContext(sc);
-
+		
 		return currentUser;
 	}
 
