@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.login.client.services.AuthenticationService;
+import com.marthym.oikonomos.client.services.AuthenticationService;
 import com.marthym.oikonomos.server.repositories.UserRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;

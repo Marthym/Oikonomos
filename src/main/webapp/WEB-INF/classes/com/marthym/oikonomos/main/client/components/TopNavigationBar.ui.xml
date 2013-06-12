@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
+	<ui:with type="com.marthym.oikonomos.main.client.resources.TopNavigationBarRessource" field="res" />
+	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
+	
+	<g:HTMLPanel tag="nav" height="36" styleName="{res.style.topNavigation}">
+		<g:HTMLPanel tag="ul" styleName="{res.style.right}">
+			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.properties}" text="{constants.properties}" 
+									targetHistoryToken="userProperties" ui:field="linkUserProperties"/></li>
+			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.logout}" text="{constants.logout}" 
+									ui:field="linkLogout"/></li>
+		</g:HTMLPanel>
+		<g:HTMLPanel tag="span" styleName="{res.style.right}" ui:field="userName" />
+		
+		<h1><g:InlineHyperlink text="{constants.applicationName}" targetHistoryToken="dashboard" ui:field="linkDashboard"/></h1>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

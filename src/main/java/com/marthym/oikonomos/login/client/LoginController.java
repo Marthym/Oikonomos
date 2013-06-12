@@ -19,10 +19,10 @@ import com.google.gwt.validation.client.impl.Validation;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
+import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.login.client.event.LoginEvent;
 import com.marthym.oikonomos.login.client.event.LoginEventHandler;
 import com.marthym.oikonomos.login.client.presenter.WelcomePresenter;
-import com.marthym.oikonomos.login.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.login.client.view.WelcomeView;
 import com.marthym.oikonomos.shared.model.User;
 

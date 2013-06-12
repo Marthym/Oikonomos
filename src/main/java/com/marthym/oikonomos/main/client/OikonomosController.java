@@ -2,58 +2,49 @@ package com.marthym.oikonomos.main.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
+import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
+import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
+import com.marthym.oikonomos.main.client.event.LogoutEvent;
+import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
-import com.marthym.oikonomos.main.client.services.UserServiceAsync;
 import com.marthym.oikonomos.main.client.view.DashboardView;
 
-public class OikonomosController implements Presenter, ValueChangeHandler<String> {
+public class OikonomosController implements Presenter {
+	private static final String CURRENT_MODULE_PATH = "oikonomos.html";
+	private static final String LOGIN_MODULE_PATH = "index.html";
+	
 	private final HandlerManager eventBus;
-	private HasWidgets container;
 	private Presenter dashboardPresenter;
-	private final UserServiceAsync rpcService;
+	private final AuthenticationServiceAsync rpcService;
 
 	public OikonomosController() {
-		this.rpcService = UserServiceAsync.Util.getInstance();
+		this.rpcService = AuthenticationServiceAsync.Util.getInstance();
 		this.eventBus = new HandlerManager(null);
 		bind();
 	}
 
 	private void bind() {
-		History.addValueChangeHandler(this);
-
-//		eventBus.addHandler(LoginEvent.TYPE,
-//				new LoginEventHandler() {
-//					
-//					@Override
-//					public String onLogin(LoginEvent event) {
-//						return doOikonomosLogin(event.getUserName(), event.getUserPassword());
-//					}
-//				});
+		eventBus.addHandler(LogoutEvent.TYPE,
+				new LogoutEventHandler() {
+					
+					@Override
+					public void onLogout(LogoutEvent event) {
+						doOikonomosLogout();
+					}
+				});
 	}
 
 	public void go(final HasWidgets container) {
-		this.container = container;
-
-		if (!History.getToken().isEmpty()) {
-			History.fireCurrentHistoryState();
-		} else {
-			History.newItem("dashboard");
-		}
-	}
-
-	public void onValueChange(ValueChangeEvent<String> event) {
 
 		GWT.runAsync(new RunAsyncCallback() {
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getLocalizedMessage());
+				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 
 			public void onSuccess() {
@@ -61,6 +52,32 @@ public class OikonomosController implements Presenter, ValueChangeHandler<String
 					dashboardPresenter = new DashboardPresenter(eventBus, new DashboardView());
 				}
 				dashboardPresenter.go(container);
+			}
+		});
+
+	}
+	
+	private void doOikonomosLogout() {
+		rpcService.logout(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				redirectToLogin();
+				
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				redirectToLogin();
+			}
+			
+			private void redirectToLogin() {
+				 String path = Window.Location.getPath();
+                 String modulePath = CURRENT_MODULE_PATH;
+                 int index = path.indexOf(modulePath);
+                 String contextPath = path.substring(0,index);
+
+                 Window.open(contextPath + LOGIN_MODULE_PATH, "_self", "");
 			}
 		});
 	}
