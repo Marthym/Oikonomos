@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.validation.client.impl.Validation;
 
 import com.marthym.oikonomos.client.components.MessageFlyer;
+import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
@@ -89,23 +90,27 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 			return null;
 		}
 		
+		WaitingFlyer.start();
 		rpcService.authenticate(login, password, new AsyncCallback<User>() {
 			
 			@Override
 			public void onSuccess(User result) {
-				 String path = Window.Location.getPath();
-                 String modulePath = CURRENT_MODULE_PATH;
-                 int index = path.indexOf(modulePath);
-                 String contextPath = path.substring(0,index);
+				WaitingFlyer.stop();
+				String path = Window.Location.getPath();
+				String modulePath = CURRENT_MODULE_PATH;
+				int index = path.indexOf(modulePath);
+				String contextPath = path.substring(0, index);
 
-                 Window.open(contextPath + MAIN_MODULE_PATH, "_self", "");
+				Window.open(contextPath + MAIN_MODULE_PATH, "_self", "");
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
+				//WaitingFlyer.stop();
 				OikonomosErrorMessages message = GWT.create(OikonomosErrorMessages.class);
 				MessageFlyer.error(message.error_message_user_unauthorized());
 			}
+			
 		});
 		return "";
 	}

@@ -90,3 +90,7 @@ h2 {color:#a6a6a6;}
 	color: #a6a6a6;
 	background: white;
 }
+
+.gwt-PopupPanelGlass {
+	background: url('img/back.png');
+}
