@@ -15,6 +15,7 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	interface DashboardViewUiBinder extends UiBinder<Widget, DashboardView> {}
 	
 	@UiField HTMLPanel topPanel;
+	@UiField HTMLPanel leftPanel;
 	@UiField HTMLPanel centerPanel;
 	
 	public DashboardView() {
@@ -29,6 +30,11 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	@Override
 	public HasWidgets getCenterPanel() {
 		return centerPanel;
+	}
+
+	@Override
+	public HasWidgets getLeftpPanel() {
+		return leftPanel;
 	}
 	
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:nomos="urn:import:com.marthym.oikonomos.main.client.components">
+	
+	<ui:with type="com.marthym.oikonomos.main.client.resources.LeftMenuResource" field="res" />
+	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="trad" />
+
+	<g:HTMLPanel styleName="{res.style.vnav}">
+		<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.accounts}"/>
+					<span class="{res.style.vnavCounter}" ui:field="accountsCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+	 
+	 	<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.categories}"/>
+					<span class="{res.style.vnavCounter}" ui:field="categoriesCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+		
+		<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.scheduler}"/>
+					<span class="{res.style.vnavCounter}" ui:field="schedulerCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+		
+		<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.payees}"/>
+					<span class="{res.style.vnavCounter}" ui:field="payeesCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+
+		<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.reports}"/>
+					<span class="{res.style.vnavCounter}" ui:field="reportsCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+				
+		<g:DisclosurePanel width="100%">
+			<g:customHeader>
+				<g:HTMLPanel styleName="{res.style.vnavItem}">
+					<i class="icon-friends" /> 
+					<ui:text from="{trad.budgetaryLines}"/>
+					<span class="{res.style.vnavCounter}" ui:field="budgetaryLinesCount"/>
+				</g:HTMLPanel>
+			</g:customHeader>
+			<g:Label>Widget body</g:Label>
+		</g:DisclosurePanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

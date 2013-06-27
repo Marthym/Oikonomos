@@ -28,7 +28,6 @@ public class WaitingFlyer extends PopupPanel {
 
 	private WaitingFlyer() {
 		super(true);
-		res.style().ensureInjected();
 		
 		setGlassEnabled(true);
 		setAutoHideEnabled(false);
@@ -44,8 +43,9 @@ public class WaitingFlyer extends PopupPanel {
 		if (instance == null) {
 			instance = new WaitingFlyer();
 		}
+		instance.closeTimer.cancel();
 		instance.closeTimer.schedule(TIME_OUT_WAITING);
-		instance.show();
+		if (!instance.isShowing()) instance.show();
 		return null;
 	}
 	

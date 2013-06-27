@@ -11,9 +11,6 @@ public interface WaitingFlyerRessource extends ClientBundle {
 	public interface WaitingFlyerRessourceCss extends CssResource {
 	      String waitingFlyer();
 	   }
-
-	   @Source("WaitingFlyer.css")
-	   WaitingFlyerRessourceCss style();
 	   
 	   @Source("loading.gif")
 	   ImageResource loading();
