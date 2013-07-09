@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ACCOUNT")
-public class Account implements java.io.Serializable {
+public class Account extends LeftMenuEntity implements java.io.Serializable {
 	private static final long serialVersionUID = -390708280442917715L;
 	
 	@Id
@@ -62,4 +62,109 @@ public class Account implements java.io.Serializable {
 	private double currentAmount;
 	@Column(name = "pointed_amount", nullable = false)
 	private double pointedAmount;
+	
+	public String getAccountOwner() {
+		return accountOwner;
+	}
+	public void setAccountOwner(String accountOwner) {
+		this.accountOwner = accountOwner;
+	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	public AccountType getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+	public String getAccountCurrency() {
+		return accountCurrency;
+	}
+	public void setAccountCurrency(String accountCurrency) {
+		this.accountCurrency = accountCurrency;
+	}
+	public boolean isClosed() {
+		return isClosed;
+	}
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+	}
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public int getBankCode() {
+		return bankCode;
+	}
+	public void setBankCode(int bankCode) {
+		this.bankCode = bankCode;
+	}
+	public int getBankDesk() {
+		return bankDesk;
+	}
+	public void setBankDesk(int bankDesk) {
+		this.bankDesk = bankDesk;
+	}
+	public long getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public int getAccountKey() {
+		return accountKey;
+	}
+	public void setAccountKey(int accountKey) {
+		this.accountKey = accountKey;
+	}
+	public double getMinimalAmount() {
+		return minimalAmount;
+	}
+	public void setMinimalAmount(double minimalAmount) {
+		this.minimalAmount = minimalAmount;
+	}
+	public double getMaximalAmount() {
+		return maximalAmount;
+	}
+	public void setMaximalAmount(double maximalAmount) {
+		this.maximalAmount = maximalAmount;
+	}
+	public double getCurrentAmount() {
+		return currentAmount;
+	}
+	public void setCurrentAmount(double currentAmount) {
+		this.currentAmount = currentAmount;
+	}
+	public double getPointedAmount() {
+		return pointedAmount;
+	}
+	public void setPointedAmount(double pointedAmount) {
+		this.pointedAmount = pointedAmount;
+	}
+	public Long getId() {
+		return id;
+	}
+	public double getInitialAmount() {
+		return initialAmount;
+	}
+	@Override
+	public long getEntityId() {
+		return getId();
+	}
+	@Override
+	public String getEntityOwner() {
+		return getAccountOwner();
+	}
+	@Override
+	public String getEntityDescription() {
+		return getAccountName();
+	}
+	
+	
 }

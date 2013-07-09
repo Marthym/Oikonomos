@@ -96,7 +96,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>1.3.2.RELEASE</version>
+			<version>1.4.0.M1</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework</groupId>
@@ -222,6 +222,10 @@
 			<id>JBoss</id>
 			<url>http://repository.jboss.org/maven2/</url>
 		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.springsource.org/libs-milestone/</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -295,10 +299,8 @@
 				<configuration>
 					<runTarget>oikonomos.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
-					<i18nConstantsBundles>
-						<i18nConstantsBundle>com.marthym.oikonomos.client.i18n.OikonomosConstants</i18nConstantsBundle>
-					</i18nConstantsBundles>
 					<i18nConstantsWithLookupBundles>
+						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.OikonomosConstants</i18nConstantsWithLookupBundle>
 						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.ValidatorMessages</i18nConstantsWithLookupBundle>
 						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.OikonomosErrorMessages</i18nConstantsWithLookupBundle>
 					</i18nConstantsWithLookupBundles>
