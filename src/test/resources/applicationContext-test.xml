@@ -13,6 +13,8 @@
    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
    http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
 
+	<import resource="applicationContext-security-test.xml"/>
+	
 	<context:component-scan base-package="com.marthym.oikonomos" />
 	<jpa:repositories base-package="com.marthym.oikonomos" />
 

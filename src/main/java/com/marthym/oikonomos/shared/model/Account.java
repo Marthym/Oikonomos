@@ -19,7 +19,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	
-	@NotNull @Column(name = "owner", unique = true, nullable = false, length = 255)
+	@NotNull @Column(name = "owner", nullable = false, length = 255)
 	private String accountOwner;
 	
 	@NotNull @Column(name = "name", nullable = false, length = 255)

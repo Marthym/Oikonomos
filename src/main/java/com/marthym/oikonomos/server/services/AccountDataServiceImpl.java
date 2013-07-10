@@ -15,6 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.main.client.services.AccountDataService;
 import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
@@ -28,8 +29,9 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 
 	@Override
 	@Secured("ROLE_USER")
-	public long getCount() {
+	public long getCount() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		return accountRepository.countByAccountOwner(authentifiedUser.getUserEmail());
 	}
@@ -38,8 +40,9 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 
 	@Override
 	@Secured("ROLE_USER")
-	public List<Account> getList() {
+	public List<Account> getList() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		return accountRepository.findByAccountOwner(authentifiedUser.getUserEmail());
 	}
@@ -50,6 +53,7 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 	@Secured("ROLE_USER")
 	public Account getEntity(long accountId) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 
 		Account myAccount = accountRepository.findOne(accountId);
@@ -68,8 +72,9 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 	@Override
 	@Secured("ROLE_USER")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public void addOrUpdateEntity(Account account) throws OikonomosException {
+	public Account addOrUpdateEntity(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 
 		if (!authentifiedUser.getUserEmail().equals(account.getAccountOwner())) {
@@ -78,13 +83,15 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
 		
-		accountRepository.save(account);
+		return accountRepository.save(account);
 	}
 
 	@Override
+	@Secured("ROLE_USER")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void delete(long accountId) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		
 		Account delAccount = accountRepository.findOne(accountId);

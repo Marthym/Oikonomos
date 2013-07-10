@@ -11,8 +11,8 @@ import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 public class OikonomosException extends Exception implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private String key;
-	private List<String> parameters;
+	protected String key;
+	protected List<String> parameters;
 
 	public OikonomosException() {
 		super();
