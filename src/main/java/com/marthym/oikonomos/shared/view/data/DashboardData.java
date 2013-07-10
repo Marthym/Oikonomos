@@ -2,6 +2,7 @@ package com.marthym.oikonomos.shared.view.data;
 
 import java.io.Serializable;
 
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.User;
 
 public class DashboardData implements HasCurrentUserData, HasEntityCountData, Serializable {
@@ -9,7 +10,6 @@ public class DashboardData implements HasCurrentUserData, HasEntityCountData, Se
 
 	private TopNavigationData topNavigation;
 	private LeftMenuData leftMenuData;
-	private User authentifiedUser;
 
 	public TopNavigationData getTopNavigation() {
 		return topNavigation;
@@ -19,10 +19,6 @@ public class DashboardData implements HasCurrentUserData, HasEntityCountData, Se
 		this.topNavigation = topNavigation;
 	}
 
-	public void setAuthentifiedUser(User authentifiedUser) {
-		this.authentifiedUser = authentifiedUser;
-	}
-	
 	public void setLeftMenuData(LeftMenuData leftMenuData) {
 		this.leftMenuData = leftMenuData;
 	}
@@ -32,8 +28,12 @@ public class DashboardData implements HasCurrentUserData, HasEntityCountData, Se
 	}
 
 	@Override
-	public User getCurrentUserData() {
-		return authentifiedUser;
+	public User getCurrentUserData() throws OikonomosUnathorizedException {
+		if (topNavigation != null) {
+			return topNavigation.getCurrentUserData();
+		} else {
+			throw new OikonomosUnathorizedException();
+		}
 	}
 
 	@Override

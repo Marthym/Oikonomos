@@ -1,7 +1,6 @@
 package com.marthym.oikonomos.server.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.marthym.oikonomos.main.client.services.AccountDataService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
+import com.marthym.oikonomos.shared.exceptions.OikonomosException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
@@ -20,38 +22,45 @@ import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 @Service("dashboardDataService")
 public class DashboardDataServiceImpl extends RemoteServiceServlet implements DashboardDataService {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(DashboardDataServiceImpl.class);
 
+	@Autowired
+	AccountDataService accountService;
+	
 	@Override
 	@Secured("ROLE_USER")
-	public DashboardData getDashboardData() {
-		DashboardData data = new DashboardData();
+	public DashboardData getDashboardData() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User authentifiedUser = (User)authentication.getPrincipal();
-		data.setAuthentifiedUser(authentifiedUser);
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		
-		data.setTopNavigation(new TopNavigationData());
-		LeftMenuData leftMenuData = new LeftMenuData();
-		data.setLeftMenuData(leftMenuData);
-		
-		leftMenuData.addEntityCount(EntityType.ACCOUNT, 5);
-		leftMenuData.addEntityCount(EntityType.REPORT, 2);
-		
+		DashboardData data = new DashboardData();
+		data.setTopNavigation(getTopNavigationData());
+		data.setLeftMenuData(getLeftMenuData());
+
 		return data;
 	}
 
 	@Override
 	@Secured("ROLE_USER")
-	public LeftMenuData getLeftMenuData() {
-		// TODO Auto-generated method stub
-		return null;
+	public LeftMenuData getLeftMenuData() throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		
+		LeftMenuData leftMenuData = new LeftMenuData();
+		leftMenuData.addEntityCount(EntityType.ACCOUNT, (int)accountService.getCount());
+		//TODO: Add all entity found
+		
+		return leftMenuData;
 	}
 
 	@Override
 	@Secured("ROLE_USER")
-	public TopNavigationData getTopNavigationData() {
-		// TODO Auto-generated method stub
-		return null;
+	public TopNavigationData getTopNavigationData() throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+		TopNavigationData topNavigationData = new TopNavigationData();
+		topNavigationData.setAuthentifiedUser(authentifiedUser);
+		return topNavigationData;
 	}
 
 
