@@ -13,7 +13,6 @@
 				<span class="{res.style.vnavCounter}" ui:field="entityCount"/>
 			</g:HTMLPanel>
 		</g:customHeader>
-		<g:Label>Widget body</g:Label>
 	</g:DisclosurePanel>
 
 </ui:UiBinder> 

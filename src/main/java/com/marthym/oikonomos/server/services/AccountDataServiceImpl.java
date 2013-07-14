@@ -40,11 +40,15 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 
 	@Override
 	@Secured("ROLE_USER")
-	public List<Account> getList() throws OikonomosException {
+	public List<Account> getList(boolean sorted) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
-		return accountRepository.findByAccountOwner(authentifiedUser.getUserEmail());
+		if (sorted) {
+			return accountRepository.findByAccountOwnerOrderByAccountTypeDesc(authentifiedUser.getUserEmail());
+		} else {
+			return accountRepository.findByAccountOwner(authentifiedUser.getUserEmail());
+		}
 	}
 
 

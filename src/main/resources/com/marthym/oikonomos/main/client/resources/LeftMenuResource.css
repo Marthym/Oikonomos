@@ -6,37 +6,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-/* ========================================================
-   Icons
-   ===================================================== */
-/* .vnav [class*="icon-"] { */
-/*   display: block; */
-/*   width: 20px; */
-/*   height: 20px; */
-/*   background-image: url("../img/icons.png"); */
-/*   background-repeat: no-repeat; */
-/*   background-color: transparent; */
-/*   border: 0; */
-/*   color: transparent; */
-/*   font: 0/0 a; */
-/*   text-shadow: none; */
-/* } */
-
-/* .vnav .icon-friends { */
-/*   background-position: 0 0; */
-/* } */
-
-/* .vnav .icon-video { */
-/*   background-position: -20px 0; */
-/* } */
-
-/* .vnav .icon-photo { */
-/*   background-position: -40px 0; */
-/* } */
-
-/* .vnav .icon-podcast { */
-/*   background-position: -60px 0; */
-/* } */
 
 /* ========================================================
    Vertical navigation
@@ -47,6 +16,18 @@
   line-height: 34px;
   text-decoration: none;
 }
+
+.vnav ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  list-style: none;
+}
+
+
 .vnav li:last-child .vnav-item {
   border-bottom-color: #50575f;
 }
@@ -116,12 +97,9 @@
 }
 
 .vnav .vnav-subnav {
-  display: none;
   border-bottom: 1px solid #404348;
 }
-.vnav .active .vnav-subnav {
-  display: block;
-}
+
 .vnav .vnav-subnav a {
   padding: 0 12px 0 16px;
   font-size: 12px;

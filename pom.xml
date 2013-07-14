@@ -21,7 +21,7 @@
 		<sl4j.version>1.7.2</sl4j.version>
 		<junit.version>4.11</junit.version>
 		<hsqldb.version>2.2.9</hsqldb.version>
-		<gwt.compile.user.agent>ie6,ie8,gecko,gecko1_8,safari,opera</gwt.compile.user.agent>
+		<gwt.compile.user.agent>ie6,ie8,ie9,gecko1_8,safari,opera</gwt.compile.user.agent>
 	</properties>
 	
 <!-- **********************************************************************
@@ -51,6 +51,33 @@
 		                <configuration>
 		                    <draftCompile>true</draftCompile>
 		                    <!-- style>DETAILED</style-->
+		                </configuration>
+		            </plugin>
+		        </plugins>
+	        </build>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+	            <gwt.compile.user.agent>ie6,ie8,ie9,gecko1_8,safari,opera</gwt.compile.user.agent>
+	        </properties>
+	        <build>
+	            <resources>
+	                <resource>
+	                    <directory>src/main/resources</directory>
+	                    <includes>
+	                        <include>**/*.gwt.xml</include>
+	                    </includes>
+	                    <filtering>true</filtering>
+	                </resource>
+	            </resources>
+	            <defaultGoal>process-resources</defaultGoal>
+		        <plugins>
+		            <plugin>
+		                <groupId>org.codehaus.mojo</groupId>
+		                <artifactId>gwt-maven-plugin</artifactId>
+		                <configuration>
+		                    <draftCompile>false</draftCompile>
 		                </configuration>
 		            </plugin>
 		        </plugins>

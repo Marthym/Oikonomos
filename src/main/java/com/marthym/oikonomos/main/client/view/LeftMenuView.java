@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import com.marthym.oikonomos.client.components.UnorderedListPanel;
+import com.marthym.oikonomos.client.components.UnorderedListPanel.ListItemElement;
+import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.components.LeftMenuEntityPanel;
 import com.marthym.oikonomos.main.client.presenter.LeftMenuPresenter;
 import com.marthym.oikonomos.main.client.resources.LeftMenuResource;
@@ -17,6 +21,7 @@ import com.marthym.oikonomos.shared.view.data.EntityType;
 
 public class LeftMenuView extends Composite implements LeftMenuPresenter.Display {	
 	private final LeftMenuResource res = LeftMenuResource.INSTANCE;
+	private final OikonomosConstants translations = GWT.create(OikonomosConstants.class);
 	
 	Map<EntityType, LeftMenuEntityPanel> entitiesPanels;
 	
@@ -48,12 +53,24 @@ public class LeftMenuView extends Composite implements LeftMenuPresenter.Display
 
 	@Override
 	public void refreshEntityList(EntityType entity, List<? extends LeftMenuEntity> entities) {
-		StringBuilder accountList = new StringBuilder();
+		UnorderedListPanel content = new UnorderedListPanel();
+		content.setStyleName(res.style().vnavSubnav());
 		for (LeftMenuEntity myEntity : entities) {
-			accountList.append(myEntity.getEntityDescription()).append("<br/>");
+			content.add(new ListItemElement(myEntity.getEntityDescription()));
 		}
-		HTMLPanel content = new HTMLPanel(accountList.toString());
+		Hyperlink link = new Hyperlink(translations.add()+" ...", "account");
+		content.add(new ListItemElement(link));
 		entitiesPanels.get(entity).getDisclosurePanel().setContent(content);
+	}
+
+	@Override
+	public void activePanel(EntityType entity) {
+		entitiesPanels.get(entity).addStyleName(res.style().active());
+	}
+
+	@Override
+	public void disactivePanel(EntityType entity) {
+		entitiesPanels.get(entity).removeStyleName(res.style().active());
 	}
 
 	

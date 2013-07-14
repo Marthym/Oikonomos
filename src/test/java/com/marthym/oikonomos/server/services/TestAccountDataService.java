@@ -101,7 +101,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getList();
+			accountDataService.getList(true);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -143,7 +143,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getList();
+			accountDataService.getList(true);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -209,7 +209,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			List<Account> accounts = accountDataService.getList();
+			List<Account> accounts = accountDataService.getList(true);
 			assertNotNull(accounts);
 			assertEquals(2, accounts.size());
 		} catch (Exception e) {

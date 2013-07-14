@@ -8,5 +8,6 @@ import com.marthym.oikonomos.shared.model.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	public List<Account> findByAccountOwner(String accountOwner);
+	public List<Account> findByAccountOwnerOrderByAccountTypeDesc(String accountOwner);
 	public Long countByAccountOwner(String accountOwner);
 }

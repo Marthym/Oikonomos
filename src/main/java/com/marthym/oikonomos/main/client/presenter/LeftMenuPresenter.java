@@ -2,6 +2,8 @@ package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.List;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -24,6 +26,8 @@ public class LeftMenuPresenter implements Presenter {
 		void setCount(EntityType entity, int count);
 		DisclosurePanel getDisclosurePanel(EntityType entity);
 		void refreshEntityList(EntityType entity, List<? extends LeftMenuEntity> entities);
+		void activePanel(EntityType entity);
+		void disactivePanel(EntityType entity);
 	}
 	
 	private final HandlerManager eventBus;
@@ -48,6 +52,15 @@ public class LeftMenuPresenter implements Presenter {
 					updateEntityList(event.getTarget());
 				}
 			});
+			
+			display.getDisclosurePanel(entity).addCloseHandler(new CloseHandler<DisclosurePanel>() {
+				
+				@Override
+				public void onClose(CloseEvent<DisclosurePanel> event) {
+					String entityName = event.getTarget().getElement().getAttribute(LeftMenuEntityPanel.ENTITY_TYPE_ATTRIBUTE);
+					display.disactivePanel(EntityType.valueOf(entityName));
+				}
+			});
 		}
 	}
 	
@@ -59,11 +72,14 @@ public class LeftMenuPresenter implements Presenter {
 
 	private void updateEntityList(DisclosurePanel panel) {
 		String entityName = panel.getElement().getAttribute(LeftMenuEntityPanel.ENTITY_TYPE_ATTRIBUTE);
+		display.activePanel(EntityType.valueOf(entityName));
+		
+		if (panel.getContent() != null) return;
 		
 		switch (EntityType.valueOf(entityName)) {
 		case ACCOUNT:
 			AccountDataServiceAsync rpcAccountData = AccountDataServiceAsync.Util.getInstance();
-			rpcAccountData.getList(new AsyncCallback<List<Account>>() {
+			rpcAccountData.getList(true, new AsyncCallback<List<Account>>() {
 				
 				@Override
 				public void onSuccess(List<Account> result) {
@@ -87,5 +103,6 @@ public class LeftMenuPresenter implements Presenter {
 		case SCHEDULER:
 			break;
 		}
+		
 	}
 }
