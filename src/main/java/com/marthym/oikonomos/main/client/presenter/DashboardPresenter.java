@@ -13,9 +13,10 @@ import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.components.TopNavigationBar;
-import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.CenterType;
+import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
 import com.marthym.oikonomos.main.client.services.DashboardDataServiceAsync;
 import com.marthym.oikonomos.main.client.view.LeftMenuView;
+import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
@@ -81,7 +82,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 
 			public void onSuccess() {
 				if (topNavigationPresenter == null) {
-					topNavigationPresenter = new TopNavigationPresenter(eventBus, new TopNavigationBar());
+					topNavigationPresenter = new TopNavigationPresenter(eventBus, data, new TopNavigationBar());
 				}
 				topNavigationPresenter.go(display.getTopPanel());
 			}
@@ -113,10 +114,32 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			}
 
 			public void onSuccess() {
-				centralPresenter = DashboardPresenterFactory.createCentralPresenter(eventBus, CenterType.valueOf(historyToken.toUpperCase()));
-				centralPresenter.go(display.getCenterPanel());
+				displayContentWidget(historyToken);
 			}
 		});
+	}
+
+	protected void displayContentWidget(final String historyToken) {
+		DashboardDataServiceAsync rpcDataService = DashboardDataServiceAsync.Util.getInstance();
+		final ContentPanelType contentType = ContentPanelType.valueOf(historyToken.toUpperCase());
+		
+		WaitingFlyer.start();
+		rpcDataService.getContentPanelData(contentType, new AsyncCallback<ContentPanelData>() {
+			
+			@Override
+			public void onSuccess(ContentPanelData result) {
+				WaitingFlyer.stop();
+				centralPresenter = DashboardPresenterFactory.createCentralPresenter(eventBus, result);
+				centralPresenter.go(display.getCenterPanel());
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				WaitingFlyer.stop();
+				MessageFlyer.error(caught.getLocalizedMessage());
+			}
+		});
+
 	}
 
 }

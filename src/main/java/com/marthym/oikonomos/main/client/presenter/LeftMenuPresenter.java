@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.components.LeftMenuEntityPanel;
-import com.marthym.oikonomos.main.client.services.AccountDataServiceAsync;
+import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
@@ -78,8 +78,8 @@ public class LeftMenuPresenter implements Presenter {
 		
 		switch (EntityType.valueOf(entityName)) {
 		case ACCOUNT:
-			AccountDataServiceAsync rpcAccountData = AccountDataServiceAsync.Util.getInstance();
-			rpcAccountData.getList(true, new AsyncCallback<List<Account>>() {
+			AccountServiceAsync rpcAccount = AccountServiceAsync.Util.getInstance();
+			rpcAccount.getList(true, new AsyncCallback<List<Account>>() {
 				
 				@Override
 				public void onSuccess(List<Account> result) {

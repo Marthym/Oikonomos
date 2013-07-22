@@ -24,7 +24,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.marthym.oikonomos.main.client.services.AccountDataService;
+import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
@@ -36,7 +36,7 @@ public class TestAccountDataService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestAccountDataService.class);
 	
 	@Autowired
-	private AccountDataService accountDataService;
+	private AccountService accountDataService;
 	
 	private static SecurityContext scUser;
 	

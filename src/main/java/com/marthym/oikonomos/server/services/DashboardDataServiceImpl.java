@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.main.client.services.AccountDataService;
+import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
+import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.view.data.AccountsListData;
+import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;
@@ -24,7 +27,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	AccountDataService accountService;
+	AccountService accountService;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -63,6 +66,16 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 		return topNavigationData;
 	}
 
-
+	@Override
+	public ContentPanelData getContentPanelData(ContentPanelType type) throws OikonomosException {
+		switch (type) {
+		case ACCOUNTS:
+		case DASHBOARD:
+			return new AccountsListData(accountService.getList(true));
+		case ACCOUNT:
+			break;
+		}
+		return null;
+	}
 
 }

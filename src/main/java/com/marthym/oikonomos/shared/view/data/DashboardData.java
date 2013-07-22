@@ -1,15 +1,19 @@
 package com.marthym.oikonomos.shared.view.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
 public class DashboardData implements HasCurrentUserData, HasEntityCountData, Serializable {
-	private static final long serialVersionUID = 3041318166635371951L;
-
+	private static final long serialVersionUID = -6176824519326945593L;
+	
 	private TopNavigationData topNavigation;
 	private LeftMenuData leftMenuData;
+	private List<Account> accountsList = new ArrayList<Account>();
 
 	public TopNavigationData getTopNavigation() {
 		return topNavigation;
@@ -25,6 +29,10 @@ public class DashboardData implements HasCurrentUserData, HasEntityCountData, Se
 	
 	public LeftMenuData getLeftMenuData() {
 		return leftMenuData;
+	}
+	
+	public void addAccount(Account account) {
+		accountsList.add(account);
 	}
 
 	@Override

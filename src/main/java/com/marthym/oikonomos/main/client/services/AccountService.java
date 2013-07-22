@@ -7,8 +7,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
 
-@RemoteServiceRelativePath("../rpc/accountDataService")
-public interface AccountDataService extends RemoteService {
+@RemoteServiceRelativePath("../rpc/accountService")
+public interface AccountService extends RemoteService {
 	public long getCount() throws OikonomosException;
 	public List<Account> getList(boolean sorted) throws OikonomosException;
 	public Account getEntity(long accountId) throws OikonomosException;

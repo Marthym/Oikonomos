@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.main.client.services.AccountDataService;
+import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
@@ -20,8 +20,8 @@ import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
 @Repository
-@Service("accountDataService")
-public class AccountDataServiceImpl extends RemoteServiceServlet implements AccountDataService {
+@Service("accountService")
+public class AccountServiceImpl extends RemoteServiceServlet implements AccountService {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
@@ -44,6 +44,7 @@ public class AccountDataServiceImpl extends RemoteServiceServlet implements Acco
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		
 		if (sorted) {
 			return accountRepository.findByAccountOwnerOrderByAccountTypeDesc(authentifiedUser.getUserEmail());
 		} else {

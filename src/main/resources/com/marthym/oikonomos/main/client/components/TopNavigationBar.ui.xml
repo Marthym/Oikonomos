@@ -12,7 +12,7 @@
 			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.logout}" text="{constants.logout}" 
 									ui:field="linkLogout"/></li>
 		</g:HTMLPanel>
-		<g:HTMLPanel tag="span" styleName="{res.style.right}" ui:field="userName" />
+		<span class="{res.style.right}" ui:field="userName" />
 		
 		<h1><g:InlineHyperlink text="{constants.applicationName}" targetHistoryToken="dashboard" ui:field="linkDashboard"/></h1>	
 	</g:HTMLPanel>
