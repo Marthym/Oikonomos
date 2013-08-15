@@ -64,6 +64,10 @@ public class LeftMenuPresenter implements Presenter {
 		}
 	}
 	
+	public void openEntityMenu(EntityType entity) {
+		display.getDisclosurePanel(entity).setOpen(true);
+	}
+	
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();

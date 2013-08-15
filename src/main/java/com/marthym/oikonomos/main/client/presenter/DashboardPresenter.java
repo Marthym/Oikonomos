@@ -21,6 +21,7 @@ import com.marthym.oikonomos.main.client.services.DashboardDataServiceAsync;
 import com.marthym.oikonomos.main.client.view.LeftMenuView;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
+import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
 
@@ -103,6 +104,12 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 					leftMenuPresenter = new LeftMenuPresenter(eventBus, data, new LeftMenuView());
 				}
 				leftMenuPresenter.go(display.getLeftpPanel());
+				
+				String historyToken = History.getToken();
+				String[] splitHistoryToken = historyToken.split("\\|");
+				try {
+					leftMenuPresenter.openEntityMenu(EntityType.valueOf(splitHistoryToken[0].toUpperCase()));
+				} catch (Exception e) {}
 			}
 		});
 	}
@@ -131,19 +138,19 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			parameters.add(splitHistoryToken[i]);
 		}
 		
-		//WaitingFlyer.start();
+		WaitingFlyer.start();
 		rpcDataService.getContentPanelData(contentType, parameters, new AsyncCallback<ContentPanelData>() {
 			
 			@Override
 			public void onSuccess(ContentPanelData result) {
-				//WaitingFlyer.stop();
+				WaitingFlyer.stop();
 				centralPresenter = DashboardPresenterFactory.createCentralPresenter(eventBus, result);
 				centralPresenter.go(display.getCenterPanel());
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				//WaitingFlyer.stop();
+				WaitingFlyer.stop();
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 		});
