@@ -1,2 +1,28 @@
-.headerCell {}
-.button {}
+.headerCell {
+	font-weight: bold;
+    padding-right: 10px;
+    white-space: nowrap;
+    width: 1px;
+}
+.actions {
+	text-align:right;
+}
+
+.textBox {
+	height:21px; width:100%;
+	margin-top:0px; padding-left:0px;
+}
+.listBox {
+	width:101%;
+}
+
+.accountNumber {
+	width:100%; margin-left:-3px;
+}
+
+.key {
+	width:40px;
+}
+.key input {margin-left:5px;}
+
+.checkBox {}

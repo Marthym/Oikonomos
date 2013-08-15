@@ -10,7 +10,12 @@ public interface EditAccountResource extends ClientBundle {
 	
 	public interface EditAccountResourceCss extends CssResource {
 		String headerCell();
-		String button();
+		String actions();
+		String textBox();
+		String listBox();
+		String accountNumber();
+		String key();
+		String checkBox();
 	}
 
 	@Source("EditAccountResource.css")

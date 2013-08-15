@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
+import com.marthym.oikonomos.main.client.resources.EditAccountResource;
 
 public class EditAccountView extends Composite implements EditAccountPresenter.Display {
 
@@ -26,6 +28,7 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	@UiField TextBox bankCode;
 	@UiField TextBox bankDesk;
 	@UiField TextBox accountNumber;
+	@UiField TextBox accountKey;
 	@UiField TextBox initialAmount;
 	@UiField TextBox minimalAmount;
 	@UiField TextBox maximalAmount;
@@ -33,7 +36,12 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	@UiField Button submitButton;
 
 	public EditAccountView() {
+		EditAccountResource.INSTANCE.style().ensureInjected();
+		
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		EditAccountConstants constants = (EditAccountConstants) GWT.create(EditAccountConstants.class);
+		accountKey.getElement().setAttribute("placeholder", constants.accountNumberKey());
 	}
 
 	public EditAccountView(String firstName) {

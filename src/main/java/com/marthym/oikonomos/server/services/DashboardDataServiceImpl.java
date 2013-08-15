@@ -15,7 +15,6 @@ import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
-import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.AccountsListData;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;

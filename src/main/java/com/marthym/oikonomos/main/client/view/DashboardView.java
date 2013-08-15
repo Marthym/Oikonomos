@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
+import com.marthym.oikonomos.main.client.resources.DashboardViewResource;
 
 public class DashboardView extends Composite implements DashboardPresenter.Display {
 	private static DashboardViewUiBinder uiBinder = GWT.create(DashboardViewUiBinder.class);
@@ -19,6 +20,7 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	@UiField HTMLPanel centerPanel;
 	
 	public DashboardView() {
+		DashboardViewResource.INSTANCE.style().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

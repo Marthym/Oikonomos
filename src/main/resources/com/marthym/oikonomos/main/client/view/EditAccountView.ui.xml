@@ -4,76 +4,78 @@
 	<ui:with type="com.marthym.oikonomos.main.client.resources.EditAccountResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.main.client.i18n.EditAccountConstants" field="constants" />
 	
-	<g:VerticalPanel>
+	<g:VerticalPanel width="80%">
 		<g:HTMLPanel tag="h3"><ui:text from="{constants.title}"/></g:HTMLPanel>
 		<g:FormPanel encoding="utf-8" method="post">
 			<g:HTMLPanel> <!-- FormPanel does not accept more than one child ... -->
 				<g:CaptionPanel captionText="{constants.detailsFieldsetLabel}">
-					<g:Grid>
+					<g:Grid width="99%">
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountNameLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="accountName"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="accountName"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountTypeLabel}" /></g:customCell>
-							<g:customCell><g:ListBox ui:field="accountType"/></g:customCell>
+							<g:customCell><g:ListBox addStyleNames="{res.style.listBox}" ui:field="accountType"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountCurrencyLabel}" /></g:customCell>
-							<g:customCell><g:ListBox ui:field="accountCurrency"/></g:customCell>
+							<g:customCell><g:ListBox addStyleNames="{res.style.listBox}" ui:field="accountCurrency"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountClosedLabel}" /></g:customCell>
-							<g:customCell><g:CheckBox ui:field="accountClosed"/></g:customCell>
+							<g:customCell><g:CheckBox addStyleNames="{res.style.checkBox}" ui:field="accountClosed"/></g:customCell>
 						</g:row>
 					</g:Grid>
 				</g:CaptionPanel>
 				
 				<g:CaptionPanel captionText="{constants.bankFieldsetLabel}">
-					<g:Grid>
+					<g:Grid width="100%">
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.bankNameLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="bankName"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="bankName"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.bankCodeLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="bankCode"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="bankCode"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.bankDeskLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="bankDesk"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="bankDesk"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountNumberLabel}" /></g:customCell>
 							<g:customCell>
-								<g:FlowPanel>
-									<g:TextBox ui:field="accountNumber"/> 
-									<g:TextBox ui:field="accountKey"/>
-								</g:FlowPanel>
+								<g:Grid styleName="{res.style.accountNumber}">
+									<g:row>
+										<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="accountNumber"/></g:customCell>
+										<g:customCell styleName="{res.style.key}"><g:TextBox addStyleNames="{res.style.textBox}" ui:field="accountKey"/></g:customCell>
+									</g:row>
+								</g:Grid>
 							</g:customCell>
 						</g:row>
 					</g:Grid>
 				</g:CaptionPanel>
 				
 				<g:CaptionPanel captionText="{constants.balanceFieldsetLabel}">
-					<g:Grid>
+					<g:Grid width="100%">
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.initialAmountLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="initialAmount"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="initialAmount"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.minimalAmountLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="minimalAmount"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="minimalAmount"/></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.maximalAmountLabel}" /></g:customCell>
-							<g:customCell><g:TextBox ui:field="maximalAmount"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="maximalAmount"/></g:customCell>
 						</g:row>
 					</g:Grid>
 				</g:CaptionPanel>
 				
 				
-				<g:HTMLPanel tag="span" styleName="{res.style.button}">
+				<g:HTMLPanel styleName="{res.style.actions}">
 					<g:Button text="{constants.resetButtonLabel}" ui:field="resetButton"/>
 					<g:Button text="{constants.submitButtonLabel}" ui:field="submitButton"/>
 				</g:HTMLPanel>
