@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.main.client.services;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
@@ -17,5 +19,5 @@ public interface DashboardDataService extends RemoteService {
 	public DashboardData getDashboardData() throws OikonomosException;
 	public LeftMenuData getLeftMenuData() throws OikonomosException;
 	public TopNavigationData getTopNavigationData() throws OikonomosException;
-	public ContentPanelData getContentPanelData(ContentPanelType type) throws OikonomosException;
+	public ContentPanelData getContentPanelData(ContentPanelType type, List<String> parameters) throws OikonomosException;
 }

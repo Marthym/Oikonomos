@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.server.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -13,10 +15,12 @@ import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.AccountsListData;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
+import com.marthym.oikonomos.shared.view.data.EditAccountData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;
 import com.marthym.oikonomos.shared.view.data.TopNavigationData;
@@ -67,13 +71,13 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	}
 
 	@Override
-	public ContentPanelData getContentPanelData(ContentPanelType type) throws OikonomosException {
+	public ContentPanelData getContentPanelData(ContentPanelType type, List<String> parameters) throws OikonomosException {
 		switch (type) {
 		case ACCOUNTS:
 		case DASHBOARD:
 			return new AccountsListData(accountService.getList(true));
 		case ACCOUNT:
-			break;
+			return new EditAccountData(null);
 		}
 		return null;
 	}

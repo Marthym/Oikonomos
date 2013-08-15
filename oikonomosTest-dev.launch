@@ -4,10 +4,10 @@
 <booleanAttribute key="com.google.gwt.eclipse.core.NOT_HEADLESS" value="false"/>
 <stringAttribute key="com.google.gwt.eclipse.core.OUT_DIR" value="www-test"/>
 <booleanAttribute key="com.google.gwt.eclipse.core.STANDARDS_MODE" value="false"/>
-<stringAttribute key="com.google.gwt.eclipse.core.STYLE" value="OBFUSCATED"/>
+<stringAttribute key="com.google.gwt.eclipse.core.STYLE" value="DETAILED"/>
 <stringAttribute key="com.google.gwt.eclipse.core.WEB_MODE" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/oikonomos/src/test/java/com/marthym/oikonomos/client/GwtTestoikonomos.java"/>
+<listEntry value="/oikonomos/src/main/java/com/marthym/oikonomos/main/client/Oikonomos.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -17,6 +17,6 @@
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.maven.mavenClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.marthym.oikonomos.client.GwtTestoikonomos"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.marthym.oikonomos.main.client.Oikonomos"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="oikonomos"/>
 </launchConfiguration>

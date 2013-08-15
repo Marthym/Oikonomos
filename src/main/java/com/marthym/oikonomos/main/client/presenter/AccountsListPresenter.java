@@ -22,12 +22,12 @@ public class AccountsListPresenter implements Presenter {
 
 	public AccountsListPresenter(Display display, AccountsListData datas) {
 		this.display = display;
-		bind(datas.getAccountsList());
+		bind(datas);
 	}
 	
-	private void bind(List<Account> datas) {
+	private void bind(AccountsListData datas) {
 		for (AccountType type : AccountType.values()) {
-			display.refreshAccountsTypePanel(type, datas);
+			display.refreshAccountsTypePanel(type, datas.getAccountsList(type));
 		}
 	}
 	

@@ -50,7 +50,7 @@
 		                <artifactId>gwt-maven-plugin</artifactId>
 		                <configuration>
 		                    <draftCompile>true</draftCompile>
-		                    <!-- style>DETAILED</style-->
+		                    <style>DETAILED</style>
 		                </configuration>
 		            </plugin>
 		        </plugins>
@@ -330,6 +330,7 @@
 						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.OikonomosConstants</i18nConstantsWithLookupBundle>
 						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.ValidatorMessages</i18nConstantsWithLookupBundle>
 						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.client.i18n.OikonomosErrorMessages</i18nConstantsWithLookupBundle>
+						<i18nConstantsWithLookupBundle>com.marthym.oikonomos.main.client.i18n.EditAccountConstants</i18nConstantsWithLookupBundle>
 					</i18nConstantsWithLookupBundles>
 					<servicePattern>**/services/*Service.java</servicePattern>
 				</configuration>

@@ -4,3 +4,4 @@
 .gwt
 target
 /*.log
+*.class

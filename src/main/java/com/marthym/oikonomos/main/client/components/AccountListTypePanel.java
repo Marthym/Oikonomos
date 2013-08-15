@@ -6,7 +6,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTMLPanel;
 
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.shared.model.Account;
@@ -28,7 +27,8 @@ public class AccountListTypePanel extends Composite {
 
 	public void refreshAccountsList(List<Account> accounts) {
 		if (accounts == null || accounts.isEmpty()) {
-			panel.setContent(new HTMLPanel("No account for "+getTranslation(this.type)));
+			panel.clear();
+			panel.setVisible(false);
 			return;
 		}
 		
@@ -43,6 +43,8 @@ public class AccountListTypePanel extends Composite {
 		panel.setContent(content);
 	}
 
+	public final AccountType getAccountType() {return type;}
+	
 	private String getTranslation(AccountType type) {
 		OikonomosConstants traduction = GWT.create(OikonomosConstants.class);
 		switch (type) {

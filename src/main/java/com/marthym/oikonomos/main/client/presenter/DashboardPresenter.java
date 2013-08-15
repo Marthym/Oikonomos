@@ -1,5 +1,8 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -121,21 +124,26 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 
 	protected void displayContentWidget(final String historyToken) {
 		DashboardDataServiceAsync rpcDataService = DashboardDataServiceAsync.Util.getInstance();
-		final ContentPanelType contentType = ContentPanelType.valueOf(historyToken.toUpperCase());
+		String[] splitHistoryToken = historyToken.split("\\|");
+		final ContentPanelType contentType = ContentPanelType.valueOf(splitHistoryToken[0].toUpperCase());
+		List<String> parameters = new LinkedList<String>();
+		for (int i=1; i<splitHistoryToken.length; i++) {
+			parameters.add(splitHistoryToken[i]);
+		}
 		
-		WaitingFlyer.start();
-		rpcDataService.getContentPanelData(contentType, new AsyncCallback<ContentPanelData>() {
+		//WaitingFlyer.start();
+		rpcDataService.getContentPanelData(contentType, parameters, new AsyncCallback<ContentPanelData>() {
 			
 			@Override
 			public void onSuccess(ContentPanelData result) {
-				WaitingFlyer.stop();
+				//WaitingFlyer.stop();
 				centralPresenter = DashboardPresenterFactory.createCentralPresenter(eventBus, result);
 				centralPresenter.go(display.getCenterPanel());
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				WaitingFlyer.stop();
+				//WaitingFlyer.stop();
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 		});
