@@ -107,6 +107,11 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			parameters.add(splitHistoryToken[i]);
 		}
 		
+		if (parameters.isEmpty() && !contentType.isDataNeeded()) {
+			DashboardPresenterFactory.createCentralPresenter(display.getCenterPanel(), eventBus, contentType);
+			return;
+		}
+		
 		WaitingFlyer.start();
 		rpcDataService.getContentPanelData(contentType, parameters, new AsyncCallback<ContentPanelData>() {
 			

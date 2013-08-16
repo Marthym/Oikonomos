@@ -18,6 +18,18 @@ public class EditAccountData extends ContentPanelData implements Serializable {
 		super(ContentPanelType.ACCOUNT);
 		this.editAccount = editAccount;		
 	}
+	public static EditAccountData cast(ContentPanelData data) {
+		try {
+			if (data.isEmpty) {
+				return new EditAccountData(new Account());
+			} else {
+				return (EditAccountData)data;
+			}
+		} catch (ClassCastException e) {
+			return new EditAccountData(new Account());
+		}
+	}
+	
 	
 	public final Account getEditAccount() { return this.editAccount;}
 }

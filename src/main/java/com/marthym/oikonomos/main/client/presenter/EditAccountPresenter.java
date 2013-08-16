@@ -41,7 +41,7 @@ public class EditAccountPresenter implements Presenter {
 	}
 	
 	private EditAccountPresenter(HandlerManager eventBus, EditAccountData datas) {
-		this.display = new EditAccountView();
+		this.display = new EditAccountView(datas.getEditAccount());
 		this.eventBus = eventBus;
 		bind(datas);
 		

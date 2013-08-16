@@ -3,6 +3,7 @@
 	
 	<ui:with type="com.marthym.oikonomos.main.client.resources.EditAccountResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.main.client.i18n.EditAccountConstants" field="constants" />
+	<ui:with type="com.marthym.oikonomos.shared.model.Account" field="account"></ui:with>
 	
 	<g:VerticalPanel width="80%">
 		<g:HTMLPanel tag="h3"><ui:text from="{constants.title}"/></g:HTMLPanel>
@@ -12,7 +13,7 @@
 					<g:Grid width="99%">
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountNameLabel}" /></g:customCell>
-							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="accountName"/></g:customCell>
+							<g:customCell><g:TextBox addStyleNames="{res.style.textBox}" ui:field="accountName"><ui:text from="{account.getAccountName}" /></g:TextBox></g:customCell>
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountTypeLabel}" /></g:customCell>
