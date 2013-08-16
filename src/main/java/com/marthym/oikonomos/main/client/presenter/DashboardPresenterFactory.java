@@ -1,9 +1,8 @@
 package com.marthym.oikonomos.main.client.presenter;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.main.client.view.AccountsListView;
-import com.marthym.oikonomos.main.client.view.EditAccountView;
 import com.marthym.oikonomos.shared.view.data.AccountsListData;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.EditAccountData;
@@ -15,17 +14,34 @@ public class DashboardPresenterFactory {
 		ACCOUNT
 	}
 
-	public final static Presenter createCentralPresenter(HandlerManager eventBus, ContentPanelData datas) {
+	public final static void createCentralPresenter(final HasWidgets parent, HandlerManager eventBus, ContentPanelData datas) {
+		Presenter.Callback callback = new Presenter.Callback() {
+			
+			@Override
+			public void onCreateFailed() {
+				
+			}
+			
+			@Override
+			public void onCreate(Presenter presenter) {
+				presenter.go(parent);
+			}
+		};
+		
 		switch (datas.getContentType()) {
 		case DASHBOARD:
 		case ACCOUNTS:
-			return new AccountsListPresenter(new AccountsListView(), (AccountsListData)datas);
+			Presenter accountListPres = AccountsListPresenter.getInstance((AccountsListData)datas);
+			callback.onCreate(accountListPres);
+			return;
 			
 		case ACCOUNT:
-			return new EditAccountPresenter(new EditAccountView(), (EditAccountData)datas);
+			EditAccountPresenter.createAsync(eventBus, (EditAccountData)datas, callback);
+			return;
 			
 		default:
-			return null;
+			return;
 		}
 	}
+	
 }

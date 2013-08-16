@@ -44,11 +44,6 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 		accountKey.getElement().setAttribute("placeholder", constants.accountNumberKey());
 	}
 
-	public EditAccountView(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
-		
-	}
-
 	@Override
 	public HasClickHandlers getValidateButton() {
 		return submitButton;

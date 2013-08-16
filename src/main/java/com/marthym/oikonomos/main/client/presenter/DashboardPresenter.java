@@ -3,8 +3,6 @@ package com.marthym.oikonomos.main.client.presenter;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -37,7 +35,6 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	private final Display display;
 	private TopNavigationPresenter topNavigationPresenter;
 	private LeftMenuPresenter leftMenuPresenter;
-	private Presenter centralPresenter;
 
 	public DashboardPresenter(HandlerManager eventBus, Display display) {
 		this.eventBus = eventBus;
@@ -79,57 +76,29 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	}
 	
 	private void displayTopNavigation(final HasCurrentUserData data) {
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure(Throwable caught) {
-				MessageFlyer.error(caught.getLocalizedMessage());
-			}
-
-			public void onSuccess() {
-				if (topNavigationPresenter == null) {
-					topNavigationPresenter = new TopNavigationPresenter(eventBus, data, new TopNavigationBar());
-				}
-				topNavigationPresenter.go(display.getTopPanel());
-			}
-		});
+		if (topNavigationPresenter == null) {
+			topNavigationPresenter = new TopNavigationPresenter(eventBus, data, new TopNavigationBar());
+		}
+		topNavigationPresenter.go(display.getTopPanel());
 	}
 	
 	private void displayLeftMenu(final HasEntityCountData data) {
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure(Throwable caught) {
-				MessageFlyer.error(caught.getLocalizedMessage());
-			}
-
-			public void onSuccess() {
-				if (leftMenuPresenter == null) {
-					leftMenuPresenter = new LeftMenuPresenter(eventBus, data, new LeftMenuView());
-				}
-				leftMenuPresenter.go(display.getLeftpPanel());
-				
-				String historyToken = History.getToken();
-				String[] splitHistoryToken = historyToken.split("\\|");
-				try {
-					leftMenuPresenter.openEntityMenu(EntityType.valueOf(splitHistoryToken[0].toUpperCase()));
-				} catch (Exception e) {}
-			}
-		});
+		if (leftMenuPresenter == null) {
+			leftMenuPresenter = new LeftMenuPresenter(eventBus, data, new LeftMenuView());
+		}
+		leftMenuPresenter.go(display.getLeftpPanel());
+		
+		String historyToken = History.getToken();
+		String[] splitHistoryToken = historyToken.split("\\|");
+		try {
+			leftMenuPresenter.openEntityMenu(EntityType.valueOf(splitHistoryToken[0].toUpperCase()));
+		} catch (Exception e) {}
 	}
 
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		final String historyToken = event.getValue();
 		
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure(Throwable caught) {
-				MessageFlyer.error(caught.getLocalizedMessage());
-			}
-
-			public void onSuccess() {
-				displayContentWidget(historyToken);
-			}
-		});
-	}
-
-	protected void displayContentWidget(final String historyToken) {
 		DashboardDataServiceAsync rpcDataService = DashboardDataServiceAsync.Util.getInstance();
 		String[] splitHistoryToken = historyToken.split("\\|");
 		final ContentPanelType contentType = ContentPanelType.valueOf(splitHistoryToken[0].toUpperCase());
@@ -144,8 +113,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			@Override
 			public void onSuccess(ContentPanelData result) {
 				WaitingFlyer.stop();
-				centralPresenter = DashboardPresenterFactory.createCentralPresenter(eventBus, result);
-				centralPresenter.go(display.getCenterPanel());
+				DashboardPresenterFactory.createCentralPresenter(display.getCenterPanel(), eventBus, result);
 			}
 			
 			@Override
@@ -154,7 +122,5 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 		});
-
 	}
-
 }

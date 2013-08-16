@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.presenter.Presenter;
+import com.marthym.oikonomos.main.client.view.AccountsListView;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 import com.marthym.oikonomos.shared.view.data.AccountsListData;
@@ -19,11 +20,19 @@ public class AccountsListPresenter implements Presenter {
 	}
 	
 	private final Display display;
+	private static AccountsListPresenter instance = null;
 
-	public AccountsListPresenter(Display display, AccountsListData datas) {
-		this.display = display;
+	private AccountsListPresenter(AccountsListData datas) {
+		this.display = new AccountsListView();
 		bind(datas);
 	}
+	 public static final Presenter getInstance(AccountsListData datas) {
+		 if (instance == null) {
+			 instance = new AccountsListPresenter(datas);
+		 }
+		 instance.bind(datas);
+		 return instance;
+	 }
 	
 	private void bind(AccountsListData datas) {
 		for (AccountType type : AccountType.values()) {
