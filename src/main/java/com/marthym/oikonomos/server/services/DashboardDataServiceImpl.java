@@ -2,7 +2,8 @@ package com.marthym.oikonomos.server.services;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,7 @@ import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 @Service("dashboardDataService")
 public class DashboardDataServiceImpl extends RemoteServiceServlet implements DashboardDataService {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(DashboardDataServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DashboardDataServiceImpl.class);
 
 	@Autowired
 	AccountService accountService;

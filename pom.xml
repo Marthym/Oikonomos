@@ -16,11 +16,12 @@
 		<!-- GWT needs at least java 1.5 -->
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>3.2.2.RELEASE</spring.framework.version>
-		<hibernate.version>4.1.9.Final</hibernate.version>
-		<sl4j.version>1.7.2</sl4j.version>
+		<spring.framework.version>3.2.4.RELEASE</spring.framework.version>
+		<hibernate.version>4.2.4.Final</hibernate.version>
+		<sl4j.version>1.7.5</sl4j.version>
+		<logback.version>1.0.13</logback.version>
 		<junit.version>4.11</junit.version>
-		<hsqldb.version>2.2.9</hsqldb.version>
+		<hsqldb.version>2.3.0</hsqldb.version>
 		<gwt.compile.user.agent>ie6,ie8,ie9,gecko1_8,safari,opera</gwt.compile.user.agent>
 	</properties>
 	
@@ -78,6 +79,8 @@
 		                <artifactId>gwt-maven-plugin</artifactId>
 		                <configuration>
 		                    <draftCompile>false</draftCompile>
+		                    <compileReport>true</compileReport>
+		                    <compilerMetrics>true</compilerMetrics>
 		                </configuration>
 		            </plugin>
 		        </plugins>
@@ -162,7 +165,7 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
-			<version>1.7.2</version>
+			<version>1.7.3</version>
 			<scope>runtime</scope>
 		</dependency>
 		
@@ -189,12 +192,12 @@
 	    <dependency>
 	        <groupId>org.hibernate</groupId>
 	        <artifactId>hibernate-validator</artifactId>
-	        <version>4.1.0.Final</version>
+	        <version>4.2.0.Final</version>
 	    </dependency>
     	<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.1.0.Final</version>
+			<version>4.2.0.Final</version>
 			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
@@ -205,7 +208,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -216,15 +219,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>log4j-over-slf4j</artifactId>
 			<version>${sl4j.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>${logback.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>

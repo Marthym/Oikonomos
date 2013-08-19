@@ -3,8 +3,9 @@ package com.marthym.oikonomos.server.services;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,7 @@ import com.marthym.oikonomos.shared.model.UserProfile;
 @Service("authenticationService")
 public class AuthenticationServiceImpl extends RemoteServiceServlet implements AuthenticationService {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(AuthenticationServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 	
 	@Autowired
 	private UserRepository userRepository;
