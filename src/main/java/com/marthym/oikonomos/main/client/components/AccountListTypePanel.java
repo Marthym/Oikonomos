@@ -2,12 +2,11 @@ package com.marthym.oikonomos.main.client.components;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Grid;
 
-import com.marthym.oikonomos.client.i18n.OikonomosConstants;
+import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 
@@ -46,21 +45,6 @@ public class AccountListTypePanel extends Composite {
 	public final AccountType getAccountType() {return type;}
 	
 	private String getTranslation(AccountType type) {
-		OikonomosConstants traduction = GWT.create(OikonomosConstants.class);
-		switch (type) {
-		case BANK_ACCOUNT:
-			return traduction.bankAccount();
-			
-		case ASSET_ACCOUNT:
-			return traduction.assetAccount();
-			
-		case LIABILITY_ACCOUNT:
-			return traduction.liabilityAccount();
-			
-		case CASH_ACCOUNT:
-			return traduction.cashAccount();
-		}
-		
-		return "";
+		return EnumTypeTranslator.getTranslation(type);
 	}
 }

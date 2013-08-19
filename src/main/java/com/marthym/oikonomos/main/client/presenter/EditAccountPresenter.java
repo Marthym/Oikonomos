@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.view.EditAccountView;
+import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.view.data.EditAccountData;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
@@ -16,11 +17,13 @@ public class EditAccountPresenter implements Presenter {
 		
 		HasClickHandlers getValidateButton();
 		HasClickHandlers getResetButton();
+		void updateViewData(Account account);
 	}
 	
 	private final Display display;
 	private final HandlerManager eventBus;
 	private static EditAccountPresenter instance = null;
+	private Account account;
 	
 	public static void createAsync(final HandlerManager eventBus, final EditAccountData datas, final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
@@ -41,13 +44,15 @@ public class EditAccountPresenter implements Presenter {
 	}
 	
 	private EditAccountPresenter(HandlerManager eventBus, EditAccountData datas) {
-		this.display = new EditAccountView(datas.getEditAccount());
+		this.display = new EditAccountView();
 		this.eventBus = eventBus;
-		bind(datas);
+		this.account = datas.getEditAccount();
+		bind();
 		
 	}
 	
-	private void bind(EditAccountData datas) {
+	private void bind() {
+		display.updateViewData(account);
 		
 	}
 	

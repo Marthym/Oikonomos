@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -40,28 +41,29 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	private String bankName;
 	
 	@Column(name = "bank_code", length = 5)
-	private int bankCode;
+	private int bankCode = -1;
 	
 	@Column(name = "bank_desk", length = 5)
-	private int bankDesk;
+	private int bankDesk = -1;
 	
 	@Column(name = "account_number", length = 11)
-	private long accountNumber;
+	private long accountNumber = -1;
 	
 	@Column(name = "account_key", length = 3)
-	private int accountKey;
+	private int accountKey = -1;
 	
 	@Column(name = "initial_amount", nullable = false)
-	private double initialAmount;
+	@DecimalMin(value="0", message="{validator.message.user.lastname}")
+	private double initialAmount = -1;
 	
 	@Column(name = "minimal_amount")
-	private double minimalAmount;
+	private double minimalAmount = -1;
 	@Column(name = "maximal_amount")
-	private double maximalAmount;
+	private double maximalAmount = -1;
 	@Column(name = "current_amount", nullable = false)
-	private double currentAmount;
+	private double currentAmount = 0;
 	@Column(name = "pointed_amount", nullable = false)
-	private double pointedAmount;
+	private double pointedAmount = 0;
 	
 	public String getAccountOwner() {
 		return accountOwner;
