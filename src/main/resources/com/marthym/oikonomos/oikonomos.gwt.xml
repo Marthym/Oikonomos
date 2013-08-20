@@ -21,6 +21,8 @@
 			class="com.google.gwt.validation.client.UserValidationMessagesResolver" />
 	</replace-with>
 
+	<inherits name="com.google.gwt.logging.Logging"/>
+	
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.marthym.oikonomos.main.client.Oikonomos' />
   	<extend-property name="locale" values="fr"/>

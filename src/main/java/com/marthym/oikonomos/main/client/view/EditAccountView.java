@@ -7,13 +7,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.marthym.oikonomos.main.client.components.SingleValueListBox;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
 import com.marthym.oikonomos.main.client.resources.EditAccountResource;
-import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 
 public class EditAccountView extends Composite implements EditAccountPresenter.Display {
@@ -22,8 +22,8 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	interface EditAccountViewUiBinder extends UiBinder<Widget, EditAccountView> {}
 	
 	@UiField TextBox accountName;
-	@UiField ListBox accountType;
-	@UiField ListBox accountCurrency;
+	@UiField SingleValueListBox accountType;
+	@UiField SingleValueListBox accountCurrency;
 	@UiField CheckBox accountClosed;
 	@UiField TextBox bankName;
 	@UiField TextBox bankCode;
@@ -61,29 +61,39 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	}
 
 	@Override
-	public void updateViewData(Account data) {
-		if (data == null) return;
-		if (data.getAccountName() != null) accountName.setValue(data.getAccountName());
-		if (data.getAccountType() != null) accountType.setSelectedIndex(data.getAccountType().ordinal());
-		if (data.getAccountCurrency() != null) {
-			int indexToFind = -1;
-			for (int i=0; i<accountCurrency.getItemCount(); i++) {
-			    if (accountCurrency.getItemText(i).equals(data.getAccountCurrency())) {
-			        indexToFind = i;
-			        break;
-			    }
-			}
-			accountCurrency.setSelectedIndex(indexToFind);
-		}
-		accountClosed.setValue(data.isClosed());
-		if (data.getBankName() != null) bankName.setValue(data.getBankName());
-		if (data.getBankCode() > -1) bankCode.setValue(Integer.toString(data.getBankCode()));
-		if (data.getBankDesk() > -1) bankDesk.setValue(Integer.toString(data.getBankDesk()));
-		if (data.getAccountNumber() > -1) accountNumber.setValue(Long.toString(data.getAccountNumber()));
-		if (data.getAccountKey() > -1) accountKey.setValue(Long.toString(data.getAccountKey()));
-		if (data.getInitialAmount() > -1) initialAmount.setValue(Double.toString(data.getInitialAmount()));
-		if (data.getMinimalAmount() > -1) minimalAmount.setValue(Double.toString(data.getMinimalAmount()));
-		if (data.getMaximalAmount() > -1) maximalAmount.setValue(Double.toString(data.getMaximalAmount()));
-	}
+	public HasValue<String> getAccountName() { return accountName; }
+
+	@Override
+	public HasValue<String> getAccountType() { return accountType; }
+
+	@Override
+	public HasValue<String> getAccountCurrency() { return accountCurrency;}
+
+	@Override
+	public HasValue<Boolean> getAccountClosed() { return accountClosed; }
+
+	@Override
+	public HasValue<String> getBankName() { return bankName; }
+
+	@Override
+	public HasValue<String> getBankCode() { return bankCode; }
+
+	@Override
+	public HasValue<String> getBankDesk() { return bankDesk; }
+
+	@Override
+	public HasValue<String> getAccountNumber() { return accountNumber; }
+
+	@Override
+	public HasValue<String> getAccountKey() { return accountKey; }
+
+	@Override
+	public HasValue<String> getInitialAmount() { return initialAmount; }
+
+	@Override
+	public HasValue<String> getMinimalAmount() { return minimalAmount; }
+
+	@Override
+	public HasValue<String> getMaximalAmount() { return maximalAmount; }
 
 }

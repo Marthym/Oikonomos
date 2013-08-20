@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
+import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.AccountsListData;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.EditAccountData;
@@ -43,7 +44,8 @@ public class DashboardPresenterFactory {
 			return;
 			
 		case ACCOUNT:
-			EditAccountPresenter.createAsync(eventBus, EditAccountData.cast(datas), callback);
+			EditAccountData castdata = EditAccountData.cast(datas);
+			EditAccountPresenter.createAsync(eventBus, castdata, callback);
 			return;
 			
 		default:
@@ -51,8 +53,8 @@ public class DashboardPresenterFactory {
 		}
 	}
 
-	public static void createCentralPresenter(HasWidgets centerPanel, HandlerManager eventBus, ContentPanelType type) {
-		createCentralPresenter(centerPanel, eventBus, ContentPanelData.getEmptyData(type));
+	public static void createCentralPresenter(HasWidgets centerPanel, HandlerManager eventBus, ContentPanelType type, User currentUser) {
+		createCentralPresenter(centerPanel, eventBus, ContentPanelData.getEmptyData(type, currentUser));
 	}
 	
 }

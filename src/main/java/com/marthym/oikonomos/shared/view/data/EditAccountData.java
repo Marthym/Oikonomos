@@ -3,33 +3,39 @@ package com.marthym.oikonomos.shared.view.data;
 import java.io.Serializable;
 
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.Account;
+import com.marthym.oikonomos.shared.model.User;
 
 public class EditAccountData extends ContentPanelData implements Serializable {
 	private static final long serialVersionUID = 2939785649169271681L;
+	
 	private Account editAccount;
 
-	/**
-	 * @Deprecated Use only for serialization issue
-	 */
-	@Deprecated
 	public EditAccountData(){super(ContentPanelType.ACCOUNT);}
-	public EditAccountData(Account editAccount){
-		super(ContentPanelType.ACCOUNT);
-		this.editAccount = editAccount;		
-	}
 	public static EditAccountData cast(ContentPanelData data) {
-		try {
-			if (data.isEmpty) {
-				return new EditAccountData(new Account());
-			} else {
+		if (data != null) {
+			EditAccountData editAccountData = new EditAccountData();
+			try {
+				editAccountData.currentUser = data.getCurrentUserData();
+				if (data.isEmpty()) 
+					return editAccountData;
+		
 				return (EditAccountData)data;
+			} catch (ClassCastException e) {
+				return editAccountData;
+				
+			} catch (OikonomosUnathorizedException e) {
+				return editAccountData;
 			}
-		} catch (ClassCastException e) {
-			return new EditAccountData(new Account());
+		} else {
+			return new EditAccountData();
 		}
 	}
 	
 	
 	public final Account getEditAccount() { return this.editAccount;}
+		
+	public void setCurrentUserData(User user) { currentUser = user; }
+	public void setAccount(Account account) { editAccount = account; }
 }

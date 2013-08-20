@@ -1,13 +1,10 @@
 package com.marthym.oikonomos.main.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 
-import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
@@ -41,20 +38,10 @@ public class OikonomosController implements Presenter {
 	}
 
 	public void go(final HasWidgets container) {
-
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure(Throwable caught) {
-				MessageFlyer.error(caught.getLocalizedMessage());
-			}
-
-			public void onSuccess() {
-				if (dashboardPresenter == null) {
-					dashboardPresenter = new DashboardPresenter(eventBus, new DashboardView());
-				}
-				dashboardPresenter.go(container);
-			}
-		});
-
+		if (dashboardPresenter == null) {
+			dashboardPresenter = new DashboardPresenter(eventBus, new DashboardView());
+		}
+		dashboardPresenter.go(container);
 	}
 	
 	private void doOikonomosLogout() {

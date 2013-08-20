@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.marthym.oikonomos.shared.view.data.EntityType;
 
 @Entity
 @Table(name = "ACCOUNT")
@@ -24,6 +27,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	private String accountOwner;
 	
 	@NotNull @Column(name = "name", nullable = false, length = 255)
+	@Size(min = 3, max = 255, message="{validator.message.account.name.size}")
 	private String accountName;
 	
 	@Column(name = "type", nullable = false, length = 20)
@@ -53,7 +57,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	private int accountKey = -1;
 	
 	@Column(name = "initial_amount", nullable = false)
-	@DecimalMin(value="0", message="{validator.message.user.lastname}")
+	@DecimalMin(value="0", message="{validator.message.account.initialAmount.min}")
 	private double initialAmount = -1;
 	
 	@Column(name = "minimal_amount")
@@ -64,6 +68,13 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	private double currentAmount = 0;
 	@Column(name = "pointed_amount", nullable = false)
 	private double pointedAmount = 0;
+	
+	@Deprecated
+	public Account(){}
+	public Account(String owner) {
+		this.accountOwner = owner;
+		this.initialAmount = initialAmount;
+	}
 	
 	public String getAccountOwner() {
 		return accountOwner;
@@ -155,6 +166,9 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	public double getInitialAmount() {
 		return initialAmount;
 	}
+	public void setInitialAmount(double initialAmount) {
+		this.initialAmount = initialAmount;
+	}
 	@Override
 	public long getEntityId() {
 		return getId();
@@ -166,6 +180,10 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	@Override
 	public String getEntityDescription() {
 		return getAccountName();
+	}
+	@Override
+	public EntityType getEntityType() {
+		return EntityType.ACCOUNT;
 	}
 	
 	

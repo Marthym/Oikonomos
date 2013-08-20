@@ -6,11 +6,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.validation.client.AbstractGwtValidatorFactory;
 import com.google.gwt.validation.client.GwtValidation;
 import com.google.gwt.validation.client.impl.AbstractGwtValidator;
+import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
 public final class SimpleValidatorFactory extends AbstractGwtValidatorFactory {
 
-	@GwtValidation(User.class)
+	@GwtValidation(value={User.class, Account.class})
 	public interface GwtValidator extends Validator {
 	}
 

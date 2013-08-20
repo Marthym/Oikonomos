@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.components.LeftMenuEntityPanel;
+import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
+import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEventHandler;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
@@ -42,6 +44,13 @@ public class LeftMenuPresenter implements Presenter {
 	}
 	
 	private void bind() {
+		eventBus.addHandler(LeftmenuEntityChangeEvent.TYPE, new LeftmenuEntityChangeEventHandler() {
+			@Override
+			public void onLeftmenuEntityChange(LeftmenuEntityChangeEvent event) {
+				onEntityChange(event);
+			}
+		});
+		
 		for (EntityType entity : EntityType.values()) {
 			display.setCount(entity, data.getCountFor(entity));
 			
@@ -108,5 +117,9 @@ public class LeftMenuPresenter implements Presenter {
 			break;
 		}
 		
+	}
+	
+	private void onEntityChange(LeftmenuEntityChangeEvent event) {
+		//TODO: Implement element change !
 	}
 }

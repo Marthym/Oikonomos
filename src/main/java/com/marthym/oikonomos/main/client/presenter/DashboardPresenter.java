@@ -17,6 +17,8 @@ import com.marthym.oikonomos.main.client.components.TopNavigationBar;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
 import com.marthym.oikonomos.main.client.services.DashboardDataServiceAsync;
 import com.marthym.oikonomos.main.client.view.LeftMenuView;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.ContentPanelData;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
@@ -35,6 +37,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	private final Display display;
 	private TopNavigationPresenter topNavigationPresenter;
 	private LeftMenuPresenter leftMenuPresenter;
+	private User currentUserData;
 
 	public DashboardPresenter(HandlerManager eventBus, Display display) {
 		this.eventBus = eventBus;
@@ -47,7 +50,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	}
 	
 	@Override
-	public void go(HasWidgets container) {
+	public void go(final HasWidgets container) {
 		DashboardDataServiceAsync rpcDataService = DashboardDataServiceAsync.Util.getInstance();
 		
 		WaitingFlyer.start();
@@ -55,24 +58,30 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			
 			@Override
 			public void onSuccess(DashboardData result) {
-				displayTopNavigation(result);
-				displayLeftMenu(result);
+				try {
+					currentUserData = result.getCurrentUserData();
+					displayTopNavigation(result);
+					displayLeftMenu(result);
+					
+					container.clear();
+					container.add(display.asWidget());
+					
+					if (!History.getToken().isEmpty()) {
+						History.fireCurrentHistoryState();
+					} else {
+						History.newItem("dashboard");
+					}
+
+				} catch (OikonomosUnathorizedException e) {
+					MessageFlyer.error(e.getLocalizedMessage());
+				}
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
-		});
-				
-		container.clear();
-		container.add(display.asWidget());
-		
-		if (!History.getToken().isEmpty()) {
-			History.fireCurrentHistoryState();
-		} else {
-			History.newItem("dashboard");
-		}
+		});				
 	}
 	
 	private void displayTopNavigation(final HasCurrentUserData data) {
@@ -108,7 +117,11 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 		}
 		
 		if (parameters.isEmpty() && !contentType.isDataNeeded()) {
-			DashboardPresenterFactory.createCentralPresenter(display.getCenterPanel(), eventBus, contentType);
+			DashboardPresenterFactory.createCentralPresenter(
+					display.getCenterPanel(), 
+					eventBus, 
+					contentType, 
+					currentUserData);
 			return;
 		}
 		
