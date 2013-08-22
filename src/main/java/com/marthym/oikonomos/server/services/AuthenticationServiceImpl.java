@@ -39,18 +39,22 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
 			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
 		}
 		
+		User currentUser = null;
+		
 		long count = userRepository.count();
 		if (count == 0) {
 			LOGGER.warn("First user login ! Create administrateur : "+username);
 			String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-			User newUser = new User(username, "", username.split("@")[0], hashPassword);
-			newUser.setUserProfile(UserProfile.ADMIN);
-			userRepository.saveAndFlush(newUser);
+			currentUser = new User(username, "", username.split("@")[0], hashPassword);
+			currentUser.setUserProfile(UserProfile.ADMIN);
+			currentUser = userRepository.saveAndFlush(currentUser);
+		} else {
+			currentUser = userRepository.findByUserEmail(username);
 		}
-		User currentUser = userRepository.findByUserEmail(username);
 		
 		if (currentUser == null || !BCrypt.checkpw(password, currentUser.getUserHashPassword())) 
 			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
+		LOGGER.info("Connect to "+currentUser.getUserEmail()+" ...");
 		
 		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();

@@ -21,7 +21,14 @@
 			class="com.google.gwt.validation.client.UserValidationMessagesResolver" />
 	</replace-with>
 
-	<inherits name="com.google.gwt.logging.Logging"/>
+	<inherits name="com.google.gwt.logging.Logging" />  
+	<set-property name="gwt.logging.logLevel" value="INFO" />            
+	<set-property name="gwt.logging.enabled" value="TRUE" />   
+	<set-property name="gwt.logging.developmentModeHandler" value="DISABLED" />    
+	<set-property name="gwt.logging.systemHandler" value="DISABLED" />  
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" />  
+	<set-property name="gwt.logging.consoleHandler" value="ENABLED"/>   
+	<set-property name="gwt.logging.firebugHandler" value="ENABLED" />
 	
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.marthym.oikonomos.main.client.Oikonomos' />
