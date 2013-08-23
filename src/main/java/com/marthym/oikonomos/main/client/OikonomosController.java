@@ -11,6 +11,8 @@ import com.marthym.oikonomos.main.client.event.LogoutEvent;
 import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.view.DashboardView;
+import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
+import com.marthym.oikonomos.shared.model.User;
 
 public class OikonomosController implements Presenter {
 	private static final String CURRENT_MODULE_PATH = "oikonomos.html";
@@ -18,15 +20,17 @@ public class OikonomosController implements Presenter {
 	
 	private final HandlerManager eventBus;
 	private Presenter dashboardPresenter;
-	private final AuthenticationServiceAsync rpcService;
+	private static User authentifiedUser;
+	private static final AuthenticationServiceAsync rpcService = AuthenticationServiceAsync.Util.getInstance();
 
 	public OikonomosController() {
-		this.rpcService = AuthenticationServiceAsync.Util.getInstance();
 		this.eventBus = new HandlerManager(null);
 		bind();
 	}
 
 	private void bind() {
+		doRemoteAuthentifiedUserRequest();
+		
 		eventBus.addHandler(LogoutEvent.TYPE,
 				new LogoutEventHandler() {
 					
@@ -58,15 +62,34 @@ public class OikonomosController implements Presenter {
 				redirectToLogin();
 			}
 			
-			private void redirectToLogin() {
-				 String path = Window.Location.getPath();
-                 String modulePath = CURRENT_MODULE_PATH;
-                 int index = path.indexOf(modulePath);
-                 String contextPath = path.substring(0,index);
-
-                 Window.open(contextPath + LOGIN_MODULE_PATH, "_self", "");
-			}
 		});
 	}
 	
+	private void doRemoteAuthentifiedUserRequest() {
+		rpcService.getAuthentifiedUser(new AsyncCallback<User>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				redirectToLogin();
+			}
+
+			@Override
+			public void onSuccess(User result) {
+				authentifiedUser = result;
+			}
+		});
+	}
+
+	private void redirectToLogin() {
+		 String path = Window.Location.getPath();
+        String modulePath = CURRENT_MODULE_PATH;
+        int index = path.indexOf(modulePath);
+        String contextPath = path.substring(0,index);
+
+        Window.open(contextPath + LOGIN_MODULE_PATH, "_self", "");
+	}
+	
+	public static final User getAuthentifiedUser() {
+		if (authentifiedUser == null) throw new OikonomosRuntimeException();
+		return authentifiedUser;
+	}
 }

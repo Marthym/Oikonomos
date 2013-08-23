@@ -1,6 +1,7 @@
 package com.marthym.oikonomos.main.client.view;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,21 @@ public class AccountsListView extends Composite implements AccountsListPresenter
 	}
 
 	@Override
-	public void refreshAccountsTypePanel(AccountType type, List<Account> datas) {
-		accountsTypePanels.get(type).refreshAccountsList(datas);
+	public void refreshAccountsTypePanel(List<Account> datas) {
+		Map<AccountType, List<Account>> orderedDatas = new HashMap<AccountType, List<Account>>();
+		for (Account data : datas) {
+			AccountType accountType = data.getAccountType();
+			List<Account> typeList = orderedDatas.get(accountType);
+			if(typeList == null) {
+				typeList = new LinkedList<Account>();
+				orderedDatas.put(accountType, typeList);
+			}
+			typeList.add(data);
+		}
+		
+		for (AccountType type : orderedDatas.keySet()) {
+			accountsTypePanels.get(type).refreshAccountsList(orderedDatas.get(type));
+		}
 	}
 
 }

@@ -4,26 +4,15 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.view.data.AccountsListData;
-import com.marthym.oikonomos.shared.view.data.ContentPanelData;
-import com.marthym.oikonomos.shared.view.data.EditAccountData;
 
 public class DashboardPresenterFactory {
 	public enum ContentPanelType {
-		DASHBOARD(true),
-		ACCOUNTS(true),
-		ACCOUNT(false);
-		
-		private boolean needData;
-		private ContentPanelType(boolean needData) {
-			this.needData = needData;
-		}
-		
-		public final boolean isDataNeeded() {return needData;}
+		DASHBOARD,
+		ACCOUNTS,
+		ACCOUNT		
 	}
-
-	public final static void createCentralPresenter(final HasWidgets parent, HandlerManager eventBus, ContentPanelData datas) {
+		
+	public final static void createCentralPresenter(final HasWidgets parent, HandlerManager eventBus, String historyToken) {
 		Presenter.Callback callback = new Presenter.Callback() {
 			@Override
 			public void onCreateFailed() {
@@ -36,25 +25,22 @@ public class DashboardPresenterFactory {
 			}
 		};
 		
-		switch (datas.getContentType()) {
+		String[] splitHistoryToken = historyToken.split("\\|");
+		final ContentPanelType contentType = ContentPanelType.valueOf(splitHistoryToken[0].toUpperCase());
+		
+		switch (contentType) {
 		case DASHBOARD:
 		case ACCOUNTS:
-			Presenter accountListPres = AccountsListPresenter.getInstance((AccountsListData)datas);
-			callback.onCreate(accountListPres);
+			AccountsListPresenter.create(callback);
 			return;
 			
 		case ACCOUNT:
-			EditAccountData castdata = EditAccountData.cast(datas);
-			EditAccountPresenter.createAsync(eventBus, castdata, callback);
+			EditAccountPresenter.createAsync(eventBus, callback);
 			return;
 			
 		default:
 			return;
 		}
-	}
-
-	public static void createCentralPresenter(HasWidgets centerPanel, HandlerManager eventBus, ContentPanelType type, User currentUser) {
-		createCentralPresenter(centerPanel, eventBus, ContentPanelData.getEmptyData(type, currentUser));
 	}
 	
 }

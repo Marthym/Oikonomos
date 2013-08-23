@@ -17,6 +17,7 @@ public class AccountListTypePanel extends Composite {
 	public AccountListTypePanel(AccountType type) {
 		this.type = type;
 		panel = new DisclosurePanel(getTranslation(type));
+		panel.setVisible(false);
 		initWidget(panel);
 	}
 
@@ -25,11 +26,8 @@ public class AccountListTypePanel extends Composite {
 	}
 
 	public void refreshAccountsList(List<Account> accounts) {
-		if (accounts == null || accounts.isEmpty()) {
-			panel.clear();
-			panel.setVisible(false);
-			return;
-		}
+		panel.clear();
+		if (accounts == null || accounts.isEmpty()) return;
 		
 		Grid content = new Grid(accounts.size(), 3);
 		for (int i = 0; i < accounts.size(); i++) {

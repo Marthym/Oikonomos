@@ -19,16 +19,15 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.impl.Validation;
+import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
 import com.marthym.oikonomos.main.client.view.EditAccountView;
 import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.view.data.EditAccountData;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
@@ -61,22 +60,29 @@ public class EditAccountPresenter implements Presenter {
 	private final HandlerManager eventBus;
 	private static EditAccountPresenter instance = null;
 	private Account account;
-	private User currentUser;
 	private static OikonomosErrorMessages errorMessages = GWT.create(OikonomosErrorMessages.class);
 	private static EditAccountConstants constants = GWT.create(EditAccountConstants.class);
-	private static AccountServiceAsync rcpAccount = AccountServiceAsync.Util.getInstance();
+	private static AccountServiceAsync RCP_ACCOUNT_SERVICE = AccountServiceAsync.Util.getInstance();
 
-	public static void createAsync(final HandlerManager eventBus, final EditAccountData datas, final Presenter.Callback callback) {
+	public static void createAsync(final HandlerManager eventBus, final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
 			
 			@Override
 			public void onSuccess() {
 				if (instance == null) {
-					instance = new EditAccountPresenter(eventBus, datas);
+					instance = new EditAccountPresenter(eventBus);
 				}
-				instance.account = datas.getEditAccount();
-				instance.updateViewFromData();
-				callback.onCreate(instance);
+				
+				String[] splitHistoryToken = History.getToken().split("\\|");
+				try {
+					long accountId = Long.parseLong(splitHistoryToken[1]);
+					EditAccountPresenter.getRemoteData(accountId, callback);
+				} catch (Exception e) {
+					User authentifiedUser = OikonomosController.getAuthentifiedUser();
+					instance.account = new Account(authentifiedUser.getUserEmail());
+					instance.updateViewFromData();
+					callback.onCreate(instance);
+				}
 			}
 			
 			@Override
@@ -86,16 +92,9 @@ public class EditAccountPresenter implements Presenter {
 		});
 	}
 	
-	private EditAccountPresenter(HandlerManager eventBus, EditAccountData datas) {
+	private EditAccountPresenter(HandlerManager eventBus) {
 		this.display = new EditAccountView();
 		this.eventBus = eventBus;
-		this.account = datas.getEditAccount();
-		try {
-			this.currentUser = datas.getCurrentUserData();
-		} catch (OikonomosUnathorizedException e) {
-			MessageFlyer.error(e.getLocalizedMessage());
-			return;
-		}
 		
 		bind();
 		
@@ -116,6 +115,23 @@ public class EditAccountPresenter implements Presenter {
 
 		updateViewFromData();
 		
+	}
+	
+	private static final void getRemoteData(long accountId, final Presenter.Callback callback) {
+		RCP_ACCOUNT_SERVICE.getEntity(accountId, new AsyncCallback<Account>() {
+			@Override
+			public void onSuccess(Account result) {
+				instance.account = result;
+				instance.updateViewFromData();
+				callback.onCreate(instance);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				WaitingFlyer.stop();
+				MessageFlyer.error(caught.getLocalizedMessage());
+			}
+		});
 	}
 	
 	private void updateViewFromData() {
@@ -142,8 +158,8 @@ public class EditAccountPresenter implements Presenter {
 	private void saveDataFromView() {
 		WaitingFlyer.start();
 		List<String> errors = new LinkedList<String>();
-		
-		if (account == null) account = new Account(currentUser.getUserEmail());
+		User authentifiedUser = OikonomosController.getAuthentifiedUser();
+		if (account == null) account = new Account(authentifiedUser.getUserEmail());
 				
 		account.setAccountName(display.getAccountName().getValue());
 		
@@ -217,8 +233,7 @@ public class EditAccountPresenter implements Presenter {
 		}
 		
 		// Save Account
-		rcpAccount = AccountServiceAsync.Util.getInstance();
-		rcpAccount.addOrUpdateEntity(account, new AsyncCallback<Account>() {
+		RCP_ACCOUNT_SERVICE.addOrUpdateEntity(account, new AsyncCallback<Account>() {
 			
 			@Override
 			public void onSuccess(Account result) {
