@@ -18,6 +18,9 @@ public interface LeftMenuResource extends ClientBundle {
 		@ClassName("vnav-counter")
 		String vnavCounter();
 		
+		@ClassName("vnav-add-link")
+		String vnavAddLink();
+		
 		@ClassName("vnav-subnav")
 		String vnavSubnav();
 		

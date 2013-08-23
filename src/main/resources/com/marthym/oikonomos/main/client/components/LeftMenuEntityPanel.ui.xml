@@ -11,6 +11,9 @@
 				<i class="icon-friends" /> 
 				<span ui:field="entityName"/>
 				<span class="{res.style.vnavCounter}" ui:field="entityCount"/>
+				<g:InlineHyperlink 
+					addStyleNames="{res.style.vnavCounter} {res.style.vnavAddLink}" 
+					title="{trad.add}" ui:field="addLink"><ui:text from="{trad.add}"/>&#x271A;</g:InlineHyperlink>
 			</g:HTMLPanel>
 		</g:customHeader>
 	</g:DisclosurePanel>

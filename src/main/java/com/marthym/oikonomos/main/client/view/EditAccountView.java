@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -21,6 +22,7 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 
 	interface EditAccountViewUiBinder extends UiBinder<Widget, EditAccountView> {}
 	
+	@UiField FormPanel formAccount;
 	@UiField TextBox accountName;
 	@UiField SingleValueListBox accountType;
 	@UiField SingleValueListBox accountCurrency;
@@ -48,6 +50,11 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 			String translation = EnumTypeTranslator.getTranslation(type);
 			accountType.addItem(translation, type.name());
 		}
+	}
+	
+	@Override
+	public void reset() {
+		formAccount.reset();
 	}
 
 	@Override
@@ -95,5 +102,10 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 
 	@Override
 	public HasValue<String> getMaximalAmount() { return maximalAmount; }
+
+	@Override
+	public void setEnableInitialAmount(boolean isEnable) {
+		initialAmount.setEnabled(isEnable);
+	}
 
 }

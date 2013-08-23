@@ -40,6 +40,7 @@ public class AccountListTypePanel extends Composite {
 			content.setText(i, columnNum++, Double.toString(account.getPointedAmount()));
 		}
 		panel.setContent(content);
+		panel.setVisible(true);
 	}
 
 	public final AccountType getAccountType() {return type;}

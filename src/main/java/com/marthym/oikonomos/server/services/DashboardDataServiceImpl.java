@@ -74,6 +74,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	}
 
 	@Override
+	@Secured("ROLE_USER")
 	public ContentPanelData getContentPanelData(ContentPanelType type, List<String> parameters) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
@@ -87,7 +88,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 				Account wantedAccount = null;
 				if (!parameters.isEmpty()) {
 					String wantedAccountId = parameters.get(0);
-					if(LOGGER.isDebugEnabled()) LOGGER.debug("Load account "+wantedAccountId);
+					LOGGER.debug("Load account {} from database.", wantedAccountId);
 					wantedAccount = accountService.getEntity(Long.parseLong(wantedAccountId));
 				}
 				EditAccountData editAccountData = new EditAccountData();

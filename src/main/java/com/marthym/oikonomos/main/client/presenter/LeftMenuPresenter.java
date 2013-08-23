@@ -1,6 +1,8 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -23,13 +25,15 @@ import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
 
 public class LeftMenuPresenter implements Presenter {
+	private static final Logger LOG = Logger.getLogger(LeftMenuPresenter.class.getName());
+	
 	public interface Display {
 		Widget asWidget();
 		void setCount(EntityType entity, int count);
 		DisclosurePanel getDisclosurePanel(EntityType entity);
-		void refreshEntityList(EntityType entity, List<? extends LeftMenuEntity> entities);
 		void activePanel(EntityType entity);
 		void disactivePanel(EntityType entity);
+		void refreshEntityList(List<? extends LeftMenuEntity> entities);
 	}
 	
 	private final HandlerManager eventBus;
@@ -83,6 +87,7 @@ public class LeftMenuPresenter implements Presenter {
 		container.add(display.asWidget());
 	}
 
+	//TODO: Optimize service for unify call EntityService
 	private void updateEntityList(DisclosurePanel panel) {
 		String entityName = panel.getElement().getAttribute(LeftMenuEntityPanel.ENTITY_TYPE_ATTRIBUTE);
 		display.activePanel(EntityType.valueOf(entityName));
@@ -96,7 +101,7 @@ public class LeftMenuPresenter implements Presenter {
 				
 				@Override
 				public void onSuccess(List<Account> result) {
-					display.refreshEntityList(EntityType.ACCOUNT, result);
+					display.refreshEntityList(result);
 				}
 				
 				@Override
@@ -120,6 +125,12 @@ public class LeftMenuPresenter implements Presenter {
 	}
 	
 	private void onEntityChange(LeftmenuEntityChangeEvent event) {
-		//TODO: Implement element change !
+		try {
+			List<LeftMenuEntity> entities = new LinkedList<LeftMenuEntity>();
+			entities.add(event.getEntity());
+			display.refreshEntityList(entities);
+		} catch (Exception e) {
+			LOG.warning(e.getClass()+": "+e.getLocalizedMessage());
+		}
 	}
 }

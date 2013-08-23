@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
+ * TODO: Implement Google GIN for code injection
  */
 public class Oikonomos implements EntryPoint {
 	public void onModuleLoad() {

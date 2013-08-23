@@ -22,7 +22,7 @@ public class LeftmenuEntityChangeEvent extends GwtEvent<LeftmenuEntityChangeEven
 		handler.onLeftmenuEntityChange(this);
 	}
 
-	public LeftMenuEntity getAccount() {
+	public LeftMenuEntity getEntity() {
 		return entity;
 	}
 }

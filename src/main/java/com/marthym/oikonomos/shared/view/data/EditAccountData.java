@@ -5,7 +5,6 @@ import java.io.Serializable;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.Account;
-import com.marthym.oikonomos.shared.model.User;
 
 public class EditAccountData extends ContentPanelData implements Serializable {
 	private static final long serialVersionUID = 2939785649169271681L;
@@ -17,7 +16,7 @@ public class EditAccountData extends ContentPanelData implements Serializable {
 		if (data != null) {
 			EditAccountData editAccountData = new EditAccountData();
 			try {
-				editAccountData.currentUser = data.getCurrentUserData();
+				editAccountData.setCurrentUserData(data.getCurrentUserData());
 				if (data.isEmpty()) 
 					return editAccountData;
 		
@@ -35,7 +34,5 @@ public class EditAccountData extends ContentPanelData implements Serializable {
 	
 	
 	public final Account getEditAccount() { return this.editAccount;}
-		
-	public void setCurrentUserData(User user) { currentUser = user; }
 	public void setAccount(Account account) { editAccount = account; }
 }

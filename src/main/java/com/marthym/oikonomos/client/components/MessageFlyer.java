@@ -20,6 +20,9 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.client.resources.MessageFlyerRessource;
 
+/**
+ * TODO: Implement INFO mode CSS
+ */
 public class MessageFlyer extends PopupPanel {
 	private static enum Type {INFO, ERROR};
 	private static int INFO_AUTOCLOSE_DELAY = 2 * 1000;

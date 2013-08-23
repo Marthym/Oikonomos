@@ -116,6 +116,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			parameters.add(splitHistoryToken[i]);
 		}
 		
+		//TODO: Refactor RCP call to the Content view Presenter !
 		if (parameters.isEmpty() && !contentType.isDataNeeded()) {
 			DashboardPresenterFactory.createCentralPresenter(
 					display.getCenterPanel(), 

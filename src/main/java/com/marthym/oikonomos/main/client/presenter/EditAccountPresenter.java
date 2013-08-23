@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -50,6 +51,8 @@ public class EditAccountPresenter implements Presenter {
 		HasValue<String> getMinimalAmount();
 		HasValue<String> getMaximalAmount();
 
+		void setEnableInitialAmount(boolean isEnable);
+		void reset();
 		HasClickHandlers getValidateButton();
 		HasClickHandlers getResetButton();
 	}
@@ -61,7 +64,8 @@ public class EditAccountPresenter implements Presenter {
 	private User currentUser;
 	private static OikonomosErrorMessages errorMessages = GWT.create(OikonomosErrorMessages.class);
 	private static EditAccountConstants constants = GWT.create(EditAccountConstants.class);
-	
+	private static AccountServiceAsync rcpAccount = AccountServiceAsync.Util.getInstance();
+
 	public static void createAsync(final HandlerManager eventBus, final EditAccountData datas, final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
 			
@@ -70,6 +74,8 @@ public class EditAccountPresenter implements Presenter {
 				if (instance == null) {
 					instance = new EditAccountPresenter(eventBus, datas);
 				}
+				instance.account = datas.getEditAccount();
+				instance.updateViewFromData();
 				callback.onCreate(instance);
 			}
 			
@@ -101,12 +107,20 @@ public class EditAccountPresenter implements Presenter {
 				saveDataFromView();
 			}
 		});
-		
+
+		this.display.getResetButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				updateViewFromData();
+			}
+		});
+
 		updateViewFromData();
 		
 	}
 	
 	private void updateViewFromData() {
+		display.reset();
+		
 		if (account == null) return;
 		if (account.getAccountName() != null) display.getAccountName().setValue(account.getAccountName());
 		if (account.getAccountType() != null) display.getAccountType().setValue(account.getAccountType().name());
@@ -117,7 +131,10 @@ public class EditAccountPresenter implements Presenter {
 		if (account.getBankDesk() > -1) display.getBankDesk().setValue(Integer.toString(account.getBankDesk()));
 		if (account.getAccountNumber() > -1) display.getAccountNumber().setValue(Long.toString(account.getAccountNumber()));
 		if (account.getAccountKey() > -1) display.getAccountKey().setValue(Long.toString(account.getAccountKey()));
-		if (account.getInitialAmount() > -1) display.getInitialAmount().setValue(Double.toString(account.getInitialAmount()));
+		if (account.getInitialAmount() > -1) {
+			display.getInitialAmount().setValue(Double.toString(account.getInitialAmount()));
+			display.setEnableInitialAmount(false);
+		}
 		if (account.getMinimalAmount() > -1) display.getMinimalAmount().setValue(Double.toString(account.getMinimalAmount()));
 		if (account.getMaximalAmount() > -1) display.getMaximalAmount().setValue(Double.toString(account.getMaximalAmount()));
 	}
@@ -200,13 +217,14 @@ public class EditAccountPresenter implements Presenter {
 		}
 		
 		// Save Account
-		AccountServiceAsync rcpAccount = AccountServiceAsync.Util.getInstance();
+		rcpAccount = AccountServiceAsync.Util.getInstance();
 		rcpAccount.addOrUpdateEntity(account, new AsyncCallback<Account>() {
 			
 			@Override
 			public void onSuccess(Account result) {
-				eventBus.fireEvent(new LeftmenuEntityChangeEvent(account));
 				account = result;
+				eventBus.fireEvent(new LeftmenuEntityChangeEvent(account));
+				History.newItem(result.getEntityType().name().toLowerCase()+"|"+result.getEntityId());
 				WaitingFlyer.stop();
 				MessageFlyer.info(
 						errorMessages.info_message_entity_saveSuccessfully().replace("{0}", EnumTypeTranslator.getTranslation(accountType)));

@@ -8,7 +8,7 @@
 	
 	<g:VerticalPanel width="80%">
 		<g:HTMLPanel tag="h3"><ui:text from="{constants.title}"/></g:HTMLPanel>
-		<g:FormPanel encoding="utf-8" method="post">
+		<g:FormPanel encoding="utf-8" method="post" ui:field="formAccount">
 			<g:HTMLPanel> <!-- FormPanel does not accept more than one child ... -->
 				<g:CaptionPanel captionText="{constants.detailsFieldsetLabel}">
 					<g:Grid width="99%">

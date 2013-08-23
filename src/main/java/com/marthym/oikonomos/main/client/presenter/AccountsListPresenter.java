@@ -26,13 +26,14 @@ public class AccountsListPresenter implements Presenter {
 		this.display = new AccountsListView();
 		bind(datas);
 	}
-	 public static final Presenter getInstance(AccountsListData datas) {
-		 if (instance == null) {
-			 instance = new AccountsListPresenter(datas);
-		 }
-		 instance.bind(datas);
-		 return instance;
-	 }
+
+	public static final Presenter getInstance(AccountsListData datas) {
+		if (instance == null) {
+			instance = new AccountsListPresenter(datas);
+		}
+		instance.bind(datas);
+		return instance;
+	}
 	
 	private void bind(AccountsListData datas) {
 		for (AccountType type : AccountType.values()) {

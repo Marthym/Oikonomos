@@ -1,13 +1,17 @@
 package com.marthym.oikonomos.shared.view.data;
 
+import java.io.Serializable;
+
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenterFactory.ContentPanelType;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
 import com.marthym.oikonomos.shared.model.User;
 
-public class ContentPanelData implements HasCurrentUserData {
+public class ContentPanelData implements HasCurrentUserData, Serializable {
+	private static final long serialVersionUID = -7627173530394194326L;
+	
 	private ContentPanelType type;
 	private boolean isEmpty = false;
-	protected User currentUser;
+	private User currentUser;
 	
 	protected ContentPanelData(ContentPanelType type) {
 		this.type = type;
@@ -30,4 +34,5 @@ public class ContentPanelData implements HasCurrentUserData {
 		if (currentUser == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "currentUser is null !");
 		return currentUser;
 	}
+	public void setCurrentUserData(User user) { currentUser = user; }
 }

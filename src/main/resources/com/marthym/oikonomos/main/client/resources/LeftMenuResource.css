@@ -62,11 +62,13 @@
 }
 .vnav .active .vnav-item, .vnav-item:active {
   opacity: 1;
-  border-top-color: #6ad2ef;
-  border-bottom-color: #1c638f;
   -webkit-box-shadow: 0 1px #bbbbbb, 0 2px #e9ebe8;
   box-shadow: 0 1px #bbbbbb, 0 2px #e9ebe8;
   background-color: #259bdb;
+}
+.vnav .active .vnav-item {
+  border-bottom-color: #1c638f;
+  border-top-color: #6ad2ef;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #44c5ec), color-stop(100%, #259bdb));
   background-image: -webkit-linear-gradient(top, #44c5ec, #259bdb);
   background-image: -moz-linear-gradient(top, #44c5ec, #259bdb);
@@ -74,8 +76,9 @@
   background-image: -o-linear-gradient(top, #44c5ec, #259bdb);
   background-image: linear-gradient(top, #44c5ec, #259bdb);
 }
+
 .vnav .active .vnav-item .vnav-counter, 
-.vnav-item:active .vnav-counter {
+.vnav-item:active .vnav-add-link {
   background: #2471a9;
 }
 .vnav .vnav-item i {
@@ -94,6 +97,14 @@
   border-radius: 9px;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.2);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.vnav .vnav-add-link {
+  margin-right: 5px;
+  color: white;
+}
+.vnav .vnav-add-link:hover {
+  background-color: #2471a9;
 }
 
 .vnav .vnav-subnav {
