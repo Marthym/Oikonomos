@@ -2,6 +2,8 @@ package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -9,8 +11,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
+import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
-import com.marthym.oikonomos.main.client.view.AccountsListView;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 
@@ -24,21 +26,30 @@ public class AccountsListPresenter implements Presenter {
 	
 	private final Display display;
 	private static AccountsListPresenter instance = null;
-	private static AccountServiceAsync RCP_ACCOUNT_SERVICE = AccountServiceAsync.Util.getInstance();
+	@Inject private AccountServiceAsync rcpAccountService;
 
-	private AccountsListPresenter() {
-		this.display = new AccountsListView();
+	@Inject
+	private AccountsListPresenter(Display display) {
+		this.display = display;
 	}
 
-	public static final void create(final Callback callback) {
+	public static void create(final Callback callback) {
 		if (instance == null) {
-			instance = new AccountsListPresenter();
+			instance = NomosInjector.INSTANCE.getAccountsListPresenter();
 		}
-		RCP_ACCOUNT_SERVICE.getList(true, new AsyncCallback<List<Account>>() {
+		instance.getRemoteData(true, callback);
+	}
+	
+	private void updateViewFromData(List<Account> datas) {
+		display.refreshAccountsTypePanel(datas);
+	}
+	
+	private final void getRemoteData(boolean isOrdered, final Presenter.Callback callback) {
+		rcpAccountService.getList(isOrdered, new AsyncCallback<List<Account>>() {
 			
 			@Override
 			public void onSuccess(List<Account> result) {
-				instance.updateViewFromData(result);
+				updateViewFromData(result);
 				callback.onCreate(instance);
 			}
 			
@@ -48,10 +59,6 @@ public class AccountsListPresenter implements Presenter {
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 		});		
-	}
-	
-	private void updateViewFromData(List<Account> datas) {
-		display.refreshAccountsTypePanel(datas);
 	}
 	
 	@Override

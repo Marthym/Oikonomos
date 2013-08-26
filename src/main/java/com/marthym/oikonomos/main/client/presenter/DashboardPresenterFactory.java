@@ -1,6 +1,6 @@
 package com.marthym.oikonomos.main.client.presenter;
 
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
@@ -12,7 +12,7 @@ public class DashboardPresenterFactory {
 		ACCOUNT		
 	}
 		
-	public final static void createCentralPresenter(final HasWidgets parent, HandlerManager eventBus, String historyToken) {
+	public final static void createCentralPresenter(final HasWidgets parent, EventBus eventBus, String historyToken) {
 		Presenter.Callback callback = new Presenter.Callback() {
 			@Override
 			public void onCreateFailed() {
@@ -35,7 +35,7 @@ public class DashboardPresenterFactory {
 			return;
 			
 		case ACCOUNT:
-			EditAccountPresenter.createAsync(eventBus, callback);
+			EditAccountPresenter.createAsync(callback);
 			return;
 			
 		default:

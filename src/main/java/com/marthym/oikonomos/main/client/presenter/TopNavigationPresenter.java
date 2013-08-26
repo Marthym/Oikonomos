@@ -1,10 +1,12 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import javax.inject.Inject;
+
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.presenter.Presenter;
@@ -21,27 +23,30 @@ public class TopNavigationPresenter implements Presenter {
 		Widget asWidget();
 	}
 	
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private final Display display;
 	private HasCurrentUserData data;
 
-	public TopNavigationPresenter(HandlerManager eventBus, HasCurrentUserData data, Display display) {
+	@Inject
+	public TopNavigationPresenter(EventBus eventBus, Display display) {
 		this.eventBus = eventBus;
 		this.display = display;
-		this.data = data;
 		bind();
 	}
 	
 	private void bind() {
-		try {
-			display.getUserName().setInnerText(data.getCurrentUserData().getUserFirstname()+" "+data.getCurrentUserData().getUserLastname());
-		} catch (OikonomosUnathorizedException e) {}
-		
 		this.display.getLogoutLink().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				eventBus.fireEvent(new LogoutEvent());
 			}
 		});
+	}
+	
+	public void updateViewData(HasCurrentUserData data) {
+		this.data = data;
+		try {
+			display.getUserName().setInnerText(this.data.getCurrentUserData().getUserFirstname()+" "+this.data.getCurrentUserData().getUserLastname());
+		} catch (OikonomosUnathorizedException e) {}
 	}
 	
 	@Override

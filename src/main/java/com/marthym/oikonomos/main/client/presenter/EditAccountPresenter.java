@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -12,18 +13,18 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.impl.Validation;
+import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
-import com.marthym.oikonomos.main.client.view.EditAccountView;
 import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
@@ -57,26 +58,27 @@ public class EditAccountPresenter implements Presenter {
 	}
 	
 	private final Display display;
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private static EditAccountPresenter instance = null;
 	private Account account;
-	private static OikonomosErrorMessages errorMessages = GWT.create(OikonomosErrorMessages.class);
-	private static EditAccountConstants constants = GWT.create(EditAccountConstants.class);
-	private static AccountServiceAsync RCP_ACCOUNT_SERVICE = AccountServiceAsync.Util.getInstance();
+	
+	@Inject private OikonomosErrorMessages errorMessages;
+	@Inject private EditAccountConstants constants;
+	@Inject private AccountServiceAsync rcpAccountService;
 
-	public static void createAsync(final HandlerManager eventBus, final Presenter.Callback callback) {
+	public static void createAsync(final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
 			
 			@Override
 			public void onSuccess() {
 				if (instance == null) {
-					instance = new EditAccountPresenter(eventBus);
+					instance = NomosInjector.INSTANCE.getEditAccountPresenter();
 				}
 				
 				String[] splitHistoryToken = History.getToken().split("\\|");
 				try {
 					long accountId = Long.parseLong(splitHistoryToken[1]);
-					EditAccountPresenter.getRemoteData(accountId, callback);
+					instance.getRemoteData(accountId, callback);
 				} catch (Exception e) {
 					User authentifiedUser = OikonomosController.getAuthentifiedUser();
 					instance.account = new Account(authentifiedUser.getUserEmail());
@@ -92,12 +94,12 @@ public class EditAccountPresenter implements Presenter {
 		});
 	}
 	
-	private EditAccountPresenter(HandlerManager eventBus) {
-		this.display = new EditAccountView();
+	@Inject
+	private EditAccountPresenter(EventBus eventBus, Display display) {
 		this.eventBus = eventBus;
+		this.display = display;
 		
 		bind();
-		
 	}
 	
 	private void bind() {
@@ -117,12 +119,12 @@ public class EditAccountPresenter implements Presenter {
 		
 	}
 	
-	private static final void getRemoteData(long accountId, final Presenter.Callback callback) {
-		RCP_ACCOUNT_SERVICE.getEntity(accountId, new AsyncCallback<Account>() {
+	private final void getRemoteData(long accountId, final Presenter.Callback callback) {
+		rcpAccountService.getEntity(accountId, new AsyncCallback<Account>() {
 			@Override
 			public void onSuccess(Account result) {
-				instance.account = result;
-				instance.updateViewFromData();
+				account = result;
+				updateViewFromData();
 				callback.onCreate(instance);
 			}
 			
@@ -233,7 +235,7 @@ public class EditAccountPresenter implements Presenter {
 		}
 		
 		// Save Account
-		RCP_ACCOUNT_SERVICE.addOrUpdateEntity(account, new AsyncCallback<Account>() {
+		rcpAccountService.addOrUpdateEntity(account, new AsyncCallback<Account>() {
 			
 			@Override
 			public void onSuccess(Account result) {

@@ -1,16 +1,14 @@
 package com.marthym.oikonomos.main.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
-
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
 import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
-import com.marthym.oikonomos.main.client.view.DashboardView;
 import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.model.User;
 
@@ -18,13 +16,13 @@ public class OikonomosController implements Presenter {
 	private static final String CURRENT_MODULE_PATH = "oikonomos.html";
 	private static final String LOGIN_MODULE_PATH = "index.html";
 	
-	private final HandlerManager eventBus;
-	private Presenter dashboardPresenter;
+	private final EventBus eventBus;
+	private DashboardPresenter dashboardPresenter;
 	private static User authentifiedUser;
 	private static final AuthenticationServiceAsync rpcService = AuthenticationServiceAsync.Util.getInstance();
 
 	public OikonomosController() {
-		this.eventBus = new HandlerManager(null);
+		eventBus = NomosInjector.INSTANCE.getEventBus();
 		bind();
 	}
 
@@ -43,7 +41,7 @@ public class OikonomosController implements Presenter {
 
 	public void go(final HasWidgets container) {
 		if (dashboardPresenter == null) {
-			dashboardPresenter = new DashboardPresenter(eventBus, new DashboardView());
+			dashboardPresenter = NomosInjector.INSTANCE.getDashboardPresenter();
 		}
 		dashboardPresenter.go(container);
 	}
@@ -92,4 +90,5 @@ public class OikonomosController implements Presenter {
 		if (authentifiedUser == null) throw new OikonomosRuntimeException();
 		return authentifiedUser;
 	}
+	
 }

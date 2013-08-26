@@ -1,24 +1,27 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import javax.inject.Inject;
+
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.main.client.components.TopNavigationBar;
+import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.services.DashboardDataServiceAsync;
-import com.marthym.oikonomos.main.client.view.LeftMenuView;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
 
 public class DashboardPresenter implements Presenter, ValueChangeHandler<String> {
+	
 	public interface Display {
 		Widget asWidget();
 		HasWidgets getTopPanel();
@@ -26,12 +29,14 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 		HasWidgets getCenterPanel();
 	}
 	
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
+	
 	private final Display display;
 	private TopNavigationPresenter topNavigationPresenter;
 	private LeftMenuPresenter leftMenuPresenter;
 
-	public DashboardPresenter(HandlerManager eventBus, Display display) {
+	@Inject
+	public DashboardPresenter(EventBus eventBus, Display display) {
 		this.eventBus = eventBus;
 		this.display = display;
 		bind();
@@ -72,15 +77,17 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	
 	private void displayTopNavigation(final HasCurrentUserData data) {
 		if (topNavigationPresenter == null) {
-			topNavigationPresenter = new TopNavigationPresenter(eventBus, data, new TopNavigationBar());
+			topNavigationPresenter = NomosInjector.INSTANCE.getTopNavigationPresenter();
 		}
+		topNavigationPresenter.updateViewData(data);
 		topNavigationPresenter.go(display.getTopPanel());
 	}
 	
 	private void displayLeftMenu(final HasEntityCountData data) {
 		if (leftMenuPresenter == null) {
-			leftMenuPresenter = new LeftMenuPresenter(eventBus, data, new LeftMenuView());
+			leftMenuPresenter = NomosInjector.INSTANCE.getLeftMenuPresenter();
 		}
+		leftMenuPresenter.updateViewData(data);
 		leftMenuPresenter.go(display.getLeftpPanel());
 		
 		String historyToken = History.getToken();

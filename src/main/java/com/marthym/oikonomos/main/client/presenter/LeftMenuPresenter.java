@@ -4,11 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -36,14 +38,14 @@ public class LeftMenuPresenter implements Presenter {
 		void refreshEntityList(List<? extends LeftMenuEntity> entities);
 	}
 	
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private final Display display;
 	private HasEntityCountData data;
 
-	public LeftMenuPresenter(HandlerManager eventBus, HasEntityCountData data, Display display) {
+	@Inject
+	public LeftMenuPresenter(EventBus eventBus, Display display) {
 		this.eventBus = eventBus;
 		this.display = display;
-		this.data = data;
 		bind();
 	}
 	
@@ -54,9 +56,12 @@ public class LeftMenuPresenter implements Presenter {
 				onEntityChange(event);
 			}
 		});
-		
+	}
+	
+	public void updateViewData(HasEntityCountData data) {
+		this.data = data;
 		for (EntityType entity : EntityType.values()) {
-			display.setCount(entity, data.getCountFor(entity));
+			display.setCount(entity, this.data.getCountFor(entity));
 			
 			display.getDisclosurePanel(entity).addOpenHandler(new OpenHandler<DisclosurePanel>() {
 				
@@ -74,7 +79,7 @@ public class LeftMenuPresenter implements Presenter {
 					display.disactivePanel(EntityType.valueOf(entityName));
 				}
 			});
-		}
+		}		
 	}
 	
 	public void openEntityMenu(EntityType entity) {
