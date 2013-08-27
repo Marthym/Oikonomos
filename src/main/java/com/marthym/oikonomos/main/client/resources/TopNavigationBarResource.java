@@ -4,9 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-//TODO: Fix the name : TopNavigationBarResource
-public interface TopNavigationBarRessource extends ClientBundle {
-	public TopNavigationBarRessource INSTANCE = GWT.create(TopNavigationBarRessource.class);
+public interface TopNavigationBarResource extends ClientBundle {
+	public TopNavigationBarResource INSTANCE = GWT.create(TopNavigationBarResource.class);
 	
 	public interface TopNavigationBarCss extends CssResource {
 	      String topNavigation();

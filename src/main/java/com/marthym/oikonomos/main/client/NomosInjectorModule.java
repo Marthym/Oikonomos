@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
+import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.components.TopNavigationBar;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
@@ -22,6 +23,7 @@ public class NomosInjectorModule extends AbstractGinModule {
     @Override
     protected void configure() {
     	bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
+    	bind(OikonomosController.class).in(Singleton.class);
     	bind(DashboardPresenter.Display.class).to(DashboardView.class).in(Singleton.class);
     	bind(TopNavigationPresenter.Display.class).to(TopNavigationBar.class).in(Singleton.class);
     	bind(LeftMenuPresenter.Display.class).to(LeftMenuView.class).in(Singleton.class);
@@ -32,5 +34,6 @@ public class NomosInjectorModule extends AbstractGinModule {
     	bind(EditAccountConstants.class).in(Singleton.class);
     	
     	bind(AccountServiceAsync.class).in(Singleton.class);
+    	bind(AuthenticationServiceAsync.class).in(Singleton.class);
     }
 }

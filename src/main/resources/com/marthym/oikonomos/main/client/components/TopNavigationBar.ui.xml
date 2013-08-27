@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
-	<ui:with type="com.marthym.oikonomos.main.client.resources.TopNavigationBarRessource" field="res" />
+	<ui:with type="com.marthym.oikonomos.main.client.resources.TopNavigationBarResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
 	<g:HTMLPanel tag="nav" height="36" styleName="{res.style.topNavigation}">

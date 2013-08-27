@@ -1,6 +1,5 @@
 .messageFlyer {
 	background-color: black;
-	color: red;
 	border-radius: 10px 10px 10px 10px;
 	box-shadow: 2px 2px 8px #AAAAAA;
 	-moz-box-shadow: 2px 2px 8px #aaa;
@@ -9,6 +8,18 @@
 	font-weight: bold;
 	position: fixed;
 	z-index: 1000;
+}
+
+.messageFlyer.error {
+	color: red;
+}
+.messageFlyer.info {
+	color: green;
+}
+.messageFlyer.info ul {
+	font-style: italic;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .messageFlyer span {

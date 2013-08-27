@@ -14,15 +14,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
-import com.marthym.oikonomos.client.resources.MessageFlyerRessource;
+import com.marthym.oikonomos.client.resources.MessageFlyerResource;
 
-/**
- * TODO: Implement INFO mode CSS
- */
 public class MessageFlyer extends PopupPanel {
 	private static enum Type {INFO, ERROR};
 	private static int INFO_AUTOCLOSE_DELAY = 2 * 1000;
@@ -31,6 +29,7 @@ public class MessageFlyer extends PopupPanel {
 	private static MessageFlyerUiBinder uiBinder = GWT
 			.create(MessageFlyerUiBinder.class);
 	
+	@UiField HTMLPanel flyer;
 	@UiField InlineHyperlink linkClose;
 	@UiField UListElement messages;
 	@UiField Element title;
@@ -43,7 +42,7 @@ public class MessageFlyer extends PopupPanel {
 		}
 	};
 
-	private final static MessageFlyerRessource res = MessageFlyerRessource.INSTANCE;
+	private final static MessageFlyerResource res = MessageFlyerResource.INSTANCE;
 	private final static OikonomosConstants translations = GWT.create(OikonomosConstants.class);
 	
 	interface MessageFlyerUiBinder extends
@@ -70,8 +69,10 @@ public class MessageFlyer extends PopupPanel {
 		instance = new MessageFlyer();
 		switch (type) {
 		case ERROR:
+			instance.flyer.addStyleName(res.style().error());
 			instance.title.setInnerText(translations.error()); break;
 		case INFO:
+			instance.flyer.addStyleName(res.style().info());
 			instance.title.setInnerText(translations.info());
 			instance.closeTimer.schedule(INFO_AUTOCLOSE_DELAY);
 			break;

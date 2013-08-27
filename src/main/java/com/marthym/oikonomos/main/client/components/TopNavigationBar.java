@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
-import com.marthym.oikonomos.main.client.resources.TopNavigationBarRessource;
+import com.marthym.oikonomos.main.client.resources.TopNavigationBarResource;
 import com.marthym.oikonomos.main.client.presenter.TopNavigationPresenter;
 
 public class TopNavigationBar extends Composite implements TopNavigationPresenter.Display {
@@ -20,7 +20,7 @@ public class TopNavigationBar extends Composite implements TopNavigationPresente
 	@UiField InlineHyperlink linkUserProperties;
 	@UiField InlineHyperlink linkLogout;
 	
-	private final TopNavigationBarRessource res = TopNavigationBarRessource.INSTANCE;
+	private final TopNavigationBarResource res = TopNavigationBarResource.INSTANCE;
 	
 	interface TopNavigationBarUiBinder extends
 		UiBinder<Widget, TopNavigationBar> {

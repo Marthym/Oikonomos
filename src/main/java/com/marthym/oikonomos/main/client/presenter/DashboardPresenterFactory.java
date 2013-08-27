@@ -1,8 +1,10 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.components.MessageFlyer;
+import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class DashboardPresenterFactory {
@@ -16,7 +18,8 @@ public class DashboardPresenterFactory {
 		Presenter.Callback callback = new Presenter.Callback() {
 			@Override
 			public void onCreateFailed() {
-				MessageFlyer.error("Fail to create presenter !"); //TODO: Translate !!
+				final OikonomosErrorMessages errorMessages = GWT.create(OikonomosErrorMessages.class);
+				MessageFlyer.error(errorMessages.error_message_presenter_failToCreate());
 			}
 			
 			@Override

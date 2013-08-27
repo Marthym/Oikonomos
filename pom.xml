@@ -205,7 +205,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.2.0.Final</version>
 			<classifier>sources</classifier>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		
 <!-- **********************************************************************

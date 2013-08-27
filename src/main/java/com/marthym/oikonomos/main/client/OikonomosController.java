@@ -17,12 +17,13 @@ public class OikonomosController implements Presenter {
 	private static final String LOGIN_MODULE_PATH = "index.html";
 	
 	private final EventBus eventBus;
+	private final AuthenticationServiceAsync rpcService;
 	private DashboardPresenter dashboardPresenter;
 	private static User authentifiedUser;
-	private static final AuthenticationServiceAsync rpcService = AuthenticationServiceAsync.Util.getInstance();
 
 	public OikonomosController() {
-		eventBus = NomosInjector.INSTANCE.getEventBus();
+		this.eventBus = NomosInjector.INSTANCE.getEventBus();
+		this.rpcService = NomosInjector.INSTANCE.getAuthenticationServiceAsync();
 		bind();
 	}
 
