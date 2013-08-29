@@ -167,7 +167,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 		return initialAmount;
 	}
 	public void setInitialAmount(double initialAmount) {
-		if (this.initialAmount > -1) throw new OikonomosRuntimeException("Initial amount is read-only !");
+		if (this.initialAmount > -1) throw new OikonomosRuntimeException("Initial amount is read-only !"); //TODO: Translate !
 		this.initialAmount = initialAmount;
 		this.currentAmount = this.initialAmount;
 	}

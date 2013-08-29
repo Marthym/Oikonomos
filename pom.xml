@@ -21,6 +21,7 @@
 		<sl4j.version>1.7.5</sl4j.version>
 		<logback.version>1.0.13</logback.version>
 		<junit.version>4.11</junit.version>
+		<mockito.version>1.9.5</mockito.version>
 		<hsqldb.version>2.3.0</hsqldb.version>
 		<gwt.compile.user.agent>ie6,ie8,ie9,gecko1_8,safari,opera</gwt.compile.user.agent>
 	</properties>
@@ -103,6 +104,12 @@
 			<artifactId>gwt-user</artifactId>
 			<version>${gwtVersion}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwtVersion}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
@@ -217,6 +224,13 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+            
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -26,6 +26,7 @@ import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
 import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
+import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 import com.marthym.oikonomos.shared.model.User;
@@ -202,7 +203,8 @@ public class EditAccountPresenter implements Presenter {
 
 		try{
 			long initialAmount = Long.parseLong(display.getInitialAmount().getValue());
-			account.setInitialAmount(initialAmount);
+			if (account.getInitialAmount() < 0)
+				account.setInitialAmount(initialAmount);
 		} catch (NumberFormatException e) {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.initialAmountLabel()));
 		}
@@ -244,7 +246,7 @@ public class EditAccountPresenter implements Presenter {
 				History.newItem(result.getEntityType().name().toLowerCase()+"|"+result.getEntityId());
 				WaitingFlyer.stop();
 				MessageFlyer.info(
-						errorMessages.info_message_entity_saveSuccessfully().replace("{0}", EnumTypeTranslator.getTranslation(accountType)));
+						errorMessages.info_message_entity_saveSuccessfully().replace("{0}", account.getAccountName()));
 			}
 			
 			@Override

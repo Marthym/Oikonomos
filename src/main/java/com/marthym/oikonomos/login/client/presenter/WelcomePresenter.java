@@ -6,7 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
@@ -23,10 +23,10 @@ public class WelcomePresenter implements Presenter {
 		Widget asWidget();
 	}
 
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private final Display display;
 
-	public WelcomePresenter(HandlerManager eventBus, Display display) {
+	public WelcomePresenter(EventBus eventBus, Display display) {
 		this.eventBus = eventBus;
 		this.display = display;
 		bind();

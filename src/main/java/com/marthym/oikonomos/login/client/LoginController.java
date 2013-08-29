@@ -6,16 +6,15 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.validation.client.impl.Validation;
-
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
@@ -31,14 +30,14 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 	private static final String CURRENT_MODULE_PATH = "index.html";
 	private static final String MAIN_MODULE_PATH = "oikonomos.html";
 	
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private HasWidgets container;
 	private Presenter welcomePresenter;
 	private final AuthenticationServiceAsync rpcService;
 
 	public LoginController() {
 		this.rpcService = AuthenticationServiceAsync.Util.getInstance();
-		this.eventBus = new HandlerManager(null);
+		this.eventBus = new SimpleEventBus();
 		bind();
 	}
 
@@ -66,18 +65,10 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 	}
 
 	public void onValueChange(ValueChangeEvent<String> event) {
-
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure(Throwable caught) {
-			}
-
-			public void onSuccess() {
-				if (welcomePresenter == null) {
-					welcomePresenter = new WelcomePresenter(eventBus, new WelcomeView());
-				}
-				welcomePresenter.go(container);
-			}
-		});
+		if (welcomePresenter == null) {
+			welcomePresenter = new WelcomePresenter(eventBus, new WelcomeView());
+		}
+		welcomePresenter.go(container);
 	}
 	
 	private String doOikonomosLogin(String login, String password) {
