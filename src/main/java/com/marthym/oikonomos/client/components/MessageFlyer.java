@@ -14,10 +14,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.client.resources.MessageFlyerResource;
 
@@ -30,7 +30,7 @@ public class MessageFlyer extends PopupPanel {
 			.create(MessageFlyerUiBinder.class);
 	
 	@UiField HTMLPanel flyer;
-	@UiField InlineHyperlink linkClose;
+	@UiField Anchor linkClose;
 	@UiField UListElement messages;
 	@UiField Element title;
 	

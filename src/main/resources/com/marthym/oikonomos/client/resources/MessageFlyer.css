@@ -31,6 +31,7 @@
 
 .messageFlyer a {
 	color: white;
+	cursor: pointer;
 }
 
 .messageFlyer h3 {

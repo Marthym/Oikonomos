@@ -106,7 +106,7 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				//WaitingFlyer.stop();
+				WaitingFlyer.stop();
 				OikonomosErrorMessages message = GWT.create(OikonomosErrorMessages.class);
 				MessageFlyer.error(message.error_message_user_unauthorized());
 			}

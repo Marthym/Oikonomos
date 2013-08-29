@@ -6,7 +6,7 @@
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
 	<g:HTMLPanel width="400px" styleName="{res.style.messageFlyer}" ui:field="flyer">
-		<span><g:InlineHyperlink text="{constants.close}" ui:field="linkClose" /></span>
+		<span><g:Anchor text="{constants.close}" ui:field="linkClose" /></span>
 		<g:HTML wordWrap="true"><h3 ui:field="title" /></g:HTML>
 		<g:HTML styleName="{res.style.messageFlyerBody}">
 			<ul ui:field="messages" />
