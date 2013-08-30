@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
@@ -152,16 +153,17 @@ public class TestAccountDataService {
 	}
 		
 	@Test
+	@Transactional
 	public void testAddOrUpdateEntity() {
-		Account newAccount = new Account();
+		Account newAccount = new Account("test@localhost.com");
 		newAccount.setAccountName("Test Account");
 		newAccount.setAccountCurrency("EUR");
 		newAccount.setAccountKey(12);
 		newAccount.setAccountNumber(123456);
-		newAccount.setAccountOwner("test@localhost.com");
 		newAccount.setAccountType(AccountType.BANK_ACCOUNT);
 		newAccount.setCurrentAmount(1000.0);
 		newAccount.setPointedAmount(900.0);
+		newAccount.setInitialAmount(200.0);
 		
 		SecurityContextHolder.setContext(scUser);
 		try {
@@ -181,7 +183,7 @@ public class TestAccountDataService {
 		
 		try {
 			long count = accountDataService.getCount();
-			assertEquals(2, count);
+			assertEquals(1, count);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
@@ -211,7 +213,7 @@ public class TestAccountDataService {
 		try {
 			List<Account> accounts = accountDataService.getList(true);
 			assertNotNull(accounts);
-			assertEquals(2, accounts.size());
+			assertEquals(1, accounts.size());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}

@@ -46,7 +46,6 @@ public class TestDashboardDataService {
 	@BeforeClass
 	public static void initSecurityContext() {
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
-		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
@@ -57,7 +56,6 @@ public class TestDashboardDataService {
 	@Test
 	public void testSecurityCredentials() {
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
-		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_TEST"));
 		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
@@ -118,19 +116,6 @@ public class TestDashboardDataService {
 	}
 	
 	@Test
-	public void testGetCountFor() {
-		SecurityContextHolder.setContext(scUser);
-		try {
-			DashboardData dashboardData = dashboardDataService.getDashboardData();
-			assertEquals(1, dashboardData.getCountFor(EntityType.ACCOUNT));
-			assertNotNull(dashboardData.getCurrentUserData());
-		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getMessage());
-		}
-		SecurityContextHolder.clearContext();
-	}
-
-	@Test
 	public void testGetLeftMenuData() {
 		SecurityContextHolder.setContext(scUser);
 		try {
@@ -162,7 +147,7 @@ public class TestDashboardDataService {
 	
 	@AfterClass
 	public static void afterClass() {
-		System.out.println("------------TestDashboardDataService: end -------");
+		System.out.println("------------ TestDashboardDataService: end -------");
 	}
 	
 }

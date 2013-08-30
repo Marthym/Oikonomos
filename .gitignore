@@ -6,3 +6,5 @@ target
 /*.log
 *.class
 src/main/webapp/WEB-INF/classes
+gwt-unitCache
+war

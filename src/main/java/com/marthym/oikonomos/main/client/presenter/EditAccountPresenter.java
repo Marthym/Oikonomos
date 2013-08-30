@@ -25,8 +25,6 @@ import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
-import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
-import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 import com.marthym.oikonomos.shared.model.User;
