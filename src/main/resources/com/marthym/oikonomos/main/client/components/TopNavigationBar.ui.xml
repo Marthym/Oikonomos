@@ -8,7 +8,7 @@
 	<g:HTMLPanel tag="nav" height="36" styleName="{res.style.topNavigation}">
 		<g:HTMLPanel tag="ul" styleName="{res.style.right}">
 			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.properties}" text="{constants.properties}" 
-									targetHistoryToken="userProperties" ui:field="linkUserProperties"/></li>
+									targetHistoryToken="profile" ui:field="linkUserProperties"/></li>
 			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.logout}" text="{constants.logout}" 
 									ui:field="linkLogout"/></li>
 		</g:HTMLPanel>

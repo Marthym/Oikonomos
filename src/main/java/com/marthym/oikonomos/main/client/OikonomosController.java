@@ -8,6 +8,8 @@ import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
 import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
+import com.marthym.oikonomos.main.client.event.UserUpdateEvent;
+import com.marthym.oikonomos.main.client.event.UserUpdateEventHandler;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.model.User;
@@ -32,10 +34,17 @@ public class OikonomosController implements Presenter {
 		
 		eventBus.addHandler(LogoutEvent.TYPE,
 				new LogoutEventHandler() {
-					
 					@Override
 					public void onLogout(LogoutEvent event) {
 						doOikonomosLogout();
+					}
+				});
+		
+		eventBus.addHandler(UserUpdateEvent.TYPE,
+				new UserUpdateEventHandler() {
+					@Override
+					public void onUserUpdate(UserUpdateEvent event) {
+						authentifiedUser = event.getUser();
 					}
 				});
 	}
@@ -78,8 +87,8 @@ public class OikonomosController implements Presenter {
 		});
 	}
 
-	private void redirectToLogin() {
-		 String path = Window.Location.getPath();
+	public static final void redirectToLogin() {
+		String path = Window.Location.getPath();
         String modulePath = CURRENT_MODULE_PATH;
         int index = path.indexOf(modulePath);
         String contextPath = path.substring(0,index);

@@ -10,6 +10,7 @@ import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
 import com.marthym.oikonomos.main.client.presenter.LeftMenuPresenter;
 import com.marthym.oikonomos.main.client.presenter.TopNavigationPresenter;
+import com.marthym.oikonomos.main.client.presenter.UserProfilePresenter;
 
 @GinModules(NomosInjectorModule.class)
 public interface NomosInjector extends Ginjector { 
@@ -21,6 +22,7 @@ public interface NomosInjector extends Ginjector {
     public LeftMenuPresenter getLeftMenuPresenter();
     public EditAccountPresenter getEditAccountPresenter();
     public AccountsListPresenter getAccountsListPresenter();
+    public UserProfilePresenter getUserProfilePresenter();
     
     public AuthenticationServiceAsync getAuthenticationServiceAsync();
 }

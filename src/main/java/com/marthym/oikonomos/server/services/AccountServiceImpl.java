@@ -15,7 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
@@ -31,7 +31,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Secured("ROLE_USER")
 	public long getCount() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		return accountRepository.countByAccountOwner(authentifiedUser.getUserEmail());
 	}
@@ -42,7 +42,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Secured("ROLE_USER")
 	public List<Account> getList(boolean sorted) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		
 		if (sorted) {
@@ -58,7 +58,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Secured("ROLE_USER")
 	public Account getEntity(long accountId) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 
 		Account myAccount = accountRepository.findOne(accountId);
@@ -79,7 +79,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Account addOrUpdateEntity(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 
 		if (!authentifiedUser.getUserEmail().equals(account.getAccountOwner())) {
@@ -96,7 +96,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void delete(long accountId) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		
 		Account delAccount = accountRepository.findOne(accountId);

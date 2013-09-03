@@ -22,7 +22,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.client.services.AuthenticationService;
 import com.marthym.oikonomos.server.repositories.UserRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.UserProfile;
 
@@ -86,9 +86,9 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
 
 	@Override
 	@Secured("ROLE_USER")
-	public User getAuthentifiedUser() throws OikonomosUnathorizedException {
+	public User getAuthentifiedUser() throws OikonomosUnauthorizedException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		return authentifiedUser;
 	}

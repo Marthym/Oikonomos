@@ -11,8 +11,11 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.main.client.event.UserUpdateEvent;
+import com.marthym.oikonomos.main.client.event.UserUpdateEventHandler;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;
+import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 
 public class TopNavigationPresenter implements Presenter {
 	public interface Display {
@@ -35,6 +38,16 @@ public class TopNavigationPresenter implements Presenter {
 	}
 	
 	private void bind() {
+		eventBus.addHandler(UserUpdateEvent.TYPE,
+				new UserUpdateEventHandler() {
+					@Override
+					public void onUserUpdate(UserUpdateEvent event) {
+						TopNavigationData data = new TopNavigationData();
+						data.setAuthentifiedUser(event.getUser());
+						updateViewData(data);
+					}
+				});
+
 		this.display.getLogoutLink().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				eventBus.fireEvent(new LogoutEvent());
@@ -46,7 +59,7 @@ public class TopNavigationPresenter implements Presenter {
 		this.data = data;
 		try {
 			display.getUserName().setInnerText(this.data.getCurrentUserData().getUserFirstname()+" "+this.data.getCurrentUserData().getUserLastname());
-		} catch (OikonomosUnathorizedException e) {}
+		} catch (OikonomosUnauthorizedException e) {}
 	}
 	
 	@Override

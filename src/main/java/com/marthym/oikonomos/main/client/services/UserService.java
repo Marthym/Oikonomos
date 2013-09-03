@@ -15,8 +15,8 @@ public interface UserService extends RemoteService {
 	
 	public User findUserByMail(String userMail);
 	public User findUserById(Long userId);
-	public User saveUser(String userId, String firstName, String lastName, String password, Date registration, Date lastlogin) throws OikonomosException;
-	public User updateUser(String userId, String firstName, String lastName, String password, Date lastlogin) throws OikonomosException;
+	public User saveUser(String userMail, String firstName, String lastName, String password, Date registration, Date lastlogin) throws OikonomosException;
+	public User updateUser(String userMail, String firstName, String lastName, String password, Date lastlogin) throws OikonomosException;
 	public void deleteUser(String userId) throws OikonomosException;
 
 }

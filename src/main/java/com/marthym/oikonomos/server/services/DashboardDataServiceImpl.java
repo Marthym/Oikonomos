@@ -11,7 +11,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
@@ -30,7 +30,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	@Secured("ROLE_USER")
 	public DashboardData getDashboardData() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		
 		DashboardData data = new DashboardData();
 		data.setTopNavigation(getTopNavigationData());
@@ -43,7 +43,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	@Secured("ROLE_USER")
 	public LeftMenuData getLeftMenuData() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		
 		LeftMenuData leftMenuData = new LeftMenuData();
 		leftMenuData.addEntityCount(EntityType.ACCOUNT, (int)accountService.getCount());
@@ -56,7 +56,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 	@Secured("ROLE_USER")
 	public TopNavigationData getTopNavigationData() throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnathorizedException("error.message.user.unauthorized", "No authentification found !");
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		TopNavigationData topNavigationData = new TopNavigationData();
 		topNavigationData.setAuthentifiedUser(authentifiedUser);

@@ -11,7 +11,8 @@ public class DashboardPresenterFactory {
 	public enum ContentPanelType {
 		DASHBOARD,
 		ACCOUNTS,
-		ACCOUNT		
+		ACCOUNT,
+		PROFILE
 	}
 		
 	public final static void createCentralPresenter(final HasWidgets parent, EventBus eventBus, String historyToken) {
@@ -39,6 +40,10 @@ public class DashboardPresenterFactory {
 			
 		case ACCOUNT:
 			EditAccountPresenter.createAsync(callback);
+			return;
+		
+		case PROFILE:
+			UserProfilePresenter.createAsync(callback);
 			return;
 			
 		default:

@@ -1,6 +1,8 @@
+.fieldTable td {padding-top:10px;}
 .headerCell {
 	font-weight: bold;
     padding-right: 10px;
+    padding-left: 10px;
     white-space: nowrap;
     width: 1px;
 }

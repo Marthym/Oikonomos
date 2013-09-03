@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.marthym.oikonomos.shared.exceptions.OikonomosUnathorizedException;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.User;
 
@@ -36,11 +36,11 @@ public class DashboardData implements HasCurrentUserData, HasEntityCountData, Se
 	}
 
 	@Override
-	public User getCurrentUserData() throws OikonomosUnathorizedException {
+	public User getCurrentUserData() throws OikonomosUnauthorizedException {
 		if (topNavigation != null) {
 			return topNavigation.getCurrentUserData();
 		} else {
-			throw new OikonomosUnathorizedException();
+			throw new OikonomosUnauthorizedException();
 		}
 	}
 

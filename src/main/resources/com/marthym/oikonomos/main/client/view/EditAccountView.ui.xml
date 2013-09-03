@@ -3,8 +3,9 @@
 	xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:nomos="urn:import:com.marthym.oikonomos.main.client.components">
 	
-	<ui:with type="com.marthym.oikonomos.main.client.resources.EditAccountResource" field="res" />
+	<ui:with type="com.marthym.oikonomos.main.client.resources.MainFormViewResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.main.client.i18n.EditAccountConstants" field="constants" />
+	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="nomosconstants" />
 	
 	<g:VerticalPanel width="80%">
 		<g:HTMLPanel tag="h3"><ui:text from="{constants.title}"/></g:HTMLPanel>
@@ -84,8 +85,8 @@
 				
 				
 				<g:HTMLPanel styleName="{res.style.actions}">
-					<g:Button text="{constants.resetButtonLabel}" ui:field="resetButton"/>
-					<g:Button text="{constants.submitButtonLabel}" ui:field="submitButton"/>
+					<g:Button text="{nomosconstants.resetButtonLabel}" ui:field="resetButton"/>
+					<g:Button text="{nomosconstants.submitButtonLabel}" ui:field="submitButton"/>
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:FormPanel>

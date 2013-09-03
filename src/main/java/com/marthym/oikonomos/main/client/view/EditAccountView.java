@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.components.SingleValueListBox;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
-import com.marthym.oikonomos.main.client.resources.EditAccountResource;
+import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 import com.marthym.oikonomos.shared.model.AccountType;
 
 public class EditAccountView extends Composite implements EditAccountPresenter.Display {
@@ -39,7 +39,7 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	@UiField Button submitButton;
 
 	public EditAccountView() {
-		EditAccountResource.INSTANCE.style().ensureInjected();
+		MainFormViewResource.INSTANCE.style().ensureInjected();
 		
 		initWidget(uiBinder.createAndBindUi(this));
 		
