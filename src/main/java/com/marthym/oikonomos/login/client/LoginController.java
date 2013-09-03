@@ -91,8 +91,11 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 				String modulePath = CURRENT_MODULE_PATH;
 				int index = path.indexOf(modulePath);
 				String contextPath = path.substring(0, index);
-
-				Window.open(contextPath + MAIN_MODULE_PATH, "_self", "");
+				String token = "";
+				if (!History.getToken().isEmpty() && !History.getToken().equals("login")) {
+					token = "#"+History.getToken();
+				}
+				Window.open(contextPath + MAIN_MODULE_PATH + token, "_self", "");
 			}
 
 			@Override

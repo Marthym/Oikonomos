@@ -31,7 +31,8 @@ h2 {color:#a6a6a6;}
   margin: 15px 6px 6px;
 }
 
-.gwt-Button {																				/* Submit button */
+.gwt-Button, 
+.gwt-SubmitButton {																				/* Submit button */
 	border-radius: 3px;
 	border: 1px solid #336895;
 	box-shadow: inset 0 1px 0 #8dc2f0;
@@ -53,7 +54,8 @@ h2 {color:#a6a6a6;}
 	font-size: 13px;
 }
 
-.gwt-Button:hover {
+.gwt-Button:hover,
+.gwt-SubmitButton:hover {
 	background: linear-gradient(bottom, #5c96c9 0%, #6bafea 100%);
 	background: -o-linear-gradient(bottom, #5c96c9 0%, #6bafea 100%);
 	background: -moz-linear-gradient(bottom, #5c96c9 0%, #6bafea 100%);
@@ -61,7 +63,8 @@ h2 {color:#a6a6a6;}
 	background: -ms-linear-gradient(bottom, #5c96c9 0%, #6bafea 100%);
 }
 
-.gwt-Button:active {
+.gwt-Button:active,
+.gwt-SubmitButton:active {
 	background: linear-gradient(bottom, #5BA7E9 0%, #4889C2 100%);
 	background: -o-linear-gradient(bottom, #5BA7E9 0%, #4889C2 100%);
 	background: -moz-linear-gradient(bottom, #5BA7E9 0%, #4889C2 100%);

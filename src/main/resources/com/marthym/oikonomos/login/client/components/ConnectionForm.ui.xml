@@ -11,7 +11,8 @@
 				<g:HTML wordWrap="true"><h2><ui:text from="{constants.applicationName}"/></h2></g:HTML>
 				<g:TextBox ui:field="email"/>
 				<g:PasswordTextBox ui:field="password"/>
-				<g:Button ui:field="btnConnect" text="{constants.login}"/>
+				<!-- g:Button ui:field="btnConnect" text="{constants.login}"/ -->
+				<g:SubmitButton ui:field="btnConnect" text="{constants.login}" />
 			</g:VerticalPanel>
 		</g:FormPanel>
 		<g:HTML wordWrap="true" ui:field="errorHandler" styleName="{resource.style.error}"/>
