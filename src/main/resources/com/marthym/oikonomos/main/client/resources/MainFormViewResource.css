@@ -1,3 +1,26 @@
+@CHARSET "UTF-8";
+.gradien-right {
+	background: -moz-linear-gradient(left, rgba(125,185,232,0) 0%, rgba(95,154,207,0.7) 32%, rgba(89,148,202,1) 38%, rgba(30,87,153,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(125,185,232,0)), color-stop(32%,rgba(95,154,207,0.7)), color-stop(38%,rgba(89,148,202,1)), color-stop(100%,rgba(30,87,153,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left, rgba(125,185,232,0) 0%,rgba(95,154,207,0.7) 32%,rgba(89,148,202,1) 38%,rgba(30,87,153,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left, rgba(125,185,232,0) 0%,rgba(95,154,207,0.7) 32%,rgba(89,148,202,1) 38%,rgba(30,87,153,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, rgba(125,185,232,0) 0%,rgba(95,154,207,0.7) 32%,rgba(89,148,202,1) 38%,rgba(30,87,153,1) 100%); /* IE10+ */
+	background: linear-gradient(to right, rgba(125,185,232,0) 0%,rgba(95,154,207,0.7) 32%,rgba(89,148,202,1) 38%,rgba(30,87,153,1) 100%); /* W3C */
+	filter: progid\:DXImageTransform\.Microsoft\.gradient( startColorstr\='#007db9e8', endColorstr\='#1e5799',GradientType\=1 ); /* IE6-9 */
+	
+	margin: 0 0 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.title-image {
+	box-shadow: 0 0 7px #000000;
+    float: right;
+    margin-right: 15px;
+    margin-top: -33px;
+    background-color: white;
+}
+
 .fieldTable td {padding-top:10px;}
 .headerCell {
 	font-weight: bold;
@@ -5,6 +28,7 @@
     padding-left: 10px;
     white-space: nowrap;
     width: 1px;
+    color: #A6A6A6;
 }
 .actions {
 	text-align:right;

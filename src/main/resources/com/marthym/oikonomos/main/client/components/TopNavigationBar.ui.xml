@@ -2,14 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
+    <ui:with type="com.marthym.oikonomos.main.client.resources.DashboardViewResource" field="dashRes" />
 	<ui:with type="com.marthym.oikonomos.main.client.resources.TopNavigationBarResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
 	<g:HTMLPanel tag="nav" height="36" styleName="{res.style.topNavigation}">
 		<g:HTMLPanel tag="ul" styleName="{res.style.right}">
-			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.properties}" text="{constants.properties}" 
+			<li><g:InlineHyperlink styleName="{res.style.button} {dashRes.style.profileNavBar}" text="{constants.properties}" title="{constants.properties}"
 									targetHistoryToken="profile" ui:field="linkUserProperties"/></li>
-			<li><g:InlineHyperlink styleName="{res.style.button} {res.style.logout}" text="{constants.logout}" 
+			<li><g:InlineHyperlink styleName="{res.style.button} {dashRes.style.logout}" text="{constants.logout}" title="{constants.logout}"
 									ui:field="linkLogout"/></li>
 		</g:HTMLPanel>
 		<span class="{res.style.right}" ui:field="userName" />

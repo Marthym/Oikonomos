@@ -1,3 +1,17 @@
+@CHARSET "UTF-8";
 .content{
 	padding:10px;
 }
+
+@sprite .logout {gwt-image: "logout";}
+@sprite .profile-nav-top {gwt-image: "profile32";}
+@sprite .profile-main-view {
+	gwt-image: "profile";
+	box-shadow: 0 0 7px #000000;
+    float: right;
+    margin-right: 15px;
+    margin-top: -33px;
+    background-color: white;
+}
+
+.clear {clear:both;}

@@ -1,3 +1,4 @@
+@CHARSET "UTF-8";
 .topNavigation {
 	width:100%; top:0; left:0; height:36px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
@@ -12,7 +13,4 @@
 .topNavigation span {line-height:32px; padding:2px;}
 .topNavigation h1 {font-size:20px; padding:5px; margin:0px; text-align:left;}
 
-.topNavigation .button {padding-left:32px; padding-top:32px; line-height:64px; font-size:0; color:transparent;
-	background:url('none.png') no-repeat top left transparent;}
-.topNavigation .logout {background-image:url('oikonomos/img/door-out-icon.png');}
-.topNavigation .properties {background-image:url('oikonomos/img/document-properties-icon.png');}
+.topNavigation .button {padding-left:32px; padding-top:32px; line-height:64px; font-size:0; color:transparent;}
