@@ -2,13 +2,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:nomos="urn:import:com.marthym.oikonomos.main.client.components">
 	
+	<ui:with type="com.marthym.oikonomos.main.client.resources.DashboardViewResource" field="dashRes" />
 	<ui:with type="com.marthym.oikonomos.main.client.resources.LeftMenuResource" field="res" />
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="trad" />
 
 	<g:DisclosurePanel width="100%" ui:field="entityDisPanel">
 		<g:customHeader>
 			<g:HTMLPanel styleName="{res.style.vnavItem}">
-				<i class="icon-friends" /> 
+				<g:Image ui:field="icon" /> 
 				<span ui:field="entityName"/>
 				<span class="{res.style.vnavCounter}" ui:field="entityCount"/>
 				<g:InlineHyperlink 

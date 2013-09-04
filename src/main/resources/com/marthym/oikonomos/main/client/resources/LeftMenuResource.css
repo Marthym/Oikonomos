@@ -81,9 +81,9 @@
 .vnav-item:active .vnav-add-link {
   background: #2471a9;
 }
-.vnav .vnav-item i {
+.vnav .vnav-item img {
   position: absolute;
-  top: 7px;
+  top: 5px;
   left: 9px;
 }
 
