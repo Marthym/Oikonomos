@@ -77,9 +77,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 		
 		User user = userRepository.findByUserEmail(userMail);
 		if (user == null) {
-			LOGGER.warn("User {} not find in database ! Clear session !");
+			LOGGER.warn("User {} not find in database ! Clear session !", userMail);
 			SecurityContextHolder.clearContext();
-			throw new OikonomosUnauthorizedException("error.message.user.unauthorizedAction", "User {} not find in database ! Clear session !");
+			throw new OikonomosException("error.message.user.unauthorizedAction", "User {} not find in database ! Clear session !");
 		}
 		LOGGER.debug("Find user {}, id {}", user.getUserEmail(), user.getUserId());
 

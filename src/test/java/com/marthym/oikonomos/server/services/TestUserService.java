@@ -26,7 +26,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.marthym.oikonomos.main.client.services.UserService;
+import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.model.UserProfile;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,6 +42,7 @@ public class TestUserService {
 	private UserService userService;
 	
 	private static SecurityContext scUser;
+	private static SecurityContext scAdmin;
 	
 	@BeforeClass
 	public static void beforeClass() {
@@ -48,13 +51,28 @@ public class TestUserService {
 	
 	@BeforeClass
 	public static void initSecurityContext() {
-		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
-		// Create de session if user is valid
-		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
-		scUser = new SecurityContextImpl();
-		scUser.setAuthentication(auth);
+		{
+			User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
+			currentUser.setUserId(99L);
+			// Create de session if user is valid
+			List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+			Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+			scUser = new SecurityContextImpl();
+			scUser.setAuthentication(auth);
+		}
+		{
+			User currentUser = new User("admin@localhost.com", "marthym", "myhtram", "password");
+			currentUser.setUserId(98L);
+			currentUser.setUserProfile(UserProfile.ADMIN);
+			// Create de session if user is valid
+			List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+			scAdmin = new SecurityContextImpl();
+			scAdmin.setAuthentication(auth);
+		}
 	}
 	
 	@Test
@@ -100,10 +118,25 @@ public class TestUserService {
 			calendar.add(Calendar.DAY_OF_YEAR, 2);
 		
 			userService.updateUser("test@test.test", "test", "test", "test", calendar.getTime());
+			fail("Simple user can't update other user !");
+		} catch (OikonomosUnauthorizedException e) {
+			// OK
 		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getLocalizedMessage());
+			fail(e.getClass()+": "+e.getMessage());
 		}
 		SecurityContextHolder.clearContext();
+		
+		SecurityContextHolder.setContext(scAdmin);
+		try {
+			Calendar calendar = GregorianCalendar.getInstance();
+			calendar.add(Calendar.DAY_OF_YEAR, 2);
+		
+			userService.updateUser("test@test.test", "test", "test", "test", calendar.getTime());
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		SecurityContextHolder.clearContext();
+
 	}
 
 	@Test
@@ -111,8 +144,19 @@ public class TestUserService {
 		SecurityContextHolder.setContext(scUser);
 		try {
 			userService.deleteUser("test@test.test");
+			fail("Simple user can't delete other user !");
+		} catch (OikonomosUnauthorizedException e) {
+			// OK
 		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getLocalizedMessage());
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		SecurityContextHolder.clearContext();
+		
+		SecurityContextHolder.setContext(scAdmin);
+		try {
+			userService.deleteUser("test@test.test");
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
 		}
 		SecurityContextHolder.clearContext();
 	}
