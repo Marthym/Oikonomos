@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -21,8 +22,10 @@ import com.marthym.oikonomos.main.client.components.LeftMenuEntityPanel;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEventHandler;
 import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
+import com.marthym.oikonomos.main.client.services.CategoryServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
+import com.marthym.oikonomos.shared.model.dto.Category;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
 
@@ -116,6 +119,20 @@ public class LeftMenuPresenter implements Presenter {
 			});
 			break;
 		case CATEGORY:
+			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
+			rpcCategory.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					MessageFlyer.error(caught.getLocalizedMessage());
+				}
+
+				@Override
+				public void onSuccess(List<Category> result) {
+					display.refreshEntityList(result);
+				}
+			});
+			
 			break;
 		case BUDGETARY_LINE:
 			break;

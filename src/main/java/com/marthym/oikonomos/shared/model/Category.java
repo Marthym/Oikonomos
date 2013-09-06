@@ -2,6 +2,7 @@ package com.marthym.oikonomos.shared.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +21,6 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.google.gwt.dev.util.collect.HashSet;
 import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 
 @Entity
@@ -41,7 +41,7 @@ public class Category implements Serializable {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="parent", cascade=CascadeType.PERSIST)
 	private Set<Category> childs;
 		
-	@ElementCollection(fetch=FetchType.LAZY)
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name="CATEGORY_TRANSLATION",joinColumns={@JoinColumn(name = "id")})
 	@MapKeyColumn(name="locale", insertable = false, updatable = false)
 	Map<String, CategoryTranslation> translations;
@@ -76,5 +76,8 @@ public class Category implements Serializable {
 	}
 	public void addDescription(String locale, String description) {
 		this.translations.put(locale, new CategoryTranslation(description));
-	}	
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 }

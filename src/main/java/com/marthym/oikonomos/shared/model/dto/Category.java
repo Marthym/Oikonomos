@@ -1,9 +1,9 @@
 package com.marthym.oikonomos.shared.model.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.dev.util.collect.HashSet;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 

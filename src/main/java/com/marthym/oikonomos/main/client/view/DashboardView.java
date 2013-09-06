@@ -6,8 +6,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.resources.DashboardViewResource;
 
@@ -16,7 +16,7 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	interface DashboardViewUiBinder extends UiBinder<Widget, DashboardView> {}
 	
 	@UiField HTMLPanel topPanel;
-	@UiField HTMLPanel leftPanel;
+	@UiField ScrollPanel leftPanel;
 	@UiField HTMLPanel centerPanel;
 	
 	public DashboardView() {

@@ -100,6 +100,36 @@ public class TestCategory {
 			assertEquals("Category Two", dto.getChilds().iterator().next().getEntityDescription());
 		}
 	}
+	
+	@Test
+	@Transactional
+	public void testCountBy() {
+		Category cat1 = new Category();
+		cat1.addDescription(Locale.FRENCH.getDisplayLanguage(), "Catégorie Un");
+		cat1.addDescription(Locale.US.getDisplayLanguage(), "Category One");
+		
+		Category cat2 = new Category();
+		cat2.addDescription(Locale.FRENCH.getDisplayLanguage(), "Catégorie Deux");
+		cat2.addDescription(Locale.US.getDisplayLanguage(), "Category Two");
+		cat2 = cat1.addChild(cat2);
+		cat1 = categoryRepository.save(cat1);
+		
+		Category cat3 = new Category();
+		cat3.addDescription(Locale.FRENCH.getDisplayLanguage(), "Catégorie Deux");
+		cat3.setOwner("test@localhost.com");
+		categoryRepository.save(cat3);
+		
+		{
+			Long count = categoryRepository.countByOwnerIsNullOrOwner("test@localhost.com");
+			assertNotNull(count);
+			assertEquals(3, (long)count);
+		}
+		{
+			Long count = categoryRepository.countByOwnerIsNullOrOwner("test2@localhost.com");
+			assertNotNull(count);
+			assertEquals(2, (long)count);
+		}
+	}
 
 	@AfterClass
 	public static void afterClass() {

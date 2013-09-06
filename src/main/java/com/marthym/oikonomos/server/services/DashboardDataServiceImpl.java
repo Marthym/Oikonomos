@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.main.client.services.AccountService;
+import com.marthym.oikonomos.main.client.services.CategoryService;
 import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
@@ -25,6 +26,9 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 
 	@Autowired
 	AccountService accountService;
+	
+	@Autowired
+	CategoryService categoryService;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -47,6 +51,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 		
 		LeftMenuData leftMenuData = new LeftMenuData();
 		leftMenuData.addEntityCount(EntityType.ACCOUNT, (int)accountService.getCount());
+		leftMenuData.addEntityCount(EntityType.CATEGORY, (int)categoryService.getCount());
 		//TODO: Add all entity found
 		
 		return leftMenuData;

@@ -9,7 +9,7 @@
 			<g:HTMLPanel height="36" ui:field="topPanel" />
 		</g:north>
 		<g:west size="300">
-			<g:HTMLPanel width="300" ui:field="leftPanel" />
+			<g:ScrollPanel width="300" ui:field="leftPanel" />
 		</g:west>
 		<g:center>
 			<g:HTMLPanel styleName="{res.style.content}" ui:field="centerPanel" />
