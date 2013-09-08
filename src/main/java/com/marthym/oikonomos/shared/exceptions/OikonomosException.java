@@ -36,7 +36,12 @@ public class OikonomosException extends Exception implements Serializable {
 		this.parameters = parameters;
 	}
 
-
+	public OikonomosException(String key, Throwable e) {
+		super(e.getMessage(), e);
+		this.key = key.replaceAll("\\.+","_");
+		this.parameters = new LinkedList<String>();;
+	}
+	
 	@Override
 	public String getLocalizedMessage() {
 		final OikonomosErrorMessages messages = GWT.create(OikonomosErrorMessages.class);
