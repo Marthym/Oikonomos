@@ -7,11 +7,10 @@
 	
 	<g:HTMLPanel>
 		<g:FormPanel ui:field="formPanel" styleName="{resource.style.login}">
-			<g:VerticalPanel width="280px" horizontalAlignment="center">
+			<g:VerticalPanel width="280px" horizontalAlignment="center" ui:field="vPanel">
 				<g:HTML wordWrap="true"><h2><ui:text from="{constants.applicationName}"/></h2></g:HTML>
-				<g:TextBox ui:field="email"/>
-				<g:PasswordTextBox ui:field="password"/>
-				<!-- g:Button ui:field="btnConnect" text="{constants.login}"/ -->
+				<g:TextBox name="username" ui:field="email"/>
+				<g:PasswordTextBox name="password" ui:field="password"/>
 				<g:SubmitButton ui:field="btnConnect" text="{constants.login}" />
 			</g:VerticalPanel>
 		</g:FormPanel>
