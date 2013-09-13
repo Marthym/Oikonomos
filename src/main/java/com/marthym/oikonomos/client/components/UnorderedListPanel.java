@@ -8,15 +8,14 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UnorderedListPanel extends ComplexPanel {
 	private static Logger LOG = Logger.getLogger(UnorderedListPanel.class.getName());
 	
-	public static class ListItemElement extends SimplePanel {
+	public static class ListItemElement extends ComplexPanel {
 	    public ListItemElement() {
-	        super((Element) Document.get().createLIElement().cast());
+	    	setElement((Element) Document.get().createLIElement().cast());
 	    }
 	 
 	    public ListItemElement(String s) {
@@ -25,8 +24,13 @@ public class UnorderedListPanel extends ComplexPanel {
 	    }
 	 
 	    public ListItemElement(Widget w) {
-	        this();
-	        this.add(w);
+	    	this();
+	        super.add(w, getElement());
+	    }
+	    
+	    @Override
+	    public void add(Widget w) {
+	    	super.add(w, getElement());
 	    }
 	}
 	

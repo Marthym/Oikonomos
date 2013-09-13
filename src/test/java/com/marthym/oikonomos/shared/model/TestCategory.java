@@ -67,7 +67,7 @@ public class TestCategory {
 		cat2 = cat1.addChild(cat2);
 		cat1 = categoryRepository.save(cat1);
 		
-		List<Category> parents = categoryRepository.findByParentId(cat1.getId());
+		List<Category> parents = categoryRepository.findByParentId("test@localhost.com", cat1.getId());
 		assertEquals(1, parents.size());
 	}
 	

@@ -6,17 +6,23 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.components.MessageFlyer;
+import com.marthym.oikonomos.client.components.UnorderedListPanel;
+import com.marthym.oikonomos.client.components.UnorderedListPanel.ListItemElement;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.components.LeftMenuEntityPanel;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
@@ -39,6 +45,8 @@ public class LeftMenuPresenter implements Presenter {
 		void activePanel(EntityType entity);
 		void disactivePanel(EntityType entity);
 		void refreshEntityList(List<? extends LeftMenuEntity> entities);
+		void refreshEntityList(List<? extends LeftMenuEntity> entities, ClickHandler handler);
+		void refreshEntitySublist(Anchor link, List<? extends LeftMenuEntity> entities);
 	}
 	
 	private final EventBus eventBus;
@@ -120,6 +128,12 @@ public class LeftMenuPresenter implements Presenter {
 			break;
 		case CATEGORY:
 			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
+			final ClickHandler expandCollapseSubentitiesHandler = new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					onExpandCollapseSubentities((Anchor)event.getSource());
+				}
+			};
 			rpcCategory.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
 
 				@Override
@@ -129,7 +143,7 @@ public class LeftMenuPresenter implements Presenter {
 
 				@Override
 				public void onSuccess(List<Category> result) {
-					display.refreshEntityList(result);
+					display.refreshEntityList(result, expandCollapseSubentitiesHandler);
 				}
 			});
 			
@@ -144,6 +158,33 @@ public class LeftMenuPresenter implements Presenter {
 			break;
 		}
 		
+	}
+	
+	private void onExpandCollapseSubentities(final Anchor link) {
+		String historyToken = link.getElement().getAttribute("data-id");
+		LOG.finer("onExpandCollapseSubentities: "+historyToken);
+		
+		ListItemElement liParent = (ListItemElement) link.getParent();
+		int widgetCount = liParent.getWidgetCount();
+		if (widgetCount >= 2) {
+			UnorderedListPanel content = (UnorderedListPanel) liParent.getWidget(1);
+			content.setVisible(!content.isVisible());
+		} else {
+		
+			String entityId = historyToken.split("\\|")[1];
+			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
+			rpcCategory.getEntitiesByParent(LocaleInfo.getCurrentLocale().getLocaleName(), Long.parseLong(entityId), new AsyncCallback<List<Category>>() {
+				@Override public void onFailure(Throwable caught) {
+					LOG.severe(caught.getLocalizedMessage());
+				}
+	
+				@Override public void onSuccess(List<Category> result) {
+					display.refreshEntitySublist(link, result);
+				}
+			});
+			
+		}
+		History.newItem(historyToken);
 	}
 	
 	private void onEntityChange(LeftmenuEntityChangeEvent event) {

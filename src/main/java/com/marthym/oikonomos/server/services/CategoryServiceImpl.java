@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.main.client.services.CategoryService;
@@ -42,6 +43,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
 	@Override
 	@Secured("ROLE_USER")
+	@Transactional
 	public List<Category> getRootEntities(String locale) throws OikonomosException {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -98,6 +100,21 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	public void delete(long categoryId) throws OikonomosException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	@Secured("ROLE_USER")
+	@Transactional
+	public List<Category> getEntitiesByParent(String locale, Long entityId) throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+		
+		List<Category> allCategoryDto = new LinkedList<Category>();
+		for (com.marthym.oikonomos.shared.model.Category category : categoryRepository.findByParentId(authentifiedUser.getUserEmail(), entityId)) {
+			allCategoryDto.add(Category.create(category, locale, false));
+		}
+		return allCategoryDto;
 	}
 
 }
