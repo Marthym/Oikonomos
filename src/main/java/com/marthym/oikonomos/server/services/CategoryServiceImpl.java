@@ -69,14 +69,26 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
-		
 		return null;
 	}
 
 	@Override
+	@Transactional
+	@Secured("ROLE_USER")
 	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException {
-		// TODO Auto-generated method stub
-		return null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+
+		com.marthym.oikonomos.shared.model.Category dao = categoryRepository.findOne(entityId);
+		if (dao.getOwner() != null && !dao.getOwner().equals(authentifiedUser.getUserEmail())) {
+			throw new OikonomosException(
+					"error.message.entity.notfound", 
+					"Category "+dao.getId()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		Category dto = Category.create(dao, locale, true);
+		
+		return dto;
 	}
 
 
@@ -90,7 +102,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
 
 	@Override
-	public Category addOrUpdateEntity(Category account, String locale) throws OikonomosException {
+	public Category addOrUpdateEntity(Category category, String locale) throws OikonomosException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -15,6 +15,6 @@ public interface CategoryService extends RemoteService {
 	public List<Category> getTree(boolean sorted, String locale) throws OikonomosException;
 	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException;
 	public Category getEntityWithoutChild(long entityId, String locale) throws OikonomosException;
-	public Category addOrUpdateEntity(Category account, String locale) throws OikonomosException;
+	public Category addOrUpdateEntity(Category category, String locale) throws OikonomosException;
 	public void delete(long categoryId) throws OikonomosException;
 }

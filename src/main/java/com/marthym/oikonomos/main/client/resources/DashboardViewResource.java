@@ -47,6 +47,9 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 	@Source("img/lm-accounts.png")
 	ImageResource mvAccounts();
 
+	@Source("img/lm-categories.png")
+	ImageResource mvCategories();
+
 	public interface DashboardViewCss extends CssResource {
 	      String content();
 	      String logout();
@@ -55,6 +58,7 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 	      @ClassName("main-view") String mainView();
 	      @ClassName("profile-main-view") String profileMainView();
 	      @ClassName("accounts-main-view") String accountsMainView();
+	      @ClassName("categories-main-view") String categoriesMainView();
 	   }
 
 	@Source("DashboardView.css")

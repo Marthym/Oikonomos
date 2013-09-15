@@ -12,7 +12,8 @@ public class DashboardPresenterFactory {
 		DASHBOARD,
 		ACCOUNTS,
 		ACCOUNT,
-		PROFILE
+		PROFILE,
+		CATEGORY
 	}
 		
 	public final static void createCentralPresenter(final HasWidgets parent, EventBus eventBus, String historyToken) {
@@ -44,6 +45,10 @@ public class DashboardPresenterFactory {
 		
 		case PROFILE:
 			UserProfilePresenter.createAsync(callback);
+			return;
+			
+		case CATEGORY:
+			EditCategoryPresenter.createAsync(callback);
 			return;
 			
 		default:

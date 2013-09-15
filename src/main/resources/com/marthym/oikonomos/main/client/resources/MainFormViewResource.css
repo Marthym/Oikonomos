@@ -52,3 +52,12 @@
 .key input {margin-left:5px;}
 
 .checkBox {}
+
+.categoryType.private {
+	color:green;
+}
+
+.categoryType.public {
+	color:red;
+	font-weight: bold;
+}

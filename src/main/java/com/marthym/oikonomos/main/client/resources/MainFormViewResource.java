@@ -17,6 +17,9 @@ public interface MainFormViewResource extends ClientBundle {
 		String accountNumber();
 		String key();
 		String checkBox();
+		String categoryType();
+		@ClassName("public") String ctPublic();
+		@ClassName("private") String ctPrivate();
 		@ClassName("gradien-right") String gradienRight();
 		@ClassName("title-image") String titleImage();
 	}

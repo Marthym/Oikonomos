@@ -1,5 +1,6 @@
 package com.marthym.oikonomos.server.utils;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,6 +48,10 @@ public class OikonomosAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("User not found !");
 		LOGGER.info("Connect to "+currentUser.getUserEmail()+" ...");
 
+		currentUser.setUserLastLoginDate(new Date());
+		currentUser = userRepository.saveAndFlush(currentUser);
+		
+		// Remove password from DTO Object for security purposes
 		currentUser.setUserPassword("");
 
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();

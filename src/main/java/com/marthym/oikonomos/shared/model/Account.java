@@ -172,7 +172,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 		this.currentAmount = this.initialAmount;
 	}
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return getId();
 	}
 	@Override

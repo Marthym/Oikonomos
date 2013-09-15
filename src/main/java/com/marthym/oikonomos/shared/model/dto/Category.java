@@ -16,7 +16,9 @@ public class Category extends LeftMenuEntity implements Serializable {
 	private Set<Category> childs;
 	private String description;
 	
-	public Category() {}
+	public Category() {
+		childs = new HashSet<Category>();
+	}
 	
 	public static Category create(com.marthym.oikonomos.shared.model.Category dao, String locale, boolean withChilds) {
 		Category dto = new Category();
@@ -41,17 +43,28 @@ public class Category extends LeftMenuEntity implements Serializable {
 	public final Long getParentId() { return parentId; }
 	
 	public final Set<Category> getChilds() { return childs; } 
+	public void addChild(Category child) {
+		childs.add(child);
+	}
 	
 	@Override
-	public long getEntityId() {
+	public Long getEntityId() {
 		return id;
 	}
 
+	public void setEntityOwner(String owner) {
+		this.owner = owner;
+	}
+	
 	@Override
 	public String getEntityOwner() {
 		return owner;
 	}
 
+	public void setEntityDescription(String description) {
+		this.description = description;
+	}
+	
 	@Override
 	public String getEntityDescription() {
 		return description;
