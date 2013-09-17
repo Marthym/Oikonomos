@@ -35,10 +35,10 @@ public class Category implements Serializable {
 	@Column(length = 255)
 	private String owner;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.PERSIST)
 	private Category parent;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="parent", cascade=CascadeType.PERSIST)
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="parent", cascade=CascadeType.ALL)
 	private Set<Category> childs;
 		
 	@ElementCollection(fetch=FetchType.EAGER)
@@ -60,24 +60,21 @@ public class Category implements Serializable {
 		else return "@category"+id;
 	}
 	
-	public Category addChild(Category child) {
-		if (parent != null && parent.equals(child)) {
-			throw new OikonomosRuntimeException("error.message.category.cycling", "Cycling category detected '"+child.getId()+"' !");
+	public void setParent(Category parent) {
+		if (!childs.isEmpty()) {
+			throw new OikonomosRuntimeException("error.message.category.cycling", "Cycling category detected '"+((parent!=null)?parent.getId():"null")+"' !");
 		}
-		child.setParent(this);
-		childs.add(child);
-		return child;
-	}
-	private void setParent(Category parent) {
-		if (!childs.isEmpty() && childs.contains(parent)) {
-			throw new OikonomosRuntimeException("error.message.category.cycling", "Cycling category detected '"+parent.getId()+"' !");
-		}
+		
+		if (this.parent != null) this.parent.childs.remove(this);
 		this.parent = parent;
+		if (this.parent != null) this.parent.childs.add(this);
 	}
+	
 	public void addDescription(String locale, String description) {
 		this.translations.put(locale, new CategoryTranslation(description));
 	}
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+	
 }

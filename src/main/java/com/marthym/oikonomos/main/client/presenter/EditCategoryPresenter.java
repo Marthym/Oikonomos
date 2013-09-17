@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -32,7 +34,10 @@ public class EditCategoryPresenter implements Presenter {
 		Widget asWidget();
 		HasText getCategoryId();
 		HasValue<String> getCategoryDescription();
-		
+		HasValue<String> getCategoryParent();
+		void enableCategoryParent(boolean isEnable);
+		boolean populateParentList(List<Category> parents);
+		void hideCurrentOption(String valueHide);
 		void setCategoryPrivate(boolean isPrivate);
 		void reset();
 		HasClickHandlers getValidateButton();
@@ -43,6 +48,7 @@ public class EditCategoryPresenter implements Presenter {
 	private final EventBus eventBus;
 	private static EditCategoryPresenter instance = null;
 	private Category category;
+	private boolean isParentLoaded = false;
 	
 	@Inject private OikonomosErrorMessages errorMessages;
 	@Inject private CategoryServiceAsync rpcCategoryService;
@@ -52,14 +58,18 @@ public class EditCategoryPresenter implements Presenter {
 			
 			@Override
 			public void onSuccess() {
+				WaitingFlyer.start();
+
 				if (instance == null) {
 					instance = NomosInjector.INSTANCE.getEditCategoryPresenter();
 				}
 				
+				instance.getRemoteViewInformations();
+				
 				String[] splitHistoryToken = History.getToken().split("\\|");
 				try {
-					long accountId = Long.parseLong(splitHistoryToken[1]);
-					instance.getRemoteData(accountId, callback);
+					long categoryId = Long.parseLong(splitHistoryToken[1]);
+					instance.getRemoteData(categoryId, callback);
 				} catch (Exception e) {
 					User authentifiedUser = OikonomosController.getAuthentifiedUser();
 					instance.category = new Category();
@@ -67,10 +77,12 @@ public class EditCategoryPresenter implements Presenter {
 					instance.updateViewFromData();
 					callback.onCreate(instance);
 				}
+				WaitingFlyer.stop();
 			}
 			
 			@Override
 			public void onFailure(Throwable reason) {
+				WaitingFlyer.stop();
 				callback.onCreateFailed();
 			}
 		});
@@ -83,7 +95,7 @@ public class EditCategoryPresenter implements Presenter {
 		bind();
 	}
 	
-	private void bind() {
+	private void bind() {		
 		this.display.getValidateButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				saveDataFromView();
@@ -99,8 +111,26 @@ public class EditCategoryPresenter implements Presenter {
 		updateViewFromData();
 	}
 
+	private final void getRemoteViewInformations() {
+		if (!isParentLoaded) {
+			rpcCategoryService.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+	
+				@Override public void onFailure(Throwable caught) {
+					WaitingFlyer.stop();
+					MessageFlyer.error(caught.getLocalizedMessage());
+				}
+	
+				@Override public void onSuccess(List<Category> result) {
+					isParentLoaded = display.populateParentList(result);
+					display.hideCurrentOption(
+							(category.getEntityId()==null)?"-1":category.getEntityId().toString());
+				}
+			});
+		}
+	}
+	
 	private final void getRemoteData(long categoryId, final Presenter.Callback callback) {
-		rpcCategoryService.getEntityWithChild(categoryId, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<Category>() {
+		rpcCategoryService.getEntityWithoutChild(categoryId, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<Category>() {
 			@Override
 			public void onSuccess(Category result) {
 				category = result;
@@ -113,7 +143,7 @@ public class EditCategoryPresenter implements Presenter {
 				WaitingFlyer.stop();
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
-		});
+		});		
 	}
 	
 	private void updateViewFromData() {
@@ -121,9 +151,25 @@ public class EditCategoryPresenter implements Presenter {
 		
 		if (category == null) return;
 		
-		if (category.getEntityId() != null)
+		if (category.getEntityId() != null) {
 			display.getCategoryId().setText(category.getEntityId().toString());
+		}
 
+		if (isParentLoaded) {
+			display.hideCurrentOption(
+				(category.getEntityId()==null)?"-1":category.getEntityId().toString()
+			);
+		}
+
+		if (category.getParentId() > 0) {
+			display.getCategoryParent().setValue(category.getParentId().toString());
+		} else {
+			display.getCategoryParent().setValue("ROOT");
+			if (!category.getChilds().isEmpty()) {
+				display.enableCategoryParent(false); // Only 2 level supported
+			}
+		}
+		
 		if (category.getEntityOwner() == null || category.getEntityOwner().isEmpty())
 			display.setCategoryPrivate(false);
 
@@ -135,9 +181,16 @@ public class EditCategoryPresenter implements Presenter {
 		if (display.getCategoryDescription().getValue().isEmpty()) {
 			MessageFlyer.error(errorMessages.error_message_category_mandatoryDescription());
 		}
+		if (!OikonomosController.getAuthentifiedUser().getUserEmail().equals(category.getEntityOwner())) {
+			MessageFlyer.error(errorMessages.error_message_category_publicNotUpdatable());
+		}
 		
 		WaitingFlyer.start();
 		category.setEntityDescription(display.getCategoryDescription().getValue());
+		Long parentId = -1L;
+		if (!display.getCategoryParent().getValue().equals("ROOT"))
+			parentId = Long.parseLong(display.getCategoryParent().getValue());
+		category.setParentId(parentId);
 		
 		rpcCategoryService.addOrUpdateEntity(category, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<Category>() {
 
@@ -153,6 +206,7 @@ public class EditCategoryPresenter implements Presenter {
 					@Override
 					public void onSuccess(Category result) {
 						category = result;
+						isParentLoaded = false;
 						eventBus.fireEvent(new LeftmenuEntityChangeEvent(category));
 						History.newItem(result.getEntityType().name().toLowerCase()+"|"+result.getEntityId());
 						WaitingFlyer.stop();

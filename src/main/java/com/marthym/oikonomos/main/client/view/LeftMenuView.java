@@ -3,7 +3,6 @@ package com.marthym.oikonomos.main.client.view;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,8 +21,6 @@ import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
 public class LeftMenuView extends Composite implements LeftMenuPresenter.Display {
-	private static final Logger LOG = Logger.getLogger(LeftMenuView.class.getName());
-	
 	private static final LeftMenuResource res = LeftMenuResource.INSTANCE;
 	
 	Map<EntityType, LeftMenuEntityPanel> entitiesPanels;
@@ -80,7 +77,6 @@ public class LeftMenuView extends Composite implements LeftMenuPresenter.Display
 			LeftMenuEntityPanel leftMenuEntityPanel = entitiesPanels.get(entity.getEntityType());
 			DisclosurePanel disclosurePanel = leftMenuEntityPanel.getDisclosurePanel();
 			String id = entity.getEntityType().name().toLowerCase()+"|"+entity.getEntityId();
-			LOG.finer("Entity id: "+id);
 			
 			UnorderedListPanel content = (UnorderedListPanel)disclosurePanel.getContent();
 			if (content == null) {
@@ -118,7 +114,6 @@ public class LeftMenuView extends Composite implements LeftMenuPresenter.Display
 	public void refreshEntitySublist(Anchor parentLink, List<? extends LeftMenuEntity> entities) {
 		for (final LeftMenuEntity entity : entities) {
 			String id = entity.getEntityType().name().toLowerCase()+"|"+entity.getEntityId();
-			LOG.finer("SubEntity id: "+id);
 			
 			UnorderedListPanel content = null;
 			

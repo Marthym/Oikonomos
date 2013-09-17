@@ -30,7 +30,6 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-
 	@Override
 	@Secured("ROLE_USER")
 	public long getCount() throws OikonomosException {
@@ -64,60 +63,108 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	}
 
 	@Override
+	@Transactional
 	@Secured("ROLE_USER")
-	public List<Category> getTree(boolean sorted, String locale) throws OikonomosException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
-		User authentifiedUser = (User)authentication.getPrincipal();
-		return null;
+	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException {
+		return getEntity(entityId, locale, true);
 	}
+
+
 
 	@Override
 	@Transactional
 	@Secured("ROLE_USER")
-	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException {
+	public Category getEntityWithoutChild(long entityId, String locale) throws OikonomosException {
+		return getEntity(entityId, locale, false);
+	}
+	
+	private Category getEntity(long entityId, String locale, boolean withChilds) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
-
+		
 		com.marthym.oikonomos.shared.model.Category dao = categoryRepository.findOne(entityId);
+		
 		if (dao.getOwner() != null && !dao.getOwner().equals(authentifiedUser.getUserEmail())) {
 			throw new OikonomosException(
 					"error.message.entity.notfound", 
 					"Category "+dao.getId()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
-		Category dto = Category.create(dao, locale, true);
+		Category dto = Category.create(dao, locale, withChilds);
 		
-		return dto;
-	}
-
-
-
-	@Override
-	public Category getEntityWithoutChild(long entityId, String locale) throws OikonomosException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public Category addOrUpdateEntity(Category category, String locale) throws OikonomosException {
-		// TODO Auto-generated method stub
-		return null;
+		return dto;		
 	}
 
 
 	@Override
+	@Transactional
+	@Secured("ROLE_USER")
+	public Category addOrUpdateEntity(Category dto, String locale) throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+		
+		if (dto.getEntityDescription() == null || dto.getEntityDescription().isEmpty()) {
+			throw new OikonomosException("error.message.category.mandatoryDescription", "Description is mandatory !");
+		}
+		
+		// Get DAO object
+		com.marthym.oikonomos.shared.model.Category dao = null;
+		if (dto.getEntityId() == null || dto.getEntityId() < 0) {
+			dao = new com.marthym.oikonomos.shared.model.Category();
+			dao.setOwner(authentifiedUser.getUserEmail());
+		} else {
+			dao = categoryRepository.findOne(dto.getEntityId());
+		}
+		
+		// Check the Owner
+		if (dao.getOwner() != null && !dao.getOwner().equals(authentifiedUser.getUserEmail())) {
+			throw new OikonomosException(
+					"error.message.user.unauthorizedAction", 
+					"Category "+dao.getId()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		
+		// Set the parent if necessary
+		if (dto.getParentId() != null && dto.getParentId() > 0) {
+			if (dto.getEntityId()!= null && dto.getParentId() == dto.getEntityId()) {
+				throw new OikonomosException("error.message.category.cycling", "Category ID and Parent ID must be different !");
+			}
+			
+			com.marthym.oikonomos.shared.model.Category parentDao = categoryRepository.findOne(dto.getParentId());
+			if (parentDao == null) {
+				throw new OikonomosException(
+						"error.message.entity.notfound", "Parent category "+dto.getParentId()+" not found !");
+			}
+			dao.setParent(parentDao);
+		}
+		dao.addDescription(locale, dto.getEntityDescription());
+		
+		dao = categoryRepository.save(dao);
+		return Category.create(dao, locale, false);
+	}
+
+
+	@Override
+	@Secured("ROLE_USER")
 	public void delete(long categoryId) throws OikonomosException {
-		// TODO Auto-generated method stub
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
 		
+		com.marthym.oikonomos.shared.model.Category dao = categoryRepository.findOne(categoryId);
+		if (dao == null) return;
+		
+		if (!authentifiedUser.getUserEmail().equals(dao.getOwner())) {
+			throw new OikonomosException("error.message.user.unauthorizedAction", 
+					"User "+authentifiedUser.getUserEmail()+" try to delete category "+dao.getId());
+		}
+		categoryRepository.delete(categoryId);
 	}
 
 	@Override
 	@Secured("ROLE_USER")
 	@Transactional
-	public List<Category> getEntitiesByParent(String locale, Long entityId) throws OikonomosException {
+	public List<Category> getEntitiesByParent(long entityId, String locale) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();

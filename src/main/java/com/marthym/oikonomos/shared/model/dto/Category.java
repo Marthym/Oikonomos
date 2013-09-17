@@ -18,6 +18,7 @@ public class Category extends LeftMenuEntity implements Serializable {
 	
 	public Category() {
 		childs = new HashSet<Category>();
+		parentId = -1L;
 	}
 	
 	public static Category create(com.marthym.oikonomos.shared.model.Category dao, String locale, boolean withChilds) {
@@ -41,11 +42,9 @@ public class Category extends LeftMenuEntity implements Serializable {
 	}
 	
 	public final Long getParentId() { return parentId; }
+	public void setParentId(Long parentId) {this.parentId = parentId;}
 	
 	public final Set<Category> getChilds() { return childs; } 
-	public void addChild(Category child) {
-		childs.add(child);
-	}
 	
 	@Override
 	public Long getEntityId() {

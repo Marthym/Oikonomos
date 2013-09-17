@@ -173,7 +173,7 @@ public class LeftMenuPresenter implements Presenter {
 		
 			String entityId = historyToken.split("\\|")[1];
 			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
-			rpcCategory.getEntitiesByParent(LocaleInfo.getCurrentLocale().getLocaleName(), Long.parseLong(entityId), new AsyncCallback<List<Category>>() {
+			rpcCategory.getEntitiesByParent(Long.parseLong(entityId), LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
 				@Override public void onFailure(Throwable caught) {
 					LOG.severe(caught.getLocalizedMessage());
 				}
@@ -187,6 +187,8 @@ public class LeftMenuPresenter implements Presenter {
 		History.newItem(historyToken);
 	}
 	
+	//TODO: For categories, when change from root to child, the menu display the category two times (as child and as root
+	//TODO: For categories, when add category, counter is not refresh
 	private void onEntityChange(LeftmenuEntityChangeEvent event) {
 		try {
 			List<LeftMenuEntity> entities = new LinkedList<LeftMenuEntity>();

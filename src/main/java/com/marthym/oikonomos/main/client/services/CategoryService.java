@@ -11,8 +11,7 @@ import com.marthym.oikonomos.shared.model.dto.Category;
 public interface CategoryService extends RemoteService {
 	public long getCount() throws OikonomosException;
 	public List<Category> getRootEntities(String locale) throws OikonomosException;
-	public List<Category> getEntitiesByParent(String locale, Long entityId) throws OikonomosException;
-	public List<Category> getTree(boolean sorted, String locale) throws OikonomosException;
+	public List<Category> getEntitiesByParent(long entityId, String locale) throws OikonomosException;
 	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException;
 	public Category getEntityWithoutChild(long entityId, String locale) throws OikonomosException;
 	public Category addOrUpdateEntity(Category category, String locale) throws OikonomosException;
