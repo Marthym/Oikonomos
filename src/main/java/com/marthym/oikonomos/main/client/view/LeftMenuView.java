@@ -73,41 +73,43 @@ public class LeftMenuView extends Composite implements LeftMenuPresenter.Display
 
 	@Override
 	public void refreshEntityList(List<? extends LeftMenuEntity> entities, ClickHandler handler) {
+		LeftMenuEntityPanel leftMenuEntityPanel = null;
+		DisclosurePanel disclosurePanel = null;
+		UnorderedListPanel content = null;
+		List<ListItemElement> allListElements = null;
+		EntityType currentType = null;
+		
 		for (final LeftMenuEntity entity : entities) {
-			LeftMenuEntityPanel leftMenuEntityPanel = entitiesPanels.get(entity.getEntityType());
-			DisclosurePanel disclosurePanel = leftMenuEntityPanel.getDisclosurePanel();
-			String id = entity.getEntityType().name().toLowerCase()+"|"+entity.getEntityId();
-			
-			UnorderedListPanel content = (UnorderedListPanel)disclosurePanel.getContent();
-			if (content == null) {
-				content = new UnorderedListPanel();
-				content.setStyleName(res.style().vnavSubnav());
-				disclosurePanel.setContent(content);
-			}
-			
-			ListItemElement entityLi = null;
-			List<ListItemElement> allListElements = content.getListElements();
-			for (ListItemElement li : allListElements) {
-				Anchor hyperlink = (Anchor)li.getWidget(0);
-				String entityId = hyperlink.getElement().getAttribute("data-id");
-				if (entityId.equals(id)) {
-					entityLi = li;
-					break;
+			if (currentType == null || currentType != entity.getEntityType()) {
+				if (currentType != null && allListElements != null) 
+					setCount(currentType, allListElements.size());
+				
+				leftMenuEntityPanel = entitiesPanels.get(entity.getEntityType());
+				disclosurePanel = leftMenuEntityPanel.getDisclosurePanel();
+				content = (UnorderedListPanel)disclosurePanel.getContent();
+				
+				if (content == null) {
+					content = new UnorderedListPanel();
+					content.setStyleName(res.style().vnavSubnav());
+					disclosurePanel.setContent(content);
 				}
+				
+				currentType = entity.getEntityType();
 			}
+			
+			String id = entity.getEntityType().name().toLowerCase()+"|"+entity.getEntityId();
 			
 			Anchor link = new Anchor(entity.getEntityDescription());
 			link.getElement().setAttribute("data-id", id);
-			if (entityLi == null) {
-				entityLi = new ListItemElement(link);
-				content.add(entityLi);
-			} else {
-				entityLi.clear();
-				entityLi.add(link);
-			}
+			ListItemElement entityLi = new ListItemElement(link);
+			content.add(entityLi);
 			
 			link.addClickHandler(handler);
 		}
+		
+		if (currentType != null && content != null && content.getListElements() != null) 
+			setCount(currentType, content.getListElements().size());
+
 	}
 	
 	@Override

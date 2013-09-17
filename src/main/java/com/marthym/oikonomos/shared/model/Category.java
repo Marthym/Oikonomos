@@ -38,7 +38,7 @@ public class Category implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.PERSIST)
 	private Category parent;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="parent", cascade=CascadeType.ALL)
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="parent", cascade=CascadeType.REMOVE)
 	private Set<Category> childs;
 		
 	@ElementCollection(fetch=FetchType.EAGER)

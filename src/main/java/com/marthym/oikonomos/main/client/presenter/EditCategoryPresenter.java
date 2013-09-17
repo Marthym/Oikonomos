@@ -1,6 +1,7 @@
 package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,8 @@ import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class EditCategoryPresenter implements Presenter {
+	private static final Logger LOG = Logger.getLogger(EditCategoryPresenter.class.getName());
+	
 	public interface Display {
 		Widget asWidget();
 		HasText getCategoryId();
@@ -113,6 +116,7 @@ public class EditCategoryPresenter implements Presenter {
 
 	private final void getRemoteViewInformations() {
 		if (!isParentLoaded) {
+			LOG.finer("getRemoteViewInformations start");
 			rpcCategoryService.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
 	
 				@Override public void onFailure(Throwable caught) {
@@ -121,9 +125,12 @@ public class EditCategoryPresenter implements Presenter {
 				}
 	
 				@Override public void onSuccess(List<Category> result) {
+					LOG.finer("getRemoteViewInformations result");
 					isParentLoaded = display.populateParentList(result);
+					String[] splitHistoryToken = History.getToken().split("\\|");
 					display.hideCurrentOption(
-							(category.getEntityId()==null)?"-1":category.getEntityId().toString());
+							(splitHistoryToken.length < 2)?"-1":splitHistoryToken[1]);
+					LOG.finer("getRemoteViewInformations end");
 				}
 			});
 		}

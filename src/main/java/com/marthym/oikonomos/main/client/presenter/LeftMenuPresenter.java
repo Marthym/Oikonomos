@@ -1,6 +1,5 @@
 package com.marthym.oikonomos.main.client.presenter;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -187,13 +186,11 @@ public class LeftMenuPresenter implements Presenter {
 		History.newItem(historyToken);
 	}
 	
-	//TODO: For categories, when change from root to child, the menu display the category two times (as child and as root
-	//TODO: For categories, when add category, counter is not refresh
 	private void onEntityChange(LeftmenuEntityChangeEvent event) {
 		try {
-			List<LeftMenuEntity> entities = new LinkedList<LeftMenuEntity>();
-			entities.add(event.getEntity());
-			display.refreshEntityList(entities);
+			DisclosurePanel disclosurePanel = display.getDisclosurePanel(event.getEntity().getEntityType());
+			disclosurePanel.clear();
+			updateEntityList(disclosurePanel);
 		} catch (Exception e) {
 			LOG.warning(e.getClass()+": "+e.getLocalizedMessage());
 		}

@@ -136,7 +136,10 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 						"error.message.entity.notfound", "Parent category "+dto.getParentId()+" not found !");
 			}
 			dao.setParent(parentDao);
+		} else {
+			dao.setParent(null);
 		}
+		
 		dao.addDescription(locale, dto.getEntityDescription());
 		
 		dao = categoryRepository.save(dao);

@@ -55,6 +55,7 @@ public class EditAccountView extends Composite implements EditAccountPresenter.D
 	@Override
 	public void reset() {
 		formAccount.reset();
+		setEnableInitialAmount(true);
 	}
 
 	@Override
