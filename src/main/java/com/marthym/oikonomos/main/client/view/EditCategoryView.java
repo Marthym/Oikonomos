@@ -35,6 +35,7 @@ public class EditCategoryView extends Composite implements EditCategoryPresenter
 	@UiField SingleValueListBox categoryParent;
 	@UiField Button resetButton;
 	@UiField Button submitButton;
+	@UiField Button deleteButton;
 	
 	@Inject OikonomosConstants constants;
 	@Inject MainFormViewResource res;
@@ -51,6 +52,7 @@ public class EditCategoryView extends Composite implements EditCategoryPresenter
 		categoryId.setText("");
 		categoryParent.setValue("ROOT");
 		setCategoryPrivate(true);
+		deleteButton.setVisible(false);
 	}
 
 	@Override
@@ -61,6 +63,11 @@ public class EditCategoryView extends Composite implements EditCategoryPresenter
 	@Override
 	public HasClickHandlers getResetButton() {
 		return resetButton;
+	}
+	
+	@Override
+	public HasClickHandlers getDeleteButton() {
+		return deleteButton;
 	}
 
 	@Override
@@ -81,12 +88,14 @@ public class EditCategoryView extends Composite implements EditCategoryPresenter
 			categoryType.addStyleName(res.style().ctPrivate());
 			categoryDescription.setEnabled(true);
 			categoryParent.setEnabled(true);
+			deleteButton.setVisible(true);
 		} else {
 			categoryType.setText(constants.view_editcategory_type_public());
 			categoryType.removeStyleName(res.style().ctPrivate());
 			categoryType.addStyleName(res.style().ctPublic());
 			categoryDescription.setEnabled(false);
 			categoryParent.setEnabled(false);
+			deleteButton.setVisible(false);
 		}
 	}
 

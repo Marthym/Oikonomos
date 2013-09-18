@@ -25,6 +25,7 @@ import com.marthym.oikonomos.main.client.services.CategoryServiceAsync;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
@@ -45,6 +46,7 @@ public class EditCategoryPresenter implements Presenter {
 		void reset();
 		HasClickHandlers getValidateButton();
 		HasClickHandlers getResetButton();
+		HasClickHandlers getDeleteButton();
 	}
 	
 	private final Display display;
@@ -111,6 +113,12 @@ public class EditCategoryPresenter implements Presenter {
 			}
 		});
 		
+		this.display.getDeleteButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				onDeleteCategory();
+			}
+		});
+
 		updateViewFromData();
 	}
 
@@ -177,8 +185,11 @@ public class EditCategoryPresenter implements Presenter {
 			}
 		}
 		
-		if (category.getEntityOwner() == null || category.getEntityOwner().isEmpty())
+		if (category.getEntityOwner() == null || category.getEntityOwner().isEmpty()) {
 			display.setCategoryPrivate(false);
+		} else if (category.getEntityId() != null) {
+			display.setCategoryPrivate(true);
+		}
 
 		display.getCategoryDescription().setValue(category.getEntityDescription());
 		
@@ -222,6 +233,26 @@ public class EditCategoryPresenter implements Presenter {
 					}
 				});
 		
+	}
+	
+	private void onDeleteCategory() {
+		WaitingFlyer.start();
+		final String categoryName = category.getEntityDescription();
+		rpcCategoryService.delete(category.getEntityId(), new AsyncCallback<Void>() {
+
+			@Override public void onFailure(Throwable caught) {
+				WaitingFlyer.stop();
+				MessageFlyer.error(caught.getLocalizedMessage());
+			}
+
+			@Override public void onSuccess(Void result) {
+				History.newItem(EntityType.CATEGORY.name().toLowerCase());
+				eventBus.fireEvent(new LeftmenuEntityChangeEvent(category));
+				WaitingFlyer.stop();
+				MessageFlyer.info(
+						errorMessages.info_message_entity_deleteSuccessfully().replace("{0}", categoryName));
+			}
+		});
 	}
 
 	@Override

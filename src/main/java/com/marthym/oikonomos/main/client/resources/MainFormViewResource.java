@@ -18,6 +18,7 @@ public interface MainFormViewResource extends ClientBundle {
 		String key();
 		String checkBox();
 		String categoryType();
+		String deleteButton();
 		@ClassName("public") String ctPublic();
 		@ClassName("private") String ctPrivate();
 		@ClassName("gradien-right") String gradienRight();
