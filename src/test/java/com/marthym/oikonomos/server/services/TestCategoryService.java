@@ -94,6 +94,14 @@ public class TestCategoryService {
 		}
 		
 		try {
+			categoryService.getCountRootEntities();
+			fail("Security breach ...");
+		} catch (AccessDeniedException e) {
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		try {
 			categoryService.getEntitiesByParent(-1L, "");
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
@@ -137,6 +145,14 @@ public class TestCategoryService {
 		
 		try {
 			categoryService.getCount();
+			fail("Security breach ...");
+		} catch (AuthenticationCredentialsNotFoundException e) {
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		try {
+			categoryService.getCountRootEntities();
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -196,6 +212,20 @@ public class TestCategoryService {
 		try {
 			long count = categoryService.getCount();
 			assertEquals(3, count);
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		SecurityContextHolder.clearContext();
+	}
+	
+	@Test
+	public void testGetCountRootEntities() {
+		SecurityContextHolder.setContext(scUser);
+		
+		try {
+			long count = categoryService.getCountRootEntities();
+			assertEquals(1, count);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}

@@ -51,7 +51,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 		
 		LeftMenuData leftMenuData = new LeftMenuData();
 		leftMenuData.addEntityCount(EntityType.ACCOUNT, (int)accountService.getCount());
-		leftMenuData.addEntityCount(EntityType.CATEGORY, (int)categoryService.getCount());
+		leftMenuData.addEntityCount(EntityType.CATEGORY, (int)categoryService.getCountRootEntities());
 		//TODO: Add all entity found
 		
 		return leftMenuData;

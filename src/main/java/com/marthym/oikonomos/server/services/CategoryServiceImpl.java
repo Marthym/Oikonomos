@@ -39,6 +39,16 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 		
 		return categoryRepository.countByOwnerIsNullOrOwner(authentifiedUser.getUserEmail());
 	}
+	
+	@Override
+	@Secured("ROLE_USER")
+	public long getCountRootEntities() throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+		
+		return categoryRepository.countRootCategoriesByOwner(authentifiedUser.getUserEmail());
+	}
 
 	@Override
 	@Secured("ROLE_USER")

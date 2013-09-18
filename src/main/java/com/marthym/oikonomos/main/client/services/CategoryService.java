@@ -10,6 +10,7 @@ import com.marthym.oikonomos.shared.model.dto.Category;
 @RemoteServiceRelativePath("../rpc/categoryService")
 public interface CategoryService extends RemoteService {
 	public long getCount() throws OikonomosException;
+	public long getCountRootEntities() throws OikonomosException;
 	public List<Category> getRootEntities(String locale) throws OikonomosException;
 	public List<Category> getEntitiesByParent(long entityId, String locale) throws OikonomosException;
 	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException;

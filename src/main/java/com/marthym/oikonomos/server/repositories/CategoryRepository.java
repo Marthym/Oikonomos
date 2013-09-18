@@ -11,6 +11,9 @@ import com.marthym.oikonomos.shared.model.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	public Long countByOwnerIsNullOrOwner(String owner);
 	
+	@Query("select count(c) from Category c where (c.owner is null or c.owner = :owner) and parent_id is null")
+	public Long countRootCategoriesByOwner(@Param("owner") String owner);
+	
 	@Query("select c from Category c where (c.owner is null or c.owner = :owner) and parent_id is null")
 	public List<Category> findRootCategoriesByOwner(@Param("owner") String owner);
 
