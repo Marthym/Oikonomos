@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.main.client.services.CategoryService;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.services.CategoryService;
 
 @Repository
 @Service("categoryService")

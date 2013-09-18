@@ -12,7 +12,7 @@ import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
+import com.marthym.oikonomos.shared.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 

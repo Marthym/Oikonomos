@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.UserUpdateEvent;
-import com.marthym.oikonomos.main.client.services.UserServiceAsync;
+import com.marthym.oikonomos.shared.services.UserServiceAsync;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.client.components.MessageFlyer;

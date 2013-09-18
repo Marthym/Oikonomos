@@ -26,10 +26,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marthym.oikonomos.main.client.services.CategoryService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.services.CategoryService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)

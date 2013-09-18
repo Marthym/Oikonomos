@@ -22,9 +22,9 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.services.DashboardDataService;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;
 import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 

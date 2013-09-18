@@ -25,11 +25,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marthym.oikonomos.main.client.services.AccountService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.services.AccountService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)

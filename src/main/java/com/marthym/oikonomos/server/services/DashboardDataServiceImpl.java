@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.main.client.services.AccountService;
-import com.marthym.oikonomos.main.client.services.CategoryService;
-import com.marthym.oikonomos.main.client.services.DashboardDataService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.services.AccountService;
+import com.marthym.oikonomos.shared.services.CategoryService;
+import com.marthym.oikonomos.shared.services.DashboardDataService;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;

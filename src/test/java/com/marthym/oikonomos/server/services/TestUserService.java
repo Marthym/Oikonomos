@@ -25,10 +25,10 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.marthym.oikonomos.main.client.services.UserService;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.UserProfile;
+import com.marthym.oikonomos.shared.services.UserService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)

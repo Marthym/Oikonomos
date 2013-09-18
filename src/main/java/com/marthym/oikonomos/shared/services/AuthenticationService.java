@@ -1,4 +1,4 @@
-package com.marthym.oikonomos.client.services;
+package com.marthym.oikonomos.shared.services;
 
 
 import org.springframework.security.access.annotation.Secured;

@@ -373,8 +373,8 @@
 					</execution>
 				</executions>
 				<configuration>
+					<packagingExcludes>**/client/**</packagingExcludes>
 					<webappDirectory>${webappDirectory}</webappDirectory>
-					<excludes>**/com/marthym/oikonomos/main/client/Injector*</excludes>
 				</configuration>
 			</plugin>
 			<plugin>

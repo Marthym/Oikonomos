@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.marthym.oikonomos.client.services.AuthenticationService;
-import com.marthym.oikonomos.main.client.services.UserService;
 import com.marthym.oikonomos.server.repositories.UserRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.UserProfile;
+import com.marthym.oikonomos.shared.services.AuthenticationService;
+import com.marthym.oikonomos.shared.services.UserService;
 
 @Repository
 @Service("userService")

@@ -5,7 +5,6 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
-import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.components.TopNavigationBar;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
@@ -15,15 +14,16 @@ import com.marthym.oikonomos.main.client.presenter.EditCategoryPresenter;
 import com.marthym.oikonomos.main.client.presenter.LeftMenuPresenter;
 import com.marthym.oikonomos.main.client.presenter.TopNavigationPresenter;
 import com.marthym.oikonomos.main.client.presenter.UserProfilePresenter;
-import com.marthym.oikonomos.main.client.services.AccountServiceAsync;
-import com.marthym.oikonomos.main.client.services.CategoryServiceAsync;
-import com.marthym.oikonomos.main.client.services.UserServiceAsync;
 import com.marthym.oikonomos.main.client.view.AccountsListView;
 import com.marthym.oikonomos.main.client.view.DashboardView;
 import com.marthym.oikonomos.main.client.view.EditAccountView;
 import com.marthym.oikonomos.main.client.view.EditCategoryView;
 import com.marthym.oikonomos.main.client.view.LeftMenuView;
 import com.marthym.oikonomos.main.client.view.UserProfileView;
+import com.marthym.oikonomos.shared.services.AccountServiceAsync;
+import com.marthym.oikonomos.shared.services.AuthenticationServiceAsync;
+import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
+import com.marthym.oikonomos.shared.services.UserServiceAsync;
 
 public class NomosInjectorModule extends AbstractGinModule {
     @Override

@@ -1,4 +1,4 @@
-package com.marthym.oikonomos.main.client.services;
+package com.marthym.oikonomos.shared.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

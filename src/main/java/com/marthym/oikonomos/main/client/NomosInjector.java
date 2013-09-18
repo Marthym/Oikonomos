@@ -4,7 +4,6 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
-import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
@@ -12,6 +11,7 @@ import com.marthym.oikonomos.main.client.presenter.EditCategoryPresenter;
 import com.marthym.oikonomos.main.client.presenter.LeftMenuPresenter;
 import com.marthym.oikonomos.main.client.presenter.TopNavigationPresenter;
 import com.marthym.oikonomos.main.client.presenter.UserProfilePresenter;
+import com.marthym.oikonomos.shared.services.AuthenticationServiceAsync;
 
 @GinModules(NomosInjectorModule.class)
 public interface NomosInjector extends Ginjector { 

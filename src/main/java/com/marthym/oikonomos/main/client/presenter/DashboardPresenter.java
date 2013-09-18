@@ -14,7 +14,7 @@ import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.main.client.services.DashboardDataServiceAsync;
+import com.marthym.oikonomos.shared.services.DashboardDataServiceAsync;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;

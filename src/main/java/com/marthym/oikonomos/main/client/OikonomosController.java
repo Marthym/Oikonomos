@@ -5,7 +5,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.marthym.oikonomos.client.presenter.Presenter;
-import com.marthym.oikonomos.client.services.AuthenticationServiceAsync;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
 import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
 import com.marthym.oikonomos.main.client.event.UserUpdateEvent;
@@ -13,6 +12,7 @@ import com.marthym.oikonomos.main.client.event.UserUpdateEventHandler;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.services.AuthenticationServiceAsync;
 
 public class OikonomosController implements Presenter {
 	private static final String CURRENT_MODULE_PATH = "oikonomos.html";
