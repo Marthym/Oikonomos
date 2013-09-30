@@ -9,7 +9,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
@@ -34,6 +33,8 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	private final Display display;
 	private TopNavigationPresenter topNavigationPresenter;
 	private LeftMenuPresenter leftMenuPresenter;
+
+	static final String HISTORY_PARAM_SEPARATOR = "\\|";
 
 	@Inject
 	public DashboardPresenter(EventBus eventBus, Display display) {
@@ -91,7 +92,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 		leftMenuPresenter.go(display.getLeftpPanel());
 		
 		String historyToken = History.getToken();
-		String[] splitHistoryToken = historyToken.split("\\|");
+		String[] splitHistoryToken = historyToken.split(HISTORY_PARAM_SEPARATOR);
 		try {
 			leftMenuPresenter.openEntityMenu(EntityType.valueOf(splitHistoryToken[0].toUpperCase()));
 		} catch (Exception e) {}

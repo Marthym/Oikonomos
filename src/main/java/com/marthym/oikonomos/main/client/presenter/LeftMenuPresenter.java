@@ -28,8 +28,10 @@ import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEventHandler;
 import com.marthym.oikonomos.shared.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
+import com.marthym.oikonomos.shared.services.PayeeServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
+import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.model.dto.Category;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
@@ -151,7 +153,18 @@ public class LeftMenuPresenter implements Presenter {
 			break;
 		case REPORT:
 			break;
-		case PAYEE :
+		case PAYEE:
+			PayeeServiceAsync rpcPayee = PayeeServiceAsync.Util.getInstance();
+			rpcPayee.findAll(new AsyncCallback<List<Payee>>() {
+
+				@Override public void onFailure(Throwable caught) {
+					MessageFlyer.error(caught.getLocalizedMessage());
+				}
+
+				@Override public void onSuccess(List<Payee> result) {
+					display.refreshEntityList(result);
+				}
+			});
 			break;
 		case SCHEDULER:
 			break;
@@ -170,7 +183,7 @@ public class LeftMenuPresenter implements Presenter {
 			content.setVisible(!content.isVisible());
 		} else {
 		
-			String entityId = historyToken.split("\\|")[1];
+			String entityId = historyToken.split(DashboardPresenter.HISTORY_PARAM_SEPARATOR)[1];
 			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
 			rpcCategory.getEntitiesByParent(Long.parseLong(entityId), LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
 				@Override public void onFailure(Throwable caught) {

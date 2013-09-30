@@ -71,7 +71,7 @@ public class EditCategoryPresenter implements Presenter {
 				
 				instance.getRemoteViewInformations();
 				
-				String[] splitHistoryToken = History.getToken().split("\\|");
+				String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
 				try {
 					long categoryId = Long.parseLong(splitHistoryToken[1]);
 					instance.getRemoteData(categoryId, callback);
@@ -135,7 +135,7 @@ public class EditCategoryPresenter implements Presenter {
 				@Override public void onSuccess(List<Category> result) {
 					LOG.finer("getRemoteViewInformations result");
 					isParentLoaded = display.populateParentList(result);
-					String[] splitHistoryToken = History.getToken().split("\\|");
+					String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
 					display.hideCurrentOption(
 							(splitHistoryToken.length < 2)?"-1":splitHistoryToken[1]);
 					LOG.finer("getRemoteViewInformations end");
@@ -197,7 +197,7 @@ public class EditCategoryPresenter implements Presenter {
 	
 	private void saveDataFromView() {
 		if (display.getCategoryDescription().getValue().isEmpty()) {
-			MessageFlyer.error(errorMessages.error_message_category_mandatoryDescription());
+			MessageFlyer.error(errorMessages.error_message_mandatoryDescription());
 		}
 		if (!OikonomosController.getAuthentifiedUser().getUserEmail().equals(category.getEntityOwner())) {
 			MessageFlyer.error(errorMessages.error_message_category_publicNotUpdatable());

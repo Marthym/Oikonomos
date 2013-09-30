@@ -7,22 +7,17 @@
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
 	<g:HTMLPanel width="80%">
-		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.view_editcategory_title}"/></g:HTMLPanel>
-		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.categoriesMainView}"/><!-- Top left icon -->
-		<g:FormPanel encoding="utf-8" method="post" ui:field="formUser" addStyleNames="{dashRes.style.clear}">
+		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.view_editpayee_title}"/></g:HTMLPanel>
+		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.payeesMainView}"/><!-- Top left icon -->
+		<g:FormPanel encoding="utf-8" method="post" ui:field="formPayee" addStyleNames="{dashRes.style.clear}">
 			<g:HTMLPanel> <!-- FormPanel does not accept more than one child ... -->
 				<table style="width:99%;" class="{res.style.fieldTable}">
 					<tr>
 						<td class="{res.style.headerCell}"><g:Label text="{constants.view_id}" /></td>
-						<td style="width:50px;"><g:Label addStyleNames="{res.style.textBox}" ui:field="categoryId"/></td>
-						<td class="{res.style.headerCell}"><g:Label text="{constants.view_editcategory_type}" /></td>
-						<td><g:Label addStyleNames="{res.style.categoryType}" ui:field="categoryType"/></td>
+						<td><g:Label addStyleNames="{res.style.textBox}" ui:field="payeeId"/></td>
 					</tr><tr>
-						<td class="{res.style.headerCell}"><g:Label text="{constants.view_editcategory_parent}" /></td>
-						<td colspan="3"><nomos:SingleValueListBox addStyleNames="{res.style.listBox}" ui:field="categoryParent"/></td>
-					</tr><tr>
-						<td class="{res.style.headerCell}"><g:Label text="{constants.view_editcategory_label}" /></td>
-						<td colspan="3"><g:TextBox addStyleNames="{res.style.textBox}" ui:field="categoryDescription"/></td>
+						<td class="{res.style.headerCell}"><g:Label text="{constants.view_editpayee_label}" /></td>
+						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="payeeName"/></td>
 					</tr>
 				</table>
 				

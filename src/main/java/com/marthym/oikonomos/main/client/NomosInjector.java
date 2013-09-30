@@ -8,6 +8,7 @@ import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
 import com.marthym.oikonomos.main.client.presenter.EditCategoryPresenter;
+import com.marthym.oikonomos.main.client.presenter.EditPayeePresenter;
 import com.marthym.oikonomos.main.client.presenter.LeftMenuPresenter;
 import com.marthym.oikonomos.main.client.presenter.TopNavigationPresenter;
 import com.marthym.oikonomos.main.client.presenter.UserProfilePresenter;
@@ -25,6 +26,7 @@ public interface NomosInjector extends Ginjector {
     public EditCategoryPresenter getEditCategoryPresenter();
     public AccountsListPresenter getAccountsListPresenter();
     public UserProfilePresenter getUserProfilePresenter();
+    public EditPayeePresenter getEditPayeePresenter();
     
     public AuthenticationServiceAsync getAuthenticationServiceAsync();
 }

@@ -16,7 +16,7 @@
 	<import resource="applicationContext-security.xml"/>
 	
 	<context:property-placeholder 
-		location="file:${catalina.home}/conf/oikonomos.properties"
+		location="file:${catalina.base}/conf/oikonomos.properties"
      	ignore-unresolvable="true" 
      	ignore-resource-not-found="true"
     />

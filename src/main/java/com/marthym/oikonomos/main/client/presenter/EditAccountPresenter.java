@@ -74,7 +74,7 @@ public class EditAccountPresenter implements Presenter {
 					instance = NomosInjector.INSTANCE.getEditAccountPresenter();
 				}
 				
-				String[] splitHistoryToken = History.getToken().split("\\|");
+				String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
 				try {
 					long accountId = Long.parseLong(splitHistoryToken[1]);
 					instance.getRemoteData(accountId, callback);

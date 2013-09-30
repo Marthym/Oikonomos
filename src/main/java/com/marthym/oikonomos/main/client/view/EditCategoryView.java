@@ -24,9 +24,9 @@ import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 import com.marthym.oikonomos.shared.model.dto.Category;
 
 public class EditCategoryView extends Composite implements EditCategoryPresenter.Display {
-	private static UserProfileViewUiBinder uiBinder = GWT.create(UserProfileViewUiBinder.class);
+	private static EditCategoryViewUiBinder uiBinder = GWT.create(EditCategoryViewUiBinder.class);
 
-	interface UserProfileViewUiBinder extends UiBinder<Widget, EditCategoryView> {}
+	interface EditCategoryViewUiBinder extends UiBinder<Widget, EditCategoryView> {}
 	
 	@UiField FormPanel formUser;
 	@UiField Label categoryId;

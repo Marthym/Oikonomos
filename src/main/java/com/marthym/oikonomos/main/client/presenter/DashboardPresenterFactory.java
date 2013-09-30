@@ -13,6 +13,7 @@ public class DashboardPresenterFactory {
 		ACCOUNTS,
 		ACCOUNT,
 		PROFILE,
+		PAYEE,
 		CATEGORY
 	}
 		
@@ -30,7 +31,7 @@ public class DashboardPresenterFactory {
 			}
 		};
 		
-		String[] splitHistoryToken = historyToken.split("\\|");
+		String[] splitHistoryToken = historyToken.split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
 		final ContentPanelType contentType = ContentPanelType.valueOf(splitHistoryToken[0].toUpperCase());
 		
 		switch (contentType) {
@@ -49,6 +50,10 @@ public class DashboardPresenterFactory {
 			
 		case CATEGORY:
 			EditCategoryPresenter.createAsync(callback);
+			return;
+		
+		case PAYEE:
+			EditPayeePresenter.createAsync(callback);
 			return;
 			
 		default:
