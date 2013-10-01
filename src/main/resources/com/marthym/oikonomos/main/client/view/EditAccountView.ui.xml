@@ -8,7 +8,7 @@
 	<ui:with type="com.marthym.oikonomos.main.client.i18n.EditAccountConstants" field="constants" />
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="nomosconstants" />
 	
-	<g:HTMLPanel width="80%">
+	<g:HTMLPanel>
 		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.title}"/></g:HTMLPanel>
 		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.accountsMainView}"/>
 		<g:FormPanel encoding="utf-8" method="post" ui:field="formAccount" addStyleNames="{dashRes.style.clear}">

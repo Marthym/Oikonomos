@@ -41,7 +41,8 @@ public class DashboardPresenterFactory {
 			return;
 			
 		case ACCOUNT:
-			EditAccountPresenter.createAsync(callback);
+			AccountTabbedPresenter.createAsync(callback);
+			//EditAccountPresenter.createAsync(callback);
 			return;
 		
 		case PROFILE:

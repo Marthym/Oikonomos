@@ -94,3 +94,33 @@ h2 {color:#616161;}
 .gwt-PopupPanelGlass {
 	background: url('img/back.png');
 }
+
+/********************************************************
+** TAB LAYOUT PANEL
+********************************************************/
+.gwt-TabLayoutPanel {
+	background-color: #E5EAEF;
+}
+.gwt-TabLayoutPanelTabs {
+	margin-left:10px;
+}
+.gwt-TabLayoutPanelTabInner {
+    margin: 0 3px 0 0;
+}
+.gwt-TabLayoutPanelTabInner .gwt-Label,
+.gwt-TabLayoutPanelTabInner .gwt-HTML {
+	background-color: #FFFFFF;
+    border: 1px solid #DDE2E8;
+    border-radius: 1px 1px 0 0;
+    color: #1F252A;
+    float: left;
+    font-size: 13px;
+    height: 20px;
+	line-height: 11px;
+    padding: 9px 19px 0;
+    text-decoration: none;
+}
+.gwt-TabLayoutPanelContent {
+	background-color: white;
+	margin: 0px 10px;
+}

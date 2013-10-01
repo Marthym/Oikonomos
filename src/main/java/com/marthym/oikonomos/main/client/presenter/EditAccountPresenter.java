@@ -8,8 +8,6 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -64,33 +62,23 @@ public class EditAccountPresenter implements Presenter {
 	@Inject private OikonomosErrorMessages errorMessages;
 	@Inject private EditAccountConstants constants;
 	@Inject private AccountServiceAsync rcpAccountService;
-
-	public static void createAsync(final Presenter.Callback callback) {
-		GWT.runAsync(new RunAsyncCallback() {
-			
-			@Override
-			public void onSuccess() {
-				if (instance == null) {
-					instance = NomosInjector.INSTANCE.getEditAccountPresenter();
-				}
-				
-				String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
-				try {
-					long accountId = Long.parseLong(splitHistoryToken[1]);
-					instance.getRemoteData(accountId, callback);
-				} catch (Exception e) {
-					User authentifiedUser = OikonomosController.getAuthentifiedUser();
-					instance.account = new Account(authentifiedUser.getUserEmail());
-					instance.updateViewFromData();
-					callback.onCreate(instance);
-				}
-			}
-			
-			@Override
-			public void onFailure(Throwable reason) {
-				callback.onCreateFailed();
-			}
-		});
+	
+	public static Presenter create(HasWidgets container) {
+		if (instance == null) {
+			instance = NomosInjector.INSTANCE.getEditAccountPresenter();
+		}
+		
+		String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
+		try {
+			long accountId = Long.parseLong(splitHistoryToken[1]);
+			instance.getRemoteData(accountId);
+		} catch (Exception e) {
+			User authentifiedUser = OikonomosController.getAuthentifiedUser();
+			instance.account = new Account(authentifiedUser.getUserEmail());
+			instance.updateViewFromData();
+		}
+		instance.go(container);
+		return instance;
 	}
 	
 	@Inject
@@ -118,13 +106,12 @@ public class EditAccountPresenter implements Presenter {
 		
 	}
 	
-	private final void getRemoteData(long accountId, final Presenter.Callback callback) {
+	private final void getRemoteData(long accountId) {
 		rcpAccountService.getEntity(accountId, new AsyncCallback<Account>() {
 			@Override
 			public void onSuccess(Account result) {
 				account = result;
 				updateViewFromData();
-				callback.onCreate(instance);
 			}
 			
 			@Override
@@ -254,6 +241,10 @@ public class EditAccountPresenter implements Presenter {
 			}
 		});
 		
+	}
+	
+	public final Widget getDisplay() {
+		return display.asWidget();
 	}
 
 	@Override

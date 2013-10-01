@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.event.LogoutEvent;
 import com.marthym.oikonomos.main.client.event.LogoutEventHandler;
@@ -101,4 +102,9 @@ public class OikonomosController implements Presenter {
 		return authentifiedUser;
 	}
 	
+	@Override
+	public Widget getDisplay() {
+		return dashboardPresenter.getDisplay();
+	}
+
 }

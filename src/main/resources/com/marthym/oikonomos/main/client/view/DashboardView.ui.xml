@@ -12,7 +12,7 @@
 			<g:ScrollPanel width="300" ui:field="leftPanel" />
 		</g:west>
 		<g:center>
-			<g:HTMLPanel styleName="{res.style.content}" ui:field="centerPanel" />
+			<g:LayoutPanel styleName="{res.style.content}" ui:field="centerPanel" />
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 

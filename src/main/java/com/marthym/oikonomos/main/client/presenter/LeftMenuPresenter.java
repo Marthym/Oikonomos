@@ -208,4 +208,10 @@ public class LeftMenuPresenter implements Presenter {
 			LOG.warning(e.getClass()+": "+e.getLocalizedMessage());
 		}
 	}
+	
+	@Override
+	public Widget getDisplay() {
+		return display.asWidget();
+	}
+
 }

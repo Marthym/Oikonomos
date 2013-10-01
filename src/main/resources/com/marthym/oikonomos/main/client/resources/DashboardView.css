@@ -1,8 +1,6 @@
 @CHARSET "UTF-8";
-.content{
-	padding:10px;
-}
-.clear {clear:both;}
+.content{}
+.clear {clear:both;margin:5px;}
 
 .main-view {
 	box-shadow: 0 0 7px #000000;

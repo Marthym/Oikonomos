@@ -106,4 +106,10 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 		DashboardPresenterFactory.createCentralPresenter(display.getCenterPanel(), eventBus, historyToken);
 		WaitingFlyer.stop();
 	}
+	
+	@Override
+	public Widget getDisplay() {
+		return display.asWidget();
+	}
+
 }

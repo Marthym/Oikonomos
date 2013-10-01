@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.UserUpdateEvent;
@@ -150,6 +149,11 @@ public class UserProfilePresenter implements Presenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(display.asWidget());
+	}
+
+	@Override
+	public Widget getDisplay() {
+		return display.asWidget();
 	}
 
 }

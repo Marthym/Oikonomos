@@ -14,6 +14,7 @@ import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.services.AccountService;
 import com.marthym.oikonomos.shared.services.CategoryService;
 import com.marthym.oikonomos.shared.services.DashboardDataService;
+import com.marthym.oikonomos.shared.services.PayeeService;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;
@@ -24,11 +25,9 @@ import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 public class DashboardDataServiceImpl extends RemoteServiceServlet implements DashboardDataService {
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
-	AccountService accountService;
-	
-	@Autowired
-	CategoryService categoryService;
+	@Autowired AccountService accountService;
+	@Autowired CategoryService categoryService;
+	@Autowired PayeeService payeeService;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -52,6 +51,7 @@ public class DashboardDataServiceImpl extends RemoteServiceServlet implements Da
 		LeftMenuData leftMenuData = new LeftMenuData();
 		leftMenuData.addEntityCount(EntityType.ACCOUNT, (int)accountService.getCount());
 		leftMenuData.addEntityCount(EntityType.CATEGORY, (int)categoryService.getCountRootEntities());
+		leftMenuData.addEntityCount(EntityType.PAYEE, (int)payeeService.getCount());
 		//TODO: Add all entity found
 		
 		return leftMenuData;

@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
@@ -17,7 +18,7 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	
 	@UiField HTMLPanel topPanel;
 	@UiField ScrollPanel leftPanel;
-	@UiField HTMLPanel centerPanel;
+	@UiField LayoutPanel centerPanel;
 	
 	public DashboardView() {
 		DashboardViewResource.INSTANCE.style().ensureInjected();
