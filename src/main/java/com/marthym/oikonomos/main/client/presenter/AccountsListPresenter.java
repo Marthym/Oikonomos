@@ -66,10 +66,4 @@ public class AccountsListPresenter implements Presenter {
 		container.clear();
 		container.add(display.asWidget());
 	}
-	
-	@Override
-	public Widget getDisplay() {
-		return display.asWidget();
-	}
-
 }

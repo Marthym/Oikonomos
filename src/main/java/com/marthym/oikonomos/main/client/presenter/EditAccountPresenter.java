@@ -57,27 +57,19 @@ public class EditAccountPresenter implements Presenter {
 	private final Display display;
 	private final EventBus eventBus;
 	private static EditAccountPresenter instance = null;
-	private Account account;
+	private Account account = null;
 	
 	@Inject private OikonomosErrorMessages errorMessages;
 	@Inject private EditAccountConstants constants;
 	@Inject private AccountServiceAsync rcpAccountService;
 	
-	public static Presenter create(HasWidgets container) {
+	public static EditAccountPresenter create(HasWidgets container) {
 		if (instance == null) {
 			instance = NomosInjector.INSTANCE.getEditAccountPresenter();
 		}
 		
-		String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
-		try {
-			long accountId = Long.parseLong(splitHistoryToken[1]);
-			instance.getRemoteData(accountId);
-		} catch (Exception e) {
-			User authentifiedUser = OikonomosController.getAuthentifiedUser();
-			instance.account = new Account(authentifiedUser.getUserEmail());
-			instance.updateViewFromData();
-		}
 		instance.go(container);
+		
 		return instance;
 	}
 	
@@ -100,26 +92,7 @@ public class EditAccountPresenter implements Presenter {
 			public void onClick(ClickEvent event) {
 				updateViewFromData();
 			}
-		});
-
-		updateViewFromData();
-		
-	}
-	
-	private final void getRemoteData(long accountId) {
-		rcpAccountService.getEntity(accountId, new AsyncCallback<Account>() {
-			@Override
-			public void onSuccess(Account result) {
-				account = result;
-				updateViewFromData();
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				WaitingFlyer.stop();
-				MessageFlyer.error(caught.getLocalizedMessage());
-			}
-		});
+		});		
 	}
 	
 	private void updateViewFromData() {
@@ -243,8 +216,9 @@ public class EditAccountPresenter implements Presenter {
 		
 	}
 	
-	public final Widget getDisplay() {
-		return display.asWidget();
+	public void setAccountData(Account account) {
+		this.account = account;
+		updateViewFromData();
 	}
 
 	@Override

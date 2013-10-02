@@ -260,10 +260,4 @@ public class EditCategoryPresenter implements Presenter {
 		container.clear();
 		container.add(display.asWidget());
 	}
-
-	@Override
-	public Widget getDisplay() {
-		return display.asWidget();
-	}
-
 }

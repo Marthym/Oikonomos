@@ -14,7 +14,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.impl.Validation;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
@@ -108,11 +107,5 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 			
 		});
 		return "";
-	}
-	
-	@Override
-	public Widget getDisplay() {
-		return welcomePresenter.getDisplay();
-	}
-
+	}	
 }
