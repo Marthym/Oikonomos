@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -19,15 +18,15 @@ import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTabbedPresenter implements Presenter {
-	
 	public interface Display {
 		Widget asWidget();
 		HasWidgets getAccountPropertiesTab();
 		HasWidgets getAccountTransactionsTab();
+		void displayTransactionsListTab();
+		void displayAccountPropertiesTab();
 	}
 	
 	private final Display display;
-	private final EventBus eventBus;
 	private static AccountTabbedPresenter instance = null;
 	private static EditAccountPresenter editAccount = null;
 	private Account account;
@@ -46,10 +45,13 @@ public class AccountTabbedPresenter implements Presenter {
 				try {
 					long accountId = Long.parseLong(splitHistoryToken[1]);
 					instance.getRemoteData(accountId);
+					instance.display.displayTransactionsListTab();
+					
 				} catch (Exception e) {
 					User authentifiedUser = OikonomosController.getAuthentifiedUser();
 					instance.account = new Account(authentifiedUser.getUserEmail());
 					editAccount.setAccountData(instance.account);
+					instance.display.displayAccountPropertiesTab();
 				}
 				callback.onCreate(instance);
 			}
@@ -61,8 +63,7 @@ public class AccountTabbedPresenter implements Presenter {
 	}
 	
 	@Inject
-	private AccountTabbedPresenter(EventBus eventBus, Display display) {
-		this.eventBus = eventBus;
+	private AccountTabbedPresenter(Display display) {
 		this.display = display;
 		
 		bind();
