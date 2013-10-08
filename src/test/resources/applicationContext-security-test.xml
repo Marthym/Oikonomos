@@ -21,7 +21,7 @@
     
 	<security:global-method-security
 		secured-annotations="enabled" jsr250-annotations="disabled">
-		<security:protect-pointcut expression="execution(* com.marthym.oikonomos.main.client.services.*Service.*(..))" access="ROLE_USER"/>
+		<security:protect-pointcut expression="execution(* com.marthym.oikonomos.shared.services.*Service.*(..))" access="ROLE_USER"/>
 	</security:global-method-security>
 
 </beans>
