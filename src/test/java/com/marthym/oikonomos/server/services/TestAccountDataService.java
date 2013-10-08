@@ -37,13 +37,13 @@ public class TestAccountDataService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestAccountDataService.class);
 	
 	@Autowired
-	private AccountService accountDataService;
+	private AccountService accountService;
 	
 	private static SecurityContext scUser;
-	
+		
 	@BeforeClass
 	public static void beforeClass() {
-		System.out.println("------------TestAccountDataService: start -------");		
+		System.out.println("------------TestAccountDataService: start -------");
 	}
 	
 	@BeforeClass
@@ -59,18 +59,19 @@ public class TestAccountDataService {
 	
 	@Test
 	public void testSecurityCredentials() {
+		SecurityContextHolder.clearContext();
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
 		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_TEST"));
-		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, null, authorities);
 		SecurityContext scTest = new SecurityContextImpl();
 		scTest.setAuthentication(auth);
 		
 		SecurityContextHolder.setContext(scTest);
 		
 		try {
-			accountDataService.addOrUpdateEntity(null);
+			accountService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -78,7 +79,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.delete(1L);
+			accountService.delete(1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -86,7 +87,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getCount();
+			accountService.getCount();
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -94,7 +95,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getEntity(1L);
+			accountService.getEntity(1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -102,7 +103,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getList(true);
+			accountService.getList(true);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -112,7 +113,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.clearContext();
 		
 		try {
-			accountDataService.addOrUpdateEntity(null);
+			accountService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -120,7 +121,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.delete(1L);
+			accountService.delete(1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -128,7 +129,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getCount();
+			accountService.getCount();
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -136,7 +137,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getEntity(1L);
+			accountService.getEntity(1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -144,7 +145,7 @@ public class TestAccountDataService {
 		}
 		
 		try {
-			accountDataService.getList(true);
+			accountService.getList(true);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -167,7 +168,7 @@ public class TestAccountDataService {
 		
 		SecurityContextHolder.setContext(scUser);
 		try {
-			newAccount = accountDataService.addOrUpdateEntity(newAccount);
+			newAccount = accountService.addOrUpdateEntity(newAccount);
 			assertNotNull(newAccount);
 			LOGGER.info("New account id: "+newAccount.getId());
 		} catch (OikonomosException e) {
@@ -182,7 +183,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			long count = accountDataService.getCount();
+			long count = accountService.getCount();
 			assertEquals(1, count);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
@@ -196,7 +197,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			Account account = accountDataService.getEntity(1L);
+			Account account = accountService.getEntity(1L);
 			assertNotNull(account);
 			assertEquals(1L, (long)account.getId());
 		} catch (Exception e) {
@@ -211,7 +212,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			List<Account> accounts = accountDataService.getList(true);
+			List<Account> accounts = accountService.getList(true);
 			assertNotNull(accounts);
 			assertEquals(1, accounts.size());
 		} catch (Exception e) {
@@ -226,7 +227,7 @@ public class TestAccountDataService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			accountDataService.delete(1L);
+			accountService.delete(1L);
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
