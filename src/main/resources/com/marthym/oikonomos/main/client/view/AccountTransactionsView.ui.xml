@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder 
+	xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:nomos="urn:import:com.marthym.oikonomos.main.client.components">
+	
+	<ui:with type="com.marthym.oikonomos.main.client.resources.DashboardViewResource" field="dashRes" />
+	<ui:with type="com.marthym.oikonomos.main.client.resources.MainFormViewResource" field="res" />
+	<ui:with type="com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants" field="constants" />
+	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="nomosconstants" />
+	
+	<g:HTMLPanel addStyleNames="{dashRes.style.transactionsView}">
+		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.title}"/></g:HTMLPanel>
+		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.accountsMainView}" />
+		
+		<g:VerticalPanel height="100%"  addStyleNames="{dashRes.style.scroll}" ui:field="vertical">
+		    <g:ScrollPanel addStyleNames="{dashRes.style.scroll}">
+				<g:Grid ui:field="transactionsGrid"/>
+			</g:ScrollPanel>
+	    	<g:DisclosurePanel  addStyleNames="{dashRes.style.disclosure}" ui:field="formDisclosure">
+				<g:header>Text header</g:header>
+				<nomos:EditTransactionForm ui:field="transactionForm" />
+			 </g:DisclosurePanel>
+		</g:VerticalPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

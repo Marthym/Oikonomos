@@ -36,7 +36,7 @@ public class DashboardView extends Composite implements DashboardPresenter.Displ
 	}
 
 	@Override
-	public HasWidgets getLeftpPanel() {
+	public HasWidgets getLeftPanel() {
 		return leftPanel;
 	}
 	

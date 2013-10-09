@@ -10,20 +10,26 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountTabbedPresenter;
+import com.marthym.oikonomos.main.client.resources.DashboardViewResource;
+import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 
 public class AccountTabbedView extends Composite implements AccountTabbedPresenter.Display {
 	
 	private TabLayoutPanel tabPanel;
-	@Inject private OikonomosConstants trad;
-	
+	private OikonomosConstants trad;
 
 	@Inject
-	public AccountTabbedView(EditAccountView editAccountView) {
+	public AccountTabbedView(EditAccountView editAccountView, OikonomosConstants trad) {
+		this.trad = trad;
+		
 		tabPanel = new TabLayoutPanel(3, Unit.EM);
-		tabPanel.add(new HTML("Test transactions"), new HTML("&#x2631; "+trad.transactions()));
-		tabPanel.add(new LayoutPanel(), new HTML("&#x270E; "+trad.properties()));
+		tabPanel.add(new LayoutPanel(), new HTML("&#x2631; "+this.trad.transactions()));
+		tabPanel.add(new LayoutPanel(), new HTML("&#x270E; "+this.trad.properties()));
 		
 		initWidget(tabPanel);
+		
+		DashboardViewResource.INSTANCE.style().ensureInjected();
+		MainFormViewResource.INSTANCE.style().ensureInjected();
 	}
 
 	@Override

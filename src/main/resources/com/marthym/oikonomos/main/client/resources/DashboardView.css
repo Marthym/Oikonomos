@@ -15,3 +15,11 @@
 @sprite .accounts-main-view {gwt-image: "mvAccounts";background-color: white;}
 @sprite .categories-main-view {gwt-image: "mvCategories";background-color: white;}
 @sprite .payess-main-view {gwt-image: "mvPayees";background-color: white;}
+
+/********************************************
+ ** AccountTransactionsView
+ *******************************************/
+
+.transactionsView {padding-bottom: 52px;}
+.transactionsView .scroll {}
+.transactionsView .disclosure {}

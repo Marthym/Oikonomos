@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.marthym.oikonomos.main.client.presenter.AccountTabbedPresenter;
+import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
 import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
 import com.marthym.oikonomos.main.client.presenter.DashboardPresenter;
 import com.marthym.oikonomos.main.client.presenter.EditAccountPresenter;
@@ -18,6 +19,7 @@ import com.marthym.oikonomos.shared.services.AuthenticationServiceAsync;
 @GinModules(NomosInjectorModule.class)
 public interface NomosInjector extends Ginjector { 
 	public static final NomosInjector INSTANCE = GWT.create(NomosInjector.class);
+	
     public EventBus getEventBus();
     public OikonomosController getOikonomosController();
     public DashboardPresenter getDashboardPresenter();
@@ -29,6 +31,7 @@ public interface NomosInjector extends Ginjector {
     public UserProfilePresenter getUserProfilePresenter();
     public EditPayeePresenter getEditPayeePresenter();
     public AccountTabbedPresenter getAccountTabbedPresenter();
+    public AccountTransactionsPresenter getAccountTransactionsPresenter();
     
     public AuthenticationServiceAsync getAuthenticationServiceAsync();
 }

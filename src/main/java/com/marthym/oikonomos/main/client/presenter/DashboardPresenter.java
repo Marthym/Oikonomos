@@ -24,7 +24,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	public interface Display {
 		Widget asWidget();
 		HasWidgets getTopPanel();
-		HasWidgets getLeftpPanel();
+		HasWidgets getLeftPanel();
 		HasWidgets getCenterPanel();
 	}
 	
@@ -89,7 +89,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 			leftMenuPresenter = NomosInjector.INSTANCE.getLeftMenuPresenter();
 		}
 		leftMenuPresenter.updateViewData(data);
-		leftMenuPresenter.go(display.getLeftpPanel());
+		leftMenuPresenter.go(display.getLeftPanel());
 		
 		String historyToken = History.getToken();
 		String[] splitHistoryToken = historyToken.split(HISTORY_PARAM_SEPARATOR);

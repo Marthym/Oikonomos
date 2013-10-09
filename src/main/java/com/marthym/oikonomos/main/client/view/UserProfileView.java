@@ -19,6 +19,7 @@ import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.presenter.UserProfilePresenter;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 
+//TODO: Ask old password for change the password
 public class UserProfileView extends Composite implements UserProfilePresenter.Display {
 	private static UserProfileViewUiBinder uiBinder = GWT.create(UserProfileViewUiBinder.class);
 

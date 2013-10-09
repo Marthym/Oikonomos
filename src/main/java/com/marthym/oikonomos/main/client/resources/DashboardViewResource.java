@@ -63,6 +63,10 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 	      @ClassName("accounts-main-view") String accountsMainView();
 	      @ClassName("categories-main-view") String categoriesMainView();
 	      @ClassName("payess-main-view") String payeesMainView();
+	      
+	      String transactionsView();
+	      String scroll();
+	      String disclosure();
 	   }
 
 	@Source("DashboardView.css")

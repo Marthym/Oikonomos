@@ -29,6 +29,7 @@ public class AccountTabbedPresenter implements Presenter {
 	private final Display display;
 	private static AccountTabbedPresenter instance = null;
 	private static EditAccountPresenter editAccount = null;
+	private static AccountTransactionsPresenter accountTransactions = null;
 	private Account account;
 	
 	@Inject private AccountServiceAsync rcpAccountService;
@@ -71,6 +72,7 @@ public class AccountTabbedPresenter implements Presenter {
 	
 	private void bind() {
 		editAccount = EditAccountPresenter.create(display.getAccountPropertiesTab());
+		accountTransactions = AccountTransactionsPresenter.create(display.getAccountTransactionsTab());
 	}
 
 	
