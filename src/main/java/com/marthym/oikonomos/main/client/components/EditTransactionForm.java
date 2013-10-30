@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 
 public class EditTransactionForm extends Composite {
 	private static EditTransactionFormUiBinder uiBinder = GWT.create(EditTransactionFormUiBinder.class);
@@ -27,8 +28,20 @@ public class EditTransactionForm extends Composite {
 	@UiField Button resetButton;
 	@UiField Button submitButton;
 	
+	AccountTransactionsConstants constants = GWT.create(AccountTransactionsConstants.class);
+	
 	public EditTransactionForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		transactionDate.getElement().setAttribute("placeholder", constants.placeholder_date());
+		transactionPayee.getElement().setAttribute("placeholder", constants.placeholder_payee());
+		transactionDebit.getElement().setAttribute("placeholder", constants.placeholder_debit());
+		transactionCredit.getElement().setAttribute("placeholder", constants.placeholder_credit());
+		transactionCategory.getElement().setAttribute("placeholder", constants.placeholder_category());
+		transactionPaiementMean.getElement().setAttribute("placeholder", constants.placeholder_paiementMean());
+		transactionAccountingDocument.getElement().setAttribute("placeholder", constants.placeholder_accountingDocument());
+		transactionComment.getElement().setAttribute("placeholder", constants.placeholder_comment());
+		transactionBudgetaryLine.getElement().setAttribute("placeholder", constants.placeholder_budgetaryLine());
 	}
 
 	public HasClickHandlers getValidateButton() {

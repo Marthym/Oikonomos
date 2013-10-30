@@ -14,15 +14,14 @@
 				<table width="100%">
 					<tr>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionDate"/></td>
-						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPayee"/></td>
+						<td colspan="2"><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPayee"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionDebit"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionCredit"/></td>
-						<td />
 					</tr>
 					<tr>
 						<td />
-						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionCategory"/></td>
-						<td colspan="2"><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPaiementMean"/></td>
+						<td colspan="2"><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionCategory"/></td>
+						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPaiementMean"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionAccountingDocument"/></td>
 					</tr>
 					<tr>

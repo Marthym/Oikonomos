@@ -12,12 +12,12 @@
 		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.title}"/></g:HTMLPanel>
 		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.accountsMainView}" />
 		
-		<g:VerticalPanel height="100%"  addStyleNames="{dashRes.style.scroll}" ui:field="vertical">
+		<g:VerticalPanel height="100%" width="100%" addStyleNames="{dashRes.style.scroll}" ui:field="vertical">
 		    <g:ScrollPanel addStyleNames="{dashRes.style.scroll}">
 				<g:Grid ui:field="transactionsGrid"/>
 			</g:ScrollPanel>
-	    	<g:DisclosurePanel  addStyleNames="{dashRes.style.disclosure}" ui:field="formDisclosure">
-				<g:header>Text header</g:header>
+	    	<g:DisclosurePanel width="100%" addStyleNames="{dashRes.style.disclosure}" ui:field="formDisclosure">
+				<g:header><ui:text from="{constants.transactionForm}" /></g:header>
 				<nomos:EditTransactionForm ui:field="transactionForm" />
 			 </g:DisclosurePanel>
 		</g:VerticalPanel>

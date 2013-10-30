@@ -1,4 +1,6 @@
 @CHARSET "UTF-8";
+@External .header;
+
 .content{}
 .clear {clear:both;margin:5px;}
 
@@ -7,6 +9,8 @@
     float: right;
     margin-right: 15px;
     margin-top: -33px;
+    margin-bottom: -11px;
+    background-color: white;
 }
 
 @sprite .logout {gwt-image: "logout";}
@@ -22,4 +26,9 @@
 
 .transactionsView {padding-bottom: 52px;}
 .transactionsView .scroll {}
-.transactionsView .disclosure {}
+.transactionsView .disclosure .header {
+	border-top: 1px solid #A6A6A6;
+    color: #616161;
+    font-weight: bold;
+    text-decoration: none;
+}
