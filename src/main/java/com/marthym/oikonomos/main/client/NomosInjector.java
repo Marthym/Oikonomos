@@ -4,6 +4,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
+import com.marthym.oikonomos.main.client.components.CategoriesSuggestOracle;
 import com.marthym.oikonomos.main.client.presenter.AccountTabbedPresenter;
 import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
 import com.marthym.oikonomos.main.client.presenter.AccountsListPresenter;
@@ -32,6 +33,7 @@ public interface NomosInjector extends Ginjector {
     public EditPayeePresenter getEditPayeePresenter();
     public AccountTabbedPresenter getAccountTabbedPresenter();
     public AccountTransactionsPresenter getAccountTransactionsPresenter();
+    public CategoriesSuggestOracle getCategoriesSuggestOracle();
     
     public AuthenticationServiceAsync getAuthenticationServiceAsync();
 }

@@ -125,6 +125,14 @@ public class TestCategoryService {
 			fail(e.getClass()+": "+e.getMessage());
 		}
 		
+		try {
+			categoryService.getEntitiesByDescription("", "");
+			fail("Security breach ...");
+		} catch (AccessDeniedException e) {
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
 		SecurityContextHolder.clearContext();
 		
 		try {
@@ -177,6 +185,14 @@ public class TestCategoryService {
 		
 		try {
 			categoryService.getEntityWithoutChild(-1L, "");
+			fail("Security breach ...");
+		} catch (AuthenticationCredentialsNotFoundException e) {
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		try {
+			categoryService.getEntitiesByDescription("", "");
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -309,6 +325,41 @@ public class TestCategoryService {
 		SecurityContextHolder.clearContext();
 	}
 
+	
+	@Test
+	public void testFindbyDescription() {
+		SecurityContextHolder.setContext(scUser);
+		
+		try {
+			List<Category> categories = categoryService.getEntitiesByDescription("Alim", Locale.FRENCH.getLanguage().toLowerCase());
+			assertNotNull(categories);
+			assertEquals(1, categories.size());
+			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		try {
+			List<Category> categories = categoryService.getEntitiesByDescription("Ba", Locale.US.getCountry().toLowerCase());
+			assertNotNull(categories);
+			assertEquals(2, categories.size());
+			assertEquals((Long)2L, (Long)categories.get(0).getEntityId());
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		try {
+			List<Category> categories = categoryService.getEntitiesByDescription("alim", Locale.FRENCH.getLanguage().toLowerCase());
+			assertNotNull(categories);
+			assertEquals(1, categories.size());
+			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());
+		} catch (Exception e) {
+			fail(e.getClass()+": "+e.getMessage());
+		}
+		
+		SecurityContextHolder.clearContext();
+	}
+	
 	@AfterClass
 	public static void clearSecurityContext() {
 		SecurityContextHolder.clearContext();

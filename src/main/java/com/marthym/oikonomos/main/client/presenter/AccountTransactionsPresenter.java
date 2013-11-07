@@ -9,9 +9,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
-import com.marthym.oikonomos.shared.services.AccountServiceAsync;
-import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTransactionsPresenter implements Presenter {
@@ -25,13 +22,8 @@ public class AccountTransactionsPresenter implements Presenter {
 	}
 	
 	private final Display display;
-	private final EventBus eventBus;
 	private static AccountTransactionsPresenter instance = null;
-	
-	@Inject private OikonomosErrorMessages errorMessages;
-	@Inject private AccountTransactionsConstants constants;
-	@Inject private AccountServiceAsync rcpAccountService;
-	
+		
 	public static AccountTransactionsPresenter create(HasWidgets container) {
 		if (instance == null) {
 			instance = NomosInjector.INSTANCE.getAccountTransactionsPresenter();
@@ -44,7 +36,6 @@ public class AccountTransactionsPresenter implements Presenter {
 	
 	@Inject
 	private AccountTransactionsPresenter(EventBus eventBus, Display display) {
-		this.eventBus = eventBus;
 		this.display = display;
 		
 		bind();

@@ -26,7 +26,7 @@
 					</tr>
 					<tr>
 						<td />
-						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionCategory"/></td>
+						<td><g:SuggestBox addStyleNames="{res.style.textBox}" ui:field="transactionCategory"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPaiementMean"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionAccountingDocument"/></td>
 					</tr>

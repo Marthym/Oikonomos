@@ -7,8 +7,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 
 public class EditTransactionForm extends Composite {
@@ -20,7 +23,8 @@ public class EditTransactionForm extends Composite {
 	@UiField TextBox transactionPayee;
 	@UiField TextBox transactionDebit;
 	@UiField TextBox transactionCredit;
-	@UiField TextBox transactionCategory;
+	@UiField(provided=true)
+			 SuggestBox transactionCategory;
 	@UiField TextBox transactionPaiementMean;
 	@UiField TextBox transactionAccountingDocument;
 	@UiField TextBox transactionComment;
@@ -28,9 +32,12 @@ public class EditTransactionForm extends Composite {
 	@UiField Button resetButton;
 	@UiField Button submitButton;
 	
-	AccountTransactionsConstants constants = GWT.create(AccountTransactionsConstants.class);
+	private final AccountTransactionsConstants constants = GWT.create(AccountTransactionsConstants.class);
+	private final SuggestOracle categoriesOracle = NomosInjector.INSTANCE.getCategoriesSuggestOracle();
 	
 	public EditTransactionForm() {
+		
+		transactionCategory = new SuggestBox(categoriesOracle);
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		transactionDate.getElement().setAttribute("placeholder", constants.placeholder_date());

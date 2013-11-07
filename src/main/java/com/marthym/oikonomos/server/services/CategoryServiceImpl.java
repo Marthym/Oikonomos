@@ -1,7 +1,11 @@
 package com.marthym.oikonomos.server.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +109,34 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 		return dto;		
 	}
 
+	@Override
+	@Transactional
+	@Secured("ROLE_USER")
+	public List<Category> getEntitiesByDescription(String descriptionQuery, String locale) throws OikonomosException {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+			User authentifiedUser = (User)authentication.getPrincipal();
+			
+			Set<Category> allCategoryDto = new HashSet<Category>();
+			List<com.marthym.oikonomos.shared.model.Category> allCategoryDao = categoryRepository.findByDescription(descriptionQuery, authentifiedUser.getUserEmail(), locale);
+			for (com.marthym.oikonomos.shared.model.Category category : allCategoryDao) {
+				allCategoryDto.add(Category.create(category, locale, false));
+				for (com.marthym.oikonomos.shared.model.Category child : category.getChilds()) {
+					allCategoryDto.add(Category.create(child, locale, false));
+				}
+			}
+			
+			List<Category> result = new ArrayList<Category>(allCategoryDto);
+			Collections.sort(result);
+			
+			return result;
+		} catch (Exception e) {
+			LOGGER.error(e.getClass()+": "+e.getLocalizedMessage());
+			if (LOGGER.isDebugEnabled()) LOGGER.debug("STACKTRACE", e);
+			throw new OikonomosException("error.message.unexpected", e.getLocalizedMessage());
+		}
+	}
 
 	@Override
 	@Transactional
