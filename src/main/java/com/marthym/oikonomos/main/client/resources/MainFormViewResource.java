@@ -8,7 +8,7 @@ public interface MainFormViewResource extends ClientBundle {
 
 	public MainFormViewResource INSTANCE = GWT.create(MainFormViewResource.class);
 	
-	public interface EditAccountResourceCss extends CssResource {
+	public interface MainFormViewResourceCss extends CssResource {
 		String fieldTable();
 		String headerCell();
 		String actions();
@@ -16,16 +16,21 @@ public interface MainFormViewResource extends ClientBundle {
 		String listBox();
 		String accountNumber();
 		String key();
-		String checkBox();
 		String categoryType();
 		String deleteButton();
 		@ClassName("public") String ctPublic();
 		@ClassName("private") String ctPrivate();
 		@ClassName("gradien-right") String gradienRight();
 		@ClassName("title-image") String titleImage();
+		
+		String transaction();
+		@ClassName("col-date") String colDate();
+		@ClassName("col-payee") String colPayee();
+		@ClassName("col-debit") String colDebit();
+		@ClassName("col-credit") String colCredit();
 	}
 
 	@Source("MainFormViewResource.css")
-	EditAccountResourceCss style();
+	MainFormViewResourceCss style();
 
 }

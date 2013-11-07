@@ -57,6 +57,8 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 	      String content();
 	      String logout();
 	      String clear();
+	      String center();
+	      String right();
 	      @ClassName("profile-nav-top")String profileNavBar();
 	      @ClassName("main-view") String mainView();
 	      @ClassName("profile-main-view") String profileMainView();

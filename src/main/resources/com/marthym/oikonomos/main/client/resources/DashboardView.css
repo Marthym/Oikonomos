@@ -3,6 +3,8 @@
 
 .content{}
 .clear {clear:both;margin:5px;}
+.center {text-align:center;}
+.right {text-align:right;}
 
 .main-view {
 	box-shadow: 0 0 7px #000000;

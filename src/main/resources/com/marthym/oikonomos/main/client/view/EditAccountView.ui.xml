@@ -35,7 +35,7 @@
 						</g:row>
 						<g:row>
 							<g:customCell styleName="{res.style.headerCell}"><g:Label text="{constants.accountClosedLabel}" /></g:customCell>
-							<g:customCell><g:CheckBox addStyleNames="{res.style.checkBox}" ui:field="accountClosed"/></g:customCell>
+							<g:customCell><g:CheckBox ui:field="accountClosed"/></g:customCell>
 						</g:row>
 					</g:Grid>
 				</g:CaptionPanel>

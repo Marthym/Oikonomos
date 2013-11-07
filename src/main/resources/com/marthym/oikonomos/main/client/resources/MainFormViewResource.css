@@ -51,8 +51,6 @@
 }
 .key input {margin-left:5px;}
 
-.checkBox {}
-
 .categoryType.private {
 	color:green;
 }
@@ -80,3 +78,11 @@
 	background: -webkit-linear-gradient(bottom, grey 0%, black 100%);
 	background: -ms-linear-gradient(bottom, grey 0%, black 100%);
 }
+
+/*****************************************/
+/**	EditTransactionForm					**/
+.transaction {border-spacing: 10px 2px;}
+.transaction .col-date {width:110px;}
+.transaction .col-payee {}
+.transaction .col-debit {width:250px;}
+.transaction .col-credit {width:250px;}
