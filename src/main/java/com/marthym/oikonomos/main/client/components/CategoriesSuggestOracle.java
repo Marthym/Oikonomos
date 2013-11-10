@@ -17,30 +17,29 @@ import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
 public class CategoriesSuggestOracle extends SuggestOracle {
 	
 	@Inject private CategoryServiceAsync categoryService;
-
+	
 	@Override
 	public void requestSuggestions(final Request request, final Callback callback) {
 		String categoryQuery = request.getQuery();
 		if (categoryQuery.length() > 2) {
-			categoryService.getEntitiesByDescription(categoryQuery, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
-				
-				@Override public void onFailure(Throwable caught) {
-					MessageFlyer.error(caught.getLocalizedMessage());
-				}
-				
-				@Override
-				public void onSuccess(List<Category> result) {
-					Collection<Suggestion> list = new LinkedList<Suggestion>();
-					for (Category cat : result) {
-						list.add(new CategorySuggestion(cat));
+	    	  categoryService.getEntitiesByDescription(categoryQuery, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+					
+					@Override public void onFailure(Throwable caught) {
+						MessageFlyer.error(caught.getLocalizedMessage());
 					}
-					Response response = new Response(list);
-                    callback.onSuggestionsReady(request, response);
-				}
-				
-			});
-			
-			
+					
+					@Override
+					public void onSuccess(List<Category> result) {
+						Collection<Suggestion> list = new LinkedList<Suggestion>();
+						for (Category cat : result) {
+							list.add(new CategorySuggestion(cat));
+						}
+						Response response = new Response(list);
+	                    callback.onSuggestionsReady(request, response);
+					}
+					
+				});
+		    
 		} else {
 			Response response = new Response(
                     Collections.<Suggestion> emptyList());

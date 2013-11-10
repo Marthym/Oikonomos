@@ -21,7 +21,11 @@ public class CategorySuggestion implements Suggestion, Serializable {
 
 	@Override
 	public String getReplacementString() {
-		return category.getEntityId().toString();
+		return category.getAbsoluteDescription();
+	}
+
+	public Category getCategory() {
+		return category;
 	}
 
 }

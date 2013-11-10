@@ -23,6 +23,8 @@
 
 	<!-- Injection -->
 	<inherits name="com.google.gwt.inject.Inject"/>
+	
+	<inherits name="com.flipthebird.GwtHashCodeEquals"/>
 
 	<!-- Loggin -->
 	<inherits name="com.google.gwt.logging.Logging" />  

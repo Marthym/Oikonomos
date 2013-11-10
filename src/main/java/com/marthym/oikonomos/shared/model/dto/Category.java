@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.flipthebird.gwthashcodeequals.EqualsBuilder;
+import com.flipthebird.gwthashcodeequals.HashCodeBuilder;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
-//TODO: Implement equals and hashCode for Set unicity
 public class Category extends LeftMenuEntity implements Serializable, Comparable<Category> {
 	private static final long serialVersionUID = -8492244149513545637L;
 
@@ -93,4 +94,33 @@ public class Category extends LeftMenuEntity implements Serializable, Comparable
 	public int compareTo(Category o) {
 		return this.getAbsoluteDescription().compareTo(o.getAbsoluteDescription());
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Category))
+            return false;
+
+        Category cat = (Category) obj;
+        return new EqualsBuilder().
+            append(id, cat.id).
+            append(owner, cat.owner).
+            append(parentId, cat.parentId).
+            append(description, cat.description).
+            isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().
+	            append(id).
+	            append(owner).
+	            append(parentId).
+	            append(description).
+	            toHashCode();
+	}
+
 }
