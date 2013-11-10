@@ -3,11 +3,10 @@ package com.marthym.oikonomos.main.client.components;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -18,6 +17,8 @@ import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
+import com.google.gwt.user.datepicker.client.DateBox;
+import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.shared.model.dto.Category;
@@ -28,7 +29,7 @@ public class EditTransactionForm extends Composite {
 	private static final Logger LOG = Logger.getLogger(EditTransactionForm.class.getName());
 	
 	@UiField FormPanel formTransaction;
-	@UiField TextBox transactionDate;
+	@UiField DateBox transactionDate;
 	@UiField TextBox transactionPayee;
 	@UiField TextBox transactionDebit;
 	@UiField TextBox transactionCredit;
@@ -43,6 +44,7 @@ public class EditTransactionForm extends Composite {
 	
 	private Category selectedCategory;
 	
+	private final OikonomosConstants oConstants = GWT.create(OikonomosConstants.class);
 	private final AccountTransactionsConstants constants = GWT.create(AccountTransactionsConstants.class);
 	private final SuggestOracle categoriesOracle = NomosInjector.INSTANCE.getCategoriesSuggestOracle();
 	
@@ -51,7 +53,10 @@ public class EditTransactionForm extends Composite {
 		transactionCategory = new SuggestBox(categoriesOracle);
 		initWidget(uiBinder.createAndBindUi(this));
 		
+		LOG.fine(oConstants.dateFormat());
 		transactionDate.getElement().setAttribute("placeholder", constants.placeholder_date());
+		transactionDate.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat(oConstants.dateFormat())));
+		
 		transactionPayee.getElement().setAttribute("placeholder", constants.placeholder_payee());
 		transactionDebit.getElement().setAttribute("placeholder", constants.placeholder_debit());
 		transactionCredit.getElement().setAttribute("placeholder", constants.placeholder_credit());
@@ -69,18 +74,10 @@ public class EditTransactionForm extends Composite {
 			}
 		});
 		
-		submitButton.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				if (selectedCategory != null && selectedCategory.getAbsoluteDescription().equals(transactionCategory.getValue().trim())) {
-					LOG.fine("Category = "+selectedCategory.getEntityId()+", "+selectedCategory.getAbsoluteDescription());
-				} else {
-					LOG.fine("Category = vide");
-				}
-				
-			}
-		});
+	}
+	
+	public Category getSelectedCategory() {
+		return selectedCategory;
 	}
 
 	public HasClickHandlers getValidateButton() {
