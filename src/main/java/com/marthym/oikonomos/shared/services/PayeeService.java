@@ -14,4 +14,5 @@ public interface PayeeService extends RemoteService {
 	public List<Payee> findAll() throws OikonomosException;
 	public Payee addOrUpdateEntity(Payee payee) throws OikonomosException;
 	public void delete(long payeeId) throws OikonomosException;
+	public List<Payee> getEntitiesByDescription(String search) throws OikonomosException;
 }

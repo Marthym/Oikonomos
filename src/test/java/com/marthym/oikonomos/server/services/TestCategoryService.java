@@ -333,7 +333,7 @@ public class TestCategoryService {
 		try {
 			List<Category> categories = categoryService.getEntitiesByDescription("Alim", Locale.FRENCH.getLanguage().toLowerCase());
 			assertNotNull(categories);
-			assertEquals(1, categories.size());
+			assertEquals(3, categories.size()); // Alimentation, Alimentation : Bar, Alimentation : Boulangerie
 			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
@@ -343,7 +343,7 @@ public class TestCategoryService {
 			List<Category> categories = categoryService.getEntitiesByDescription("Ba", Locale.US.getCountry().toLowerCase());
 			assertNotNull(categories);
 			assertEquals(2, categories.size());
-			assertEquals((Long)2L, (Long)categories.get(0).getEntityId());
+			assertEquals((Long)3L, (Long)categories.get(0).getEntityId());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
@@ -351,7 +351,7 @@ public class TestCategoryService {
 		try {
 			List<Category> categories = categoryService.getEntitiesByDescription("alim", Locale.FRENCH.getLanguage().toLowerCase());
 			assertNotNull(categories);
-			assertEquals(1, categories.size());
+			assertEquals(3, categories.size());
 			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());

@@ -77,6 +77,15 @@ public class PayeeServiceImpl extends RemoteServiceServlet implements PayeeServi
 		return payeeRepository.findAll(sortByName());
 	}
 
+	@Override
+	@Secured("ROLE_USER")
+	public List<Payee> getEntitiesByDescription(String search) throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+
+		return payeeRepository.findByNameContaining(search, sortByName());
+	}
+
 	private static final Sort sortByName() {
 		return new Sort(Direction.ASC, "name");
 	}

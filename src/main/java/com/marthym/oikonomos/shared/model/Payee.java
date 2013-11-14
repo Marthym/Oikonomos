@@ -32,6 +32,10 @@ public class Payee extends LeftMenuEntity implements java.io.Serializable {
 		this.name = name;
 	}
 	
+	public final String getName() {
+		return name;
+	}
+	
 	@Override
 	public Long getEntityId() {
 		return id;
