@@ -21,6 +21,9 @@ import com.google.gwt.user.datepicker.client.DateBox;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
+import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
+import com.marthym.oikonomos.shared.model.PaiementMeans;
+import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.model.dto.Category;
 
 public class EditTransactionForm extends Composite {
@@ -30,12 +33,13 @@ public class EditTransactionForm extends Composite {
 	
 	@UiField FormPanel formTransaction;
 	@UiField DateBox transactionDate;
-	@UiField TextBox transactionPayee;
+	@UiField(provided=true)
+	 		 SuggestBox transactionPayee;
 	@UiField TextBox transactionDebit;
 	@UiField TextBox transactionCredit;
 	@UiField(provided=true)
 			 SuggestBox transactionCategory;
-	@UiField TextBox transactionPaiementMean;
+	@UiField SingleValueListBox transactionPaiementMean;
 	@UiField TextBox transactionAccountingDocument;
 	@UiField TextBox transactionComment;
 	@UiField TextBox transactionBudgetaryLine;
@@ -43,14 +47,17 @@ public class EditTransactionForm extends Composite {
 	@UiField Button submitButton;
 	
 	private Category selectedCategory;
+	private Payee selectedPayee;
 	
 	private final OikonomosConstants oConstants = GWT.create(OikonomosConstants.class);
 	private final AccountTransactionsConstants constants = GWT.create(AccountTransactionsConstants.class);
 	private final SuggestOracle categoriesOracle = NomosInjector.INSTANCE.getCategoriesSuggestOracle();
+	private final SuggestOracle payeesOracle = NomosInjector.INSTANCE.getPayeesSuggestOracle();
 	
 	public EditTransactionForm() {
 		
 		transactionCategory = new SuggestBox(categoriesOracle);
+		transactionPayee = new SuggestBox(payeesOracle);
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		LOG.fine(oConstants.dateFormat());
@@ -66,6 +73,11 @@ public class EditTransactionForm extends Composite {
 		transactionComment.getElement().setAttribute("placeholder", constants.placeholder_comment());
 		transactionBudgetaryLine.getElement().setAttribute("placeholder", constants.placeholder_budgetaryLine());
 		
+		for (PaiementMeans mean : PaiementMeans.values()) {
+			String translation = EnumTypeTranslator.getTranslation(mean);
+			transactionPaiementMean.addItem(translation, mean.name());
+		}
+		
 		transactionCategory.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			@Override
 			public void onSelection(SelectionEvent<Suggestion> event) {
@@ -74,6 +86,16 @@ public class EditTransactionForm extends Composite {
 			}
 		});
 		
+		transactionPayee.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+			@Override public void onSelection(SelectionEvent<Suggestion> event) {
+				PayeeSuggestion suggestion = (PayeeSuggestion) event.getSelectedItem();
+				selectedPayee = suggestion.getPayee();
+			}
+		});
+	}
+	
+	public Payee getSeletedPayee() {
+		return selectedPayee;
 	}
 	
 	public Category getSelectedCategory() {

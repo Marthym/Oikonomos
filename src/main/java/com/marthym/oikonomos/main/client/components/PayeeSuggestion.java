@@ -24,7 +24,7 @@ public class PayeeSuggestion implements Suggestion, Serializable {
 		return payee.getEntityDescription();
 	}
 
-	public Payee getCategory() {
+	public final Payee getPayee() {
 		return payee;
 	}
 

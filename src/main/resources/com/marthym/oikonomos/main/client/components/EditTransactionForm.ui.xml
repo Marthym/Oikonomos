@@ -20,14 +20,14 @@
 				   	</colgroup> 
 					<tr>
 						<td><d:DateBox addStyleNames="{res.style.textBox} {dashRes.style.center}" ui:field="transactionDate"/></td>
-						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPayee"/></td>
+						<td><g:SuggestBox addStyleNames="{res.style.textBox}" ui:field="transactionPayee"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox} {dashRes.style.right}" ui:field="transactionDebit"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox} {dashRes.style.right}" ui:field="transactionCredit"/></td>
 					</tr>
 					<tr>
 						<td />
 						<td><g:SuggestBox addStyleNames="{res.style.textBox}" ui:field="transactionCategory"/></td>
-						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionPaiementMean"/></td>
+						<td><nomos:SingleValueListBox addStyleNames="{res.style.listBox}" ui:field="transactionPaiementMean"/></td>
 						<td><g:TextBox addStyleNames="{res.style.textBox}" ui:field="transactionAccountingDocument"/></td>
 					</tr>
 					<tr>

@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.main.client.components.CategoriesSuggestOracle;
+import com.marthym.oikonomos.main.client.components.PayeesSuggestOracle;
 import com.marthym.oikonomos.main.client.components.TopNavigationBar;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
@@ -63,5 +64,6 @@ public class NomosInjectorModule extends AbstractGinModule {
     	bind(PayeeServiceAsync.class).in(Singleton.class);
     	
     	bind(CategoriesSuggestOracle.class).in(Singleton.class);
+    	bind(PayeesSuggestOracle.class).in(Singleton.class);
     }
 }

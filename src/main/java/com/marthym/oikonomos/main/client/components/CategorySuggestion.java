@@ -24,7 +24,7 @@ public class CategorySuggestion implements Suggestion, Serializable {
 		return category.getAbsoluteDescription();
 	}
 
-	public Category getCategory() {
+	public final Category getCategory() {
 		return category;
 	}
 
