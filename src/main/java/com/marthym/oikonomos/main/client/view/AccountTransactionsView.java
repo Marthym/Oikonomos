@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.main.client.view;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -9,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.components.EditTransactionForm;
@@ -54,13 +57,48 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	}
 
 	@Override
-	public Payee getSelectedPayee() {
+	public Payee getTransactionPayee() {
 		return transactionForm.getSeletedPayee();
 	}
 
 	@Override
-	public Category getSelectedCategory() {
+	public Category getTransactionCategory() {
 		return transactionForm.getSelectedCategory();
+	}
+
+	@Override
+	public HasValue<Date> getTransactionDate() {
+		return transactionForm.getTransactionDate();
+	}
+
+	@Override
+	public HasValue<String> getTransactionDebit() {
+		return transactionForm.getTransactionDebit();
+	}
+
+	@Override
+	public HasValue<String> getTransactionCredit() {
+		return transactionForm.getTransactionCredit();
+	}
+
+	@Override
+	public HasValue<String> getTransactionPaiementMean() {
+		return transactionForm.getTransactionPaiementMean();
+	}
+
+	@Override
+	public HasValue<String> getTransactionAccountingDocument() {
+		return transactionForm.getTransactionAccountingDocument();
+	}
+
+	@Override
+	public HasValue<String> getTransactionComment() {
+		return transactionForm.getTransactionComment();
+	}
+
+	@Override
+	public HasValue<String> getTransactionBudgetaryLine() {
+		return transactionForm.getTransactionBudgetaryLine();
 	}
 
 }

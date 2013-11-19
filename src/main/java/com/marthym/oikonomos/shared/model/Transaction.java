@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -44,6 +45,7 @@ public class Transaction implements java.io.Serializable {
 	
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	private Category category;
+	@Transient private Long categoryId;
 	
 	@Column(length=255)
 	private String accountingDocument;
@@ -104,6 +106,9 @@ public class Transaction implements java.io.Serializable {
 	}
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+	public void setCategory(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 	public String getAccountingDocument() {
 		return accountingDocument;

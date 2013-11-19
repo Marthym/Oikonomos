@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.marthym.oikonomos.shared.model.Transaction;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-	public List<Transaction> findByOwner(String accountOwner);
-	public Long countByOwner(String accountOwner);
+	public List<Transaction> findByOwnerOrderByDateDesc(String owner);
+	public Long countByOwner(String owner);
 }

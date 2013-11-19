@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBox;
@@ -115,6 +116,14 @@ public class EditTransactionForm extends Composite {
 			return null;
 		}
 	}
+	
+	public final HasValue<Date> getTransactionDate() {return transactionDate;}
+	public final HasValue<String> getTransactionDebit() {return transactionDebit;}
+	public final HasValue<String> getTransactionCredit() {return transactionCredit;}
+	public final HasValue<String> getTransactionPaiementMean() {return transactionPaiementMean;}
+	public final HasValue<String> getTransactionAccountingDocument() {return transactionAccountingDocument;}
+	public final HasValue<String> getTransactionComment() {return transactionComment;}
+	public final HasValue<String> getTransactionBudgetaryLine() {return transactionBudgetaryLine;}
 
 	public HasClickHandlers getValidateButton() {
 		return submitButton;
