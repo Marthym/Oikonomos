@@ -1,7 +1,8 @@
 @CHARSET "UTF-8";
 @External .header;
 
-.content{}
+.content{background-color:#E5EAEF;}
+.content .view {background-color:white;margin:10px 10px 0;}
 .clear {clear:both;margin:5px;}
 .center {text-align:center;}
 .right {text-align:right;}

@@ -6,7 +6,7 @@
 	<ui:with type="com.marthym.oikonomos.main.client.resources.DashboardViewResource" field="dashRes" />
 	<ui:with type="com.marthym.oikonomos.client.i18n.OikonomosConstants" field="constants" />
 	
-	<g:HTMLPanel>
+	<g:HTMLPanel addStyleNames="{dashRes.style.view}">
 		<g:HTMLPanel tag="h2" addStyleNames="{res.style.gradienRight}"><ui:text from="{constants.view_userprofile_title}"/></g:HTMLPanel>
 		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.profileMainView}"/>
 		<g:FormPanel encoding="utf-8" method="post" ui:field="formUser" addStyleNames="{dashRes.style.clear}">

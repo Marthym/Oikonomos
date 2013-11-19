@@ -55,6 +55,7 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 
 	public interface DashboardViewCss extends CssResource {
 	      String content();
+	      String view();
 	      String logout();
 	      String clear();
 	      String center();
