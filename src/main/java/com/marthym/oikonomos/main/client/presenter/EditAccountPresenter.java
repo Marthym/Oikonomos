@@ -2,11 +2,8 @@ package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,11 +14,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.validation.client.impl.Validation;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
+import com.marthym.oikonomos.shared.FieldVerifier;
 import com.marthym.oikonomos.shared.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
@@ -181,13 +178,9 @@ public class EditAccountPresenter implements Presenter {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.maximalAmountLabel()));
 		}
 		
+		
 		// Check validation for Account
-		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<Account>> violations = validator.validate(account);
-		for (ConstraintViolation<Account> violation : violations) {
-			errors.add(violation.getMessage());
-		}
-
+		errors.addAll(FieldVerifier.validate(account));
 		if (!errors.isEmpty()) {
 			WaitingFlyer.stop();
 			MessageFlyer.error(errors);

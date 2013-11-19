@@ -202,6 +202,17 @@ public class TestPayeeService {
 			}
 		}
 		
+		{
+			Payee payee = new Payee("");
+			
+			try {
+				payee = payeeService.addOrUpdateEntity(payee);
+				fail("Constraint not respected !");
+			} catch (OikonomosException e) {
+				LOGGER.info(e.getMessage());
+			}
+		}
+		
 		SecurityContextHolder.clearContext();
 	}
 	

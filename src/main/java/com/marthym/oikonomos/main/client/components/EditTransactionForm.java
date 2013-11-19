@@ -1,5 +1,6 @@
 package com.marthym.oikonomos.main.client.components;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -63,6 +64,7 @@ public class EditTransactionForm extends Composite {
 		LOG.fine(oConstants.dateFormat());
 		transactionDate.getElement().setAttribute("placeholder", constants.placeholder_date());
 		transactionDate.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getFormat(oConstants.dateFormat())));
+		transactionDate.setValue(new Date());
 		
 		transactionPayee.getElement().setAttribute("placeholder", constants.placeholder_payee());
 		transactionDebit.getElement().setAttribute("placeholder", constants.placeholder_debit());
@@ -95,11 +97,23 @@ public class EditTransactionForm extends Composite {
 	}
 	
 	public Payee getSeletedPayee() {
-		return selectedPayee;
+		String value = transactionPayee.getValue();
+		if (selectedPayee != null && selectedPayee.getName().equals(value)) {
+			return selectedPayee;			
+		} else if (!value.trim().isEmpty()) {
+			return new Payee(value);
+		} else {
+			return null;
+		}
 	}
 	
 	public Category getSelectedCategory() {
-		return selectedCategory;
+		String value = transactionCategory.getValue();
+		if (selectedCategory != null && selectedCategory.getAbsoluteDescription().equals(value)) {
+			return selectedCategory;			
+		} else {
+			return null;
+		}
 	}
 
 	public HasClickHandlers getValidateButton() {

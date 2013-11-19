@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
@@ -20,6 +21,7 @@ public class Payee extends LeftMenuEntity implements java.io.Serializable {
     private Long id;
 	
 	@NotNull @Column(nullable = false, length = 255)
+	@Size(min = 2, max = 255, message="{validator.message.payee.name.size}")
 	private String name;
 	
 	

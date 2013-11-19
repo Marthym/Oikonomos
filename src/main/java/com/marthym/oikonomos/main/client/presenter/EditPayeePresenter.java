@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
+import com.marthym.oikonomos.shared.FieldVerifier;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.services.PayeeServiceAsync;
@@ -141,13 +144,16 @@ public class EditPayeePresenter implements Presenter {
 	}
 	
 	private void saveDataFromView() {
-		if (display.getPayeeName().getValue().isEmpty()) {
-			MessageFlyer.error(errorMessages.error_message_mandatoryDescription());
-		}
-		
 		WaitingFlyer.start();
 		payee.setName(display.getPayeeName().getValue());
-		
+				
+		List<String> errors = FieldVerifier.validate(payee);
+		if (!errors.isEmpty()) {
+			WaitingFlyer.stop();
+			MessageFlyer.error(errors);
+			return;
+		}
+
 		rpcPayeeService.addOrUpdateEntity(payee, new AsyncCallback<Payee>() {
 
 					@Override

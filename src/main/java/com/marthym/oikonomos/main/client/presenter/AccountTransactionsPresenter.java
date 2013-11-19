@@ -9,12 +9,17 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
+import com.marthym.oikonomos.shared.model.Payee;
+import com.marthym.oikonomos.shared.model.dto.Category;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTransactionsPresenter implements Presenter {
 	
 	public interface Display {
 		Widget asWidget();
+		
+		Payee getSelectedPayee();
+		Category getSelectedCategory();
 		
 		void reset();
 		HasClickHandlers getValidateButton();
@@ -60,7 +65,10 @@ public class AccountTransactionsPresenter implements Presenter {
 	}
 	
 	private void saveDataFromView() {
-		
+		Payee payee = display.getSelectedPayee();
+		if (payee == null) {
+			
+		}
 	}
 	
 	@Override

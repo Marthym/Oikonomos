@@ -2,6 +2,10 @@ package com.marthym.oikonomos.server.services;
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.server.repositories.PayeeRepository;
+import com.marthym.oikonomos.server.utils.OikonomosExceptionFactory;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Payee;
@@ -22,6 +27,7 @@ import com.marthym.oikonomos.shared.services.PayeeService;
 @Service("payeeService")
 public class PayeeServiceImpl extends RemoteServiceServlet implements PayeeService {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(PayeeServiceImpl.class);
 
 	@Autowired
 	private PayeeRepository payeeRepository;
@@ -55,7 +61,15 @@ public class PayeeServiceImpl extends RemoteServiceServlet implements PayeeServi
 	public Payee addOrUpdateEntity(Payee payee) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
-		return payeeRepository.save(payee);
+		
+		try {
+			return payeeRepository.save(payee);
+		} catch (ConstraintViolationException e) {
+			LOGGER.error(e.getClass()+": "+e.getLocalizedMessage());
+			if (LOGGER.isDebugEnabled()) LOGGER.debug("STACKTRACE", e);
+			
+			throw OikonomosExceptionFactory.buildOikonomosException(e);
+		}
 	}
 
 	@Override

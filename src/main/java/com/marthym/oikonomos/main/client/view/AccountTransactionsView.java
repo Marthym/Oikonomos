@@ -15,6 +15,8 @@ import com.marthym.oikonomos.main.client.components.EditTransactionForm;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
+import com.marthym.oikonomos.shared.model.Payee;
+import com.marthym.oikonomos.shared.model.dto.Category;
 
 public class AccountTransactionsView extends Composite implements AccountTransactionsPresenter.Display {
 	private static AccountTransactionsViewUiBinder uiBinder = GWT.create(AccountTransactionsViewUiBinder.class);
@@ -49,6 +51,16 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	@Override
 	public HasClickHandlers getResetButton() {
 		return transactionForm.getResetButton();
+	}
+
+	@Override
+	public Payee getSelectedPayee() {
+		return transactionForm.getSeletedPayee();
+	}
+
+	@Override
+	public Category getSelectedCategory() {
+		return transactionForm.getSelectedCategory();
 	}
 
 }
