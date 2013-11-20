@@ -1,23 +1,27 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.main.client.OikonomosController;
+import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
 import com.marthym.oikonomos.shared.model.Account;
-import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.services.AccountServiceAsync;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTabbedPresenter implements Presenter {
+	private static final Logger LOG = Logger.getLogger(AccountTabbedPresenter.class.getName());
+	
 	public interface Display {
 		Widget asWidget();
 		HasWidgets getAccountPropertiesTab();
@@ -28,11 +32,10 @@ public class AccountTabbedPresenter implements Presenter {
 	
 	private final Display display;
 	private static AccountTabbedPresenter instance = null;
-	private static EditAccountPresenter editAccount = null;
-	private static AccountTransactionsPresenter accountTransactions = null;
 	private Account account;
 	
 	@Inject private AccountServiceAsync rcpAccountService;
+	@Inject private EventBus eventBus;
 	
 	public static void createAsync(final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
@@ -40,6 +43,8 @@ public class AccountTabbedPresenter implements Presenter {
 			@Override public void onSuccess() {
 				if (instance == null) {
 					instance = NomosInjector.INSTANCE.getAccountTabbedPresenter();
+					EditAccountPresenter.create(instance.display.getAccountPropertiesTab());
+					AccountTransactionsPresenter.create(instance.display.getAccountTransactionsTab());
 				}
 				
 				String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
@@ -47,13 +52,10 @@ public class AccountTabbedPresenter implements Presenter {
 					long accountId = Long.parseLong(splitHistoryToken[1]);
 					instance.getRemoteData(accountId);
 					instance.display.displayTransactionsListTab();
-					
 				} catch (Exception e) {
-					User authentifiedUser = OikonomosController.getAuthentifiedUser();
-					instance.account = new Account(authentifiedUser.getUserEmail());
-					editAccount.setAccountData(instance.account);
 					instance.display.displayAccountPropertiesTab();
 				}
+
 				callback.onCreate(instance);
 			}
 			
@@ -71,19 +73,20 @@ public class AccountTabbedPresenter implements Presenter {
 	}
 	
 	private void bind() {
-		editAccount = EditAccountPresenter.create(display.getAccountPropertiesTab());
-		accountTransactions = AccountTransactionsPresenter.create(display.getAccountTransactionsTab());
 	}
 
 	
 	private final void getRemoteData(long accountId) {
+		if (account != null && account.getId().equals(accountId)) return;
+		
 		WaitingFlyer.start();
 		rcpAccountService.getEntity(accountId, new AsyncCallback<Account>() {
 			@Override
 			public void onSuccess(Account result) {
 				account = result;
-				editAccount.setAccountData(account);
+				LOG.finer("Account loaded: "+account.getId());
 				WaitingFlyer.stop();
+				eventBus.fireEvent(new AccountDataUpdateEvent(account));
 			}
 			
 			@Override
@@ -92,6 +95,14 @@ public class AccountTabbedPresenter implements Presenter {
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 		});
+	}
+	
+	public final Account getCurrentAccount() {
+		return account;
+	}
+	
+	public void setCurrentAccount(Account account) {
+		this.account = account;
 	}
 	
 	@Override

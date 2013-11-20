@@ -1,5 +1,6 @@
 package com.marthym.oikonomos.server.services;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,11 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.model.dto.Category;
 import com.marthym.oikonomos.shared.services.TransactionService;
 
 public class TransactionServiceImpl extends RemoteServiceServlet implements TransactionService {
@@ -23,6 +26,9 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -46,7 +52,6 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 			return result;
 			
 		} else {
-			LOGGER.info("Try to load transaction owned by other !");
 			throw new OikonomosException(
 					"error.message.account.notfound", 
 					"Transaction "+id+" not fount for user "+authentifiedUser.getUserEmail());
@@ -67,15 +72,68 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 	@Override
 	@Secured("ROLE_USER")
 	public Transaction addOrUpdateEntity(Transaction transaction) throws OikonomosException {
-		// TODO Auto-generated method stub
-		return null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+		
+		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
+			throw new OikonomosException(
+					"error.message.account.notowned", 
+					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		return transactionRepository.save(transaction);
+	}
+
+	@Override
+	@Secured("ROLE_USER")
+	public Transaction addOrUpdateEntity(Transaction transaction, Category dtoCategory) throws OikonomosException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
+
+		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
+			throw new OikonomosException(
+					"error.message.account.notowned", 
+					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		
+		if (dtoCategory.getEntityOwner() != null && !dtoCategory.getEntityOwner().equals(authentifiedUser.getUserEmail())) {
+			throw new OikonomosException(
+					"error.message.entity.notfound", 
+					"Category "+dtoCategory.getEntityId()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		
+		com.marthym.oikonomos.shared.model.Category category = categoryRepository.findOne(dtoCategory.getEntityId());
+		if (category == null) {
+			throw new OikonomosException(
+					"error.message.category.notfound", 
+					Arrays.asList(new String[]{dtoCategory.getEntityId()+"-"+dtoCategory.getAbsoluteDescription()}),
+					"Category "+dtoCategory.getEntityId()+" not found in database !");
+		}
+		
+		transaction.setCategory(category);
+		return transactionRepository.save(transaction);
 	}
 
 	@Override
 	@Secured("ROLE_USER")
 	public void delete(long id) throws OikonomosException {
-		// TODO Auto-generated method stub
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
+		User authentifiedUser = (User)authentication.getPrincipal();
 		
+		Transaction transaction = transactionRepository.findOne(id);
+		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
+			throw new OikonomosException(
+					"error.message.account.notowned", 
+					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		
+		if (transaction.getReconciliation() != null) {
+			LOGGER.warn("{} delete transaction '{}' which is reconciliate !", authentifiedUser.getUserEmail(), transaction.getId());
+		}
+		
+		transactionRepository.delete(transaction);
 	}
 
 }

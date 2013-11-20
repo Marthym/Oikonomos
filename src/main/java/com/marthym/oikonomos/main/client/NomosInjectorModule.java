@@ -52,6 +52,7 @@ public class NomosInjectorModule extends AbstractGinModule {
     	bind(EditPayeePresenter.Display.class).to(EditPayeeView.class).in(Singleton.class);
     	bind(AccountTransactionsPresenter.Display.class).to(AccountTransactionsView.class).in(Singleton.class);
     	
+    	bind(AccountTabbedPresenter.class).in(Singleton.class);
     	bind(OikonomosConstants.class).in(Singleton.class);
     	bind(OikonomosErrorMessages.class).in(Singleton.class);
     	bind(EditAccountConstants.class).in(Singleton.class);

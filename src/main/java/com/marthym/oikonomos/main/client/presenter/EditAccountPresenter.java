@@ -2,6 +2,7 @@ package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -15,20 +16,21 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.main.client.OikonomosController;
+import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
+import com.marthym.oikonomos.main.client.event.AccountDataUpdateEventHandler;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.main.client.i18n.EditAccountConstants;
 import com.marthym.oikonomos.shared.FieldVerifier;
 import com.marthym.oikonomos.shared.services.AccountServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.AccountType;
-import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class EditAccountPresenter implements Presenter {
+	private static final Logger LOG = Logger.getLogger(EditAccountPresenter.class.getName());
 	
 	public interface Display {
 		Widget asWidget();
@@ -54,8 +56,8 @@ public class EditAccountPresenter implements Presenter {
 	private final Display display;
 	private final EventBus eventBus;
 	private static EditAccountPresenter instance = null;
-	private Account account = null;
 	
+	@Inject private AccountTabbedPresenter parent;
 	@Inject private OikonomosErrorMessages errorMessages;
 	@Inject private EditAccountConstants constants;
 	@Inject private AccountServiceAsync rcpAccountService;
@@ -63,6 +65,7 @@ public class EditAccountPresenter implements Presenter {
 	public static EditAccountPresenter create(HasWidgets container) {
 		if (instance == null) {
 			instance = NomosInjector.INSTANCE.getEditAccountPresenter();
+			instance.updateViewFromData();
 		}
 		
 		instance.go(container);
@@ -89,13 +92,26 @@ public class EditAccountPresenter implements Presenter {
 			public void onClick(ClickEvent event) {
 				updateViewFromData();
 			}
-		});		
+		});	
+		
+		eventBus.addHandler(AccountDataUpdateEvent.TYPE, new AccountDataUpdateEventHandler() {
+			@Override
+			public void onAccountDataUpdate(AccountDataUpdateEvent event) {
+				updateViewFromData();
+			}
+		});
 	}
 	
 	private void updateViewFromData() {
 		display.reset();
 		
+		LOG.finer("updateViewFromData()-> Look for account ...");
+		Account account = parent.getCurrentAccount();
+		LOG.finer("updateViewFromData()-> ... account found: "+account);
+		
 		if (account == null) return;
+		LOG.finer("updateViewFromData()-> ... id: "+account.getId());
+
 		if (account.getAccountName() != null) display.getAccountName().setValue(account.getAccountName());
 		if (account.getAccountType() != null) display.getAccountType().setValue(account.getAccountType().name());
 		if (account.getAccountCurrency() != null) display.getAccountCurrency().setValue(account.getAccountCurrency());
@@ -116,9 +132,9 @@ public class EditAccountPresenter implements Presenter {
 	private void saveDataFromView() {
 		WaitingFlyer.start();
 		List<String> errors = new LinkedList<String>();
-		User authentifiedUser = OikonomosController.getAuthentifiedUser();
-		if (account == null) account = new Account(authentifiedUser.getUserEmail());
-				
+		
+		Account account = parent.getCurrentAccount();
+		
 		account.setAccountName(display.getAccountName().getValue());
 		
 		final AccountType accountType = AccountType.valueOf(display.getAccountType().getValue());
@@ -192,7 +208,8 @@ public class EditAccountPresenter implements Presenter {
 			
 			@Override
 			public void onSuccess(Account result) {
-				account = result;
+				Account account = result;
+				NomosInjector.INSTANCE.getAccountTabbedPresenter().setCurrentAccount(account);
 				eventBus.fireEvent(new LeftmenuEntityChangeEvent(account));
 				History.newItem(result.getEntityType().name().toLowerCase()+"|"+result.getEntityId());
 				WaitingFlyer.stop();
@@ -209,11 +226,6 @@ public class EditAccountPresenter implements Presenter {
 		
 	}
 	
-	public void setAccountData(Account account) {
-		this.account = account;
-		updateViewFromData();
-	}
-
 	@Override
 	public void go(HasWidgets container) {
 		container.clear();

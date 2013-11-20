@@ -18,14 +18,14 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "TRANSACTION")
 public class Transaction implements java.io.Serializable {
-	private static final long serialVersionUID = 5932616959616786679L;
+	private static final long serialVersionUID = 9079967378219903068L;
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	
-	@NotNull @Column(nullable = false, length = 255)
-	private String owner;
+	@NotNull @ManyToOne(cascade=CascadeType.REFRESH, optional=false)
+	private Account account;
 		
 	@Column(nullable = false, length = 20)
 	@Enumerated(EnumType.STRING)
@@ -60,9 +60,10 @@ public class Transaction implements java.io.Serializable {
 	
 	@Deprecated
 	public Transaction(){}
-	public Transaction(String owner) {
-		this.owner = owner;
+	public Transaction(Account account) {
+		this.account = account;
 	}
+	public final Account getAccount() {return account;}
 	public PaiementMeans getPaiementMean() {
 		return paiementMean;
 	}
@@ -132,7 +133,7 @@ public class Transaction implements java.io.Serializable {
 		return id;
 	}
 	public String getOwner() {
-		return owner;
+		return account.getAccountOwner();
 	}
 	public Reconciliation getReconciliation() {
 		return reconciliation;
