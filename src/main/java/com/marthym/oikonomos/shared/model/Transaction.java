@@ -12,13 +12,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "TRANSACTION")
 public class Transaction implements java.io.Serializable {
-	private static final long serialVersionUID = 9079967378219903068L;
+	private static final long serialVersionUID = -2688586694694115640L;
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,12 +29,13 @@ public class Transaction implements java.io.Serializable {
 	@NotNull @ManyToOne(cascade=CascadeType.REFRESH, optional=false)
 	private Account account;
 		
-	@Column(nullable = false, length = 20)
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private PaiementMeans paiementMean;
 	
+	@Temporal(TemporalType.DATE)
 	@NotNull @Column(nullable = false)
-	private Date date;
+	private Date transactionDate;
 	
 	@NotNull @ManyToOne(cascade=CascadeType.PERSIST, optional=false)
 	private Payee payee;
@@ -53,7 +56,7 @@ public class Transaction implements java.io.Serializable {
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	private BudgetaryLine budgetLine;
 	
-	private String comment;
+	private String transactionComment;
 	
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	private Reconciliation reconciliation;
@@ -71,10 +74,10 @@ public class Transaction implements java.io.Serializable {
 		this.paiementMean = paiementMean;
 	}
 	public Date getDate() {
-		return date;
+		return transactionDate;
 	}
 	public void setDate(Date date) {
-		this.date = date;
+		this.transactionDate = date;
 	}
 	public Payee getPayee() {
 		return payee;
@@ -124,10 +127,10 @@ public class Transaction implements java.io.Serializable {
 		this.budgetLine = budgetLine;
 	}
 	public String getComment() {
-		return comment;
+		return transactionComment;
 	}
 	public void setComment(String comment) {
-		this.comment = comment;
+		this.transactionComment = comment;
 	}
 	public Long getId() {
 		return id;

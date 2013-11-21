@@ -24,60 +24,52 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.marthym.oikonomos.server.repositories.AccountRepository;
+import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
+import com.marthym.oikonomos.shared.model.Account;
+import com.marthym.oikonomos.shared.model.Category;
 import com.marthym.oikonomos.shared.model.Payee;
+import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.model.UserProfile;
-import com.marthym.oikonomos.shared.services.PayeeService;
+import com.marthym.oikonomos.shared.services.TransactionService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestPayeeService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TestPayeeService.class);
-	public static final Date USER_REGISTERED = new Date();
-	public static final Date USER_LASTLOGIN = new Date();
-	
+public class TestTransactionService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestTransactionService.class);	
 
 	@Autowired
-	private PayeeService payeeService;
+	private TransactionService transactionService;
+	
+	@Autowired
+	private AccountRepository accountRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	private static SecurityContext scUser;
-	private static SecurityContext scAdmin;
 	
 	@BeforeClass
 	public static void beforeClass() {
-		System.out.println("------------TestPayeeService: start -------");		
+		System.out.println("------------TestTransactionService: start -------");		
 	}
 	
 	@BeforeClass
 	public static void initSecurityContext() {
-		{
-			User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
-			currentUser.setUserId(99L);
-			// Create de session if user is valid
-			List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
-			scUser = new SecurityContextImpl();
-			scUser.setAuthentication(auth);
-		}
-		{
-			User currentUser = new User("admin@localhost.com", "marthym", "myhtram", "password");
-			currentUser.setUserId(98L);
-			currentUser.setUserProfile(UserProfile.ADMIN);
-			// Create de session if user is valid
-			List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
-			scAdmin = new SecurityContextImpl();
-			scAdmin.setAuthentication(auth);
-		}
+		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
+		// Create de session if user is valid
+		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+		scUser = new SecurityContextImpl();
+		scUser.setAuthentication(auth);
 	}
 	
 	@Test
-	public void testSecurityCredentials() {
+	public void testSecurityCredentials() {	
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
 		// Create session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
@@ -89,7 +81,7 @@ public class TestPayeeService {
 		SecurityContextHolder.setContext(scTest);
 		
 		try {
-			payeeService.addOrUpdateEntity(null);
+			transactionService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -97,7 +89,7 @@ public class TestPayeeService {
 		}
 
 		try {
-			payeeService.delete(1L);
+			transactionService.delete(1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -105,7 +97,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.find(1L);
+			transactionService.find(1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -113,7 +105,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.findAll();
+			transactionService.findAllForAccount(null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -121,7 +113,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.getCount();
+			transactionService.getCount(null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -129,7 +121,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.getEntitiesByDescription(null);
+			transactionService.addOrUpdateEntity(null, null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -139,7 +131,7 @@ public class TestPayeeService {
 		SecurityContextHolder.clearContext();
 		
 		try {
-			payeeService.addOrUpdateEntity(null);
+			transactionService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -147,7 +139,7 @@ public class TestPayeeService {
 		}
 
 		try {
-			payeeService.delete(1L);
+			transactionService.delete(1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -155,7 +147,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.find(1L);
+			transactionService.find(1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -163,7 +155,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.findAll();
+			transactionService.findAllForAccount(null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -171,7 +163,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.getCount();
+			transactionService.getCount(null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -179,7 +171,7 @@ public class TestPayeeService {
 		}
 		
 		try {
-			payeeService.getEntitiesByDescription(null);
+			transactionService.addOrUpdateEntity(null, null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -188,28 +180,37 @@ public class TestPayeeService {
 	}
 
 	@Test
+	@Transactional
 	public void testAddOrUpdateEntity() {
 		SecurityContextHolder.setContext(scUser);
+		Account account = accountRepository.findOne(1L);
 		{
 			Payee payee = new Payee("Test Payee");
-			
+			Transaction trans = new Transaction(account);
+			trans.setDate(new Date());
+			trans.setPayee(payee);
 			try {
-				payee = payeeService.addOrUpdateEntity(payee);
-				assertNotNull(payee);
-				LOGGER.info("New payee id: "+payee.getEntityId());
+				trans = transactionService.addOrUpdateEntity(trans);
+				assertNotNull(trans);
+				LOGGER.info("New transaction id: "+trans.getId());
 			} catch (OikonomosException e) {
 				fail(e.getClass()+": "+e.getMessage());
 			}
 		}
 		
 		{
-			Payee payee = new Payee("");
-			
+			Category daoCategory = categoryRepository.findOne(1L);
+			com.marthym.oikonomos.shared.model.dto.Category dtoCategory = com.marthym.oikonomos.shared.model.dto.Category.create(daoCategory, "fr", false);
+			Payee payee = new Payee("Test Payee");
+			Transaction trans = new Transaction(account);
+			trans.setDate(new Date());
+			trans.setPayee(payee);
 			try {
-				payee = payeeService.addOrUpdateEntity(payee);
-				fail("Constraint not respected !");
+				trans = transactionService.addOrUpdateEntity(trans, dtoCategory);
+				assertNotNull(trans);
+				LOGGER.info("New transaction id: "+trans.getId());
 			} catch (OikonomosException e) {
-				LOGGER.info(e.getMessage());
+				fail(e.getClass()+": "+e.getMessage());
 			}
 		}
 		
@@ -220,9 +221,9 @@ public class TestPayeeService {
 	public void testFind() {
 		SecurityContextHolder.setContext(scUser);
 		try {
-			Payee payee = payeeService.find(1L);
-			assertNotNull(payee);
-			assertEquals("Emy H. Tram", payee.getName());
+			Transaction transaction = transactionService.find(1L);
+			assertNotNull(transaction);
+			assertEquals("Emy H. Tram", transaction.getPayee().getName());
 		} catch (OikonomosException e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
@@ -231,26 +232,13 @@ public class TestPayeeService {
 	}
 	
 	@Test
-	public void testFindAll() {
+	public void testFindAllForAccount() {
 		SecurityContextHolder.setContext(scUser);
+		Account account = accountRepository.findOne(1L);
 		try {
-			List<Payee> findAll = payeeService.findAll();
-			assertNotNull(findAll);
-			assertEquals(3, findAll.size());
-		} catch (OikonomosException e) {
-			fail(e.getClass()+": "+e.getMessage());
-		}
-		
-		SecurityContextHolder.clearContext();
-	}
-	
-	@Test
-	public void testGetEntitiesByDescription() {
-		SecurityContextHolder.setContext(scUser);
-		try {
-			List<Payee> findAll = payeeService.getEntitiesByDescription("tram");
-			assertNotNull(findAll);
-			assertEquals(1, findAll.size());
+			List<Transaction> transactions = transactionService.findAllForAccount(account);
+			assertNotNull(transactions);
+			assertEquals(2, transactions.size());
 		} catch (OikonomosException e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
@@ -261,9 +249,10 @@ public class TestPayeeService {
 	@Test
 	public void testGetCount() {
 		SecurityContextHolder.setContext(scUser);
+		Account account = accountRepository.findOne(1L);
 		try {
-			long count = payeeService.getCount();
-			assertEquals(3, count);
+			long count = transactionService.getCount(account);
+			assertEquals(2, count);
 		} catch (OikonomosException e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
@@ -272,17 +261,18 @@ public class TestPayeeService {
 	}
 	
 	@Test
+	@Transactional
 	public void testDelete() {
 		SecurityContextHolder.setContext(scUser);
 		try {
-			payeeService.find(3L);
-			payeeService.delete(3L);
+			transactionService.find(2L);
+			transactionService.delete(2L);
 		} catch (OikonomosException e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
 		
 		try {
-			payeeService.find(3L);
+			transactionService.find(2L);
 			fail("Not deleted !");
 		} catch (OikonomosException e) {}
 		
@@ -296,7 +286,7 @@ public class TestPayeeService {
 	
 	@AfterClass
 	public static void afterClass() {
-		System.out.println("------------TestPayeeService: end -------");
+		System.out.println("------------TestTransactionService: end -------");
 	}
 	
 }

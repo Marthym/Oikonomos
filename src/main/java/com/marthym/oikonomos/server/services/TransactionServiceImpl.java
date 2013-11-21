@@ -6,20 +6,27 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
+import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
 import com.marthym.oikonomos.shared.model.dto.Category;
 import com.marthym.oikonomos.shared.services.TransactionService;
 
+@Repository
+@Service("TransactionService")
 public class TransactionServiceImpl extends RemoteServiceServlet implements TransactionService {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
@@ -32,12 +39,17 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 	
 	@Override
 	@Secured("ROLE_USER")
-	public long getCount() throws OikonomosException {
+	public long getCount(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		if (!authentifiedUser.getUserEmail().equals(account.getAccountOwner())) {
+			throw new OikonomosException(
+					"error.message.account.notowned", 
+					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
 		
-		return transactionRepository.countByOwner(authentifiedUser.getUserEmail());
+		return transactionRepository.countByAccount(account);
 	}
 
 	@Override
@@ -60,12 +72,17 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Override
 	@Secured("ROLE_USER")
-	public List<Transaction> findAll() throws OikonomosException {
+	public List<Transaction> findAllForAccount(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
-
-		List<Transaction> transactions = transactionRepository.findByOwnerOrderByDateDesc(authentifiedUser.getUserEmail());
+		
+		if (!authentifiedUser.getUserEmail().equals(account.getAccountOwner())) {
+			throw new OikonomosException(
+					"error.message.account.notowned", 
+					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+		}
+		List<Transaction> transactions = transactionRepository.findByAccount(account, sortByDate());
 		return transactions;
 	}
 
@@ -134,6 +151,10 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		}
 		
 		transactionRepository.delete(transaction);
+	}
+
+	private static final Sort sortByDate() {
+		return new Sort(Direction.ASC, "transactionDate");
 	}
 
 }

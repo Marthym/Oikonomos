@@ -223,6 +223,7 @@ public class TestAccountDataService {
 	}
 	
 	@Test
+	@Transactional
 	public void testDelete() {
 		SecurityContextHolder.setContext(scUser);
 		

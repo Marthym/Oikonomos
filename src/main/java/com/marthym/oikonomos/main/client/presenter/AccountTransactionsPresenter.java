@@ -93,6 +93,10 @@ public class AccountTransactionsPresenter implements Presenter {
 		WaitingFlyer.start();
 		List<String> errors = new LinkedList<String>();
 		Account account = parent.getCurrentAccount();
+		if (account == null) {
+			errors.add(errorMessages.error_message_unexpected());
+			errors.add(errorMessages.error_message_account_notfound());
+		}
 		if (transaction == null) transaction = new Transaction(account);
 		
 		transaction.setDate(display.getTransactionDate().getValue());

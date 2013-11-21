@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
@@ -20,7 +21,10 @@ public class TestTransaction {
 	
 	@Autowired
 	private TransactionRepository transactionRepository;
-	
+
+	@Autowired
+	private AccountRepository accountRepository;
+
 	@BeforeClass
 	public static void beforeClass() {
 		System.out.println("------------ TestTransaction: start -------");
@@ -30,10 +34,9 @@ public class TestTransaction {
 	@Test
 	@Transactional
 	public void testCreate() {		
-		long count = transactionRepository.count();
-		Assert.assertEquals(0, count);
+		long initCount = transactionRepository.count();
 		
-		Transaction transac = new Transaction("test@localhost.com");
+		Transaction transac = new Transaction(accountRepository.findOne(1L));
 		transac.setAccountingDocument("accounting doc");
 		transac.setComment("Test comment");
 		transac.setCredit(1000L);
@@ -44,8 +47,8 @@ public class TestTransaction {
 		transac = transactionRepository.save(transac);
 		Assert.assertNotNull(transac);
 		
-		count = transactionRepository.count();
-		Assert.assertEquals(1, count);
+		long count = transactionRepository.count();
+		Assert.assertEquals(initCount+1, count);
 	}
 
 	@AfterClass
