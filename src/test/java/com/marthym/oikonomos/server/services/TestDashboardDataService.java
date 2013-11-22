@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.services.DashboardDataService;
+import com.marthym.oikonomos.shared.services.ViewsDataService;
 import com.marthym.oikonomos.shared.view.data.LeftMenuData;
 import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 
@@ -32,7 +32,7 @@ import com.marthym.oikonomos.shared.view.data.TopNavigationData;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestDashboardDataService {
 	@Autowired
-	private DashboardDataService dashboardDataService;
+	private ViewsDataService dashboardDataService;
 	
 	private static SecurityContext scUser;
 

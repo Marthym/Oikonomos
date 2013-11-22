@@ -13,7 +13,7 @@ import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
 import com.marthym.oikonomos.main.client.NomosInjector;
-import com.marthym.oikonomos.shared.services.DashboardDataServiceAsync;
+import com.marthym.oikonomos.shared.services.ViewsDataServiceAsync;
 import com.marthym.oikonomos.shared.view.data.DashboardData;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasCurrentUserData;
@@ -49,7 +49,7 @@ public class DashboardPresenter implements Presenter, ValueChangeHandler<String>
 	
 	@Override
 	public void go(final HasWidgets container) {
-		DashboardDataServiceAsync rpcDataService = DashboardDataServiceAsync.Util.getInstance();
+		ViewsDataServiceAsync rpcDataService = ViewsDataServiceAsync.Util.getInstance();
 		
 		WaitingFlyer.start();
 		rpcDataService.getDashboardData(new AsyncCallback<DashboardData>() {

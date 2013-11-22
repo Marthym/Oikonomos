@@ -1,5 +1,6 @@
 package com.marthym.oikonomos.main.client.presenter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
+import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEvent;
+import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEventHandler;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.shared.FieldVerifier;
 import com.marthym.oikonomos.shared.model.Account;
@@ -44,6 +47,8 @@ public class AccountTransactionsPresenter implements Presenter {
 		HasValue<String> getTransactionComment();
 		HasValue<String> getTransactionBudgetaryLine();
 		
+		void addTransactionGridLine(List<TransactionDTO> transaction);
+		
 		void reset();
 		HasClickHandlers getValidateButton();
 		HasClickHandlers getResetButton();
@@ -51,7 +56,9 @@ public class AccountTransactionsPresenter implements Presenter {
 	
 	private final Display display;
 	private static AccountTransactionsPresenter instance = null;
-	private TransactionDTO transaction = null;
+	private int currentTransactionIndex = -1;
+	private List<TransactionDTO> transactions = null;
+	private EventBus eventBus;
 	
 	@Inject private AccountTabbedPresenter parent;
 	@Inject private OikonomosErrorMessages errorMessages;
@@ -71,6 +78,8 @@ public class AccountTransactionsPresenter implements Presenter {
 	@Inject
 	private AccountTransactionsPresenter(EventBus eventBus, Display display) {
 		this.display = display;
+		this.eventBus = eventBus;
+		this.transactions = new ArrayList<TransactionDTO>();
 		
 		bind();
 	}
@@ -78,22 +87,33 @@ public class AccountTransactionsPresenter implements Presenter {
 	private void bind() {
 		this.display.getValidateButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				saveDataFromView();
+				saveTransactionFormFromView();
 			}
 		});
 
 		this.display.getResetButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				updateViewFromData();
+				updateTransactionFormFromData();
 			}
-		});		
+		});
+		
+		eventBus.addHandler(AccountTransactionsDataLoadedEvent.TYPE, new AccountTransactionsDataLoadedEventHandler() {
+			@Override public void onAccountTransactionsDataLoaded(AccountTransactionsDataLoadedEvent event) {
+				transactions = event.getTransactions();
+				display.addTransactionGridLine(transactions);
+			}
+		});
 	}
 	
-	private void updateViewFromData() {
+	private void updateTransactionGridFromData() {
+		
+	}
+	
+	private void updateTransactionFormFromData() {
 		display.reset();
 	}
 	
-	private void saveDataFromView() {
+	private void saveTransactionFormFromView() {
 		WaitingFlyer.start();
 		List<String> errors = new LinkedList<String>();
 		Account account = parent.getCurrentAccount();
@@ -101,7 +121,12 @@ public class AccountTransactionsPresenter implements Presenter {
 			errors.add(errorMessages.error_message_unexpected());
 			errors.add(errorMessages.error_message_account_notfound());
 		}
-		if (transaction == null) transaction = new TransactionDTO(account);
+		TransactionDTO transaction = null;
+		if (currentTransactionIndex < 0) {
+			transaction = new TransactionDTO(account);
+		} else {
+			transaction = transactions.get(currentTransactionIndex);
+		}
 		
 		transaction.setTransactionDate(display.getTransactionDate().getValue());
 		transaction.setAccountingDocument(display.getTransactionAccountingDocument().getValue());
@@ -136,7 +161,10 @@ public class AccountTransactionsPresenter implements Presenter {
 		
 		rpcTransaction.addOrUpdateEntity(transaction, new AsyncCallback<TransactionDTO>() {
 			@Override public void onSuccess(TransactionDTO result) {
-				transaction = result;
+				if (currentTransactionIndex < 0) {
+					transactions.add(result);
+					currentTransactionIndex = transactions.size()-1;
+				}
 				History.newItem(getHistoryToken());
 				WaitingFlyer.stop();
 			}
@@ -156,6 +184,7 @@ public class AccountTransactionsPresenter implements Presenter {
 	}
 
 	public final String getHistoryToken() {
-		return transaction.getAccount().getEntityType().name().toLowerCase()+"|"+transaction.getAccount().getEntityId()+"t"+transaction.getId();
+		TransactionDTO transaction = transactions.get(currentTransactionIndex);
+		return transaction.getAccount().getEntityType().name().toLowerCase()+"|"+transaction.getAccount().getEntityId()+"|t"+transaction.getId();
 	}
 }

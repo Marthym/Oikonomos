@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.google.gwt.view.client.ProvidesKey;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.BudgetaryLine;
 import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
@@ -41,6 +42,13 @@ public class TransactionDTO implements Serializable {
 	private BudgetaryLine budgetLine;
 	private String transactionComment;	
 	private Reconciliation reconciliation;
+	
+	public static final ProvidesKey<TransactionDTO> KEY_PROVIDER = new ProvidesKey<TransactionDTO>() {
+		@Override
+		public Object getKey(TransactionDTO item) {
+			return item.getId();
+		}
+	};
 	
 	@Deprecated
 	public TransactionDTO(){}

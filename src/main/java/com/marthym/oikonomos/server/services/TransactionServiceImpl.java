@@ -1,6 +1,6 @@
 package com.marthym.oikonomos.server.services;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
 		List<Transaction> transactions = transactionRepository.findByAccount(account, sortByDate());
-		List<TransactionDTO> dtos = new LinkedList<TransactionDTO>();
+		List<TransactionDTO> dtos = new ArrayList<TransactionDTO>();
 		for (Transaction dao : transactions) {
 			dtos.add(TransactionDTO.create(dao, locale));
 		}

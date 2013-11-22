@@ -13,8 +13,10 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
+import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEvent;
 import com.marthym.oikonomos.shared.model.Account;
-import com.marthym.oikonomos.shared.services.AccountServiceAsync;
+import com.marthym.oikonomos.shared.services.ViewsDataServiceAsync;
+import com.marthym.oikonomos.shared.view.data.AccountTabbedData;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.presenter.Presenter;
@@ -34,7 +36,7 @@ public class AccountTabbedPresenter implements Presenter {
 	private static AccountTabbedPresenter instance = null;
 	private Account account;
 	
-	@Inject private AccountServiceAsync rcpAccountService;
+	@Inject private ViewsDataServiceAsync rpcViewsData;
 	@Inject private EventBus eventBus;
 	
 	public static void createAsync(final Presenter.Callback callback) {
@@ -80,13 +82,14 @@ public class AccountTabbedPresenter implements Presenter {
 		if (account != null && account.getId().equals(accountId)) return;
 		
 		WaitingFlyer.start();
-		rcpAccountService.getEntity(accountId, new AsyncCallback<Account>() {
+		rpcViewsData.getAccountTabbedData(accountId, new AsyncCallback<AccountTabbedData>() {
 			@Override
-			public void onSuccess(Account result) {
-				account = result;
+			public void onSuccess(AccountTabbedData data) {
+				account = data.getAccount();
 				LOG.finer("Account loaded: "+account.getId());
 				WaitingFlyer.stop();
 				eventBus.fireEvent(new AccountDataUpdateEvent(account));
+				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(data.getTransactions()));
 			}
 			
 			@Override
