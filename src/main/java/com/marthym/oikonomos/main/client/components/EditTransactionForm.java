@@ -26,7 +26,7 @@ import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.view.EnumTypeTranslator;
 import com.marthym.oikonomos.shared.model.PaiementMeans;
 import com.marthym.oikonomos.shared.model.Payee;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 
 public class EditTransactionForm extends Composite {
 	private static EditTransactionFormUiBinder uiBinder = GWT.create(EditTransactionFormUiBinder.class);
@@ -48,7 +48,7 @@ public class EditTransactionForm extends Composite {
 	@UiField Button resetButton;
 	@UiField Button submitButton;
 	
-	private Category selectedCategory;
+	private CategoryDTO selectedCategory;
 	private Payee selectedPayee;
 	
 	private final OikonomosConstants oConstants = GWT.create(OikonomosConstants.class);
@@ -108,7 +108,7 @@ public class EditTransactionForm extends Composite {
 		}
 	}
 	
-	public Category getSelectedCategory() {
+	public CategoryDTO getSelectedCategory() {
 		String value = transactionCategory.getValue();
 		if (selectedCategory != null && selectedCategory.getAbsoluteDescription().equals(value)) {
 			return selectedCategory;			

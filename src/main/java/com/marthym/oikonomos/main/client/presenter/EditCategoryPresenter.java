@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasText;
@@ -23,7 +22,7 @@ import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.client.components.MessageFlyer;
@@ -40,7 +39,7 @@ public class EditCategoryPresenter implements Presenter {
 		HasValue<String> getCategoryDescription();
 		HasValue<String> getCategoryParent();
 		void enableCategoryParent(boolean isEnable);
-		boolean populateParentList(List<Category> parents);
+		boolean populateParentList(List<CategoryDTO> parents);
 		void hideCurrentOption(String valueHide);
 		void setCategoryPrivate(boolean isPrivate);
 		void reset();
@@ -52,7 +51,7 @@ public class EditCategoryPresenter implements Presenter {
 	private final Display display;
 	private final EventBus eventBus;
 	private static EditCategoryPresenter instance = null;
-	private Category category;
+	private CategoryDTO category;
 	private boolean isParentLoaded = false;
 	
 	@Inject private OikonomosErrorMessages errorMessages;
@@ -77,7 +76,7 @@ public class EditCategoryPresenter implements Presenter {
 					instance.getRemoteData(categoryId, callback);
 				} catch (Exception e) {
 					User authentifiedUser = OikonomosController.getAuthentifiedUser();
-					instance.category = new Category();
+					instance.category = new CategoryDTO();
 					instance.category.setEntityOwner(authentifiedUser.getUserEmail());
 					instance.updateViewFromData();
 					callback.onCreate(instance);
@@ -125,14 +124,14 @@ public class EditCategoryPresenter implements Presenter {
 	private final void getRemoteViewInformations() {
 		if (!isParentLoaded) {
 			LOG.finer("getRemoteViewInformations start");
-			rpcCategoryService.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+			rpcCategoryService.getRootEntities(new AsyncCallback<List<CategoryDTO>>() {
 	
 				@Override public void onFailure(Throwable caught) {
 					WaitingFlyer.stop();
 					MessageFlyer.error(caught.getLocalizedMessage());
 				}
 	
-				@Override public void onSuccess(List<Category> result) {
+				@Override public void onSuccess(List<CategoryDTO> result) {
 					LOG.finer("getRemoteViewInformations result");
 					isParentLoaded = display.populateParentList(result);
 					String[] splitHistoryToken = History.getToken().split(DashboardPresenter.HISTORY_PARAM_SEPARATOR);
@@ -145,9 +144,9 @@ public class EditCategoryPresenter implements Presenter {
 	}
 	
 	private final void getRemoteData(long categoryId, final Presenter.Callback callback) {
-		rpcCategoryService.getEntityWithoutChild(categoryId, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<Category>() {
+		rpcCategoryService.getEntityWithoutChild(categoryId, new AsyncCallback<CategoryDTO>() {
 			@Override
-			public void onSuccess(Category result) {
+			public void onSuccess(CategoryDTO result) {
 				category = result;
 				updateViewFromData();
 				callback.onCreate(instance);
@@ -210,7 +209,7 @@ public class EditCategoryPresenter implements Presenter {
 			parentId = Long.parseLong(display.getCategoryParent().getValue());
 		category.setParentId(parentId);
 		
-		rpcCategoryService.addOrUpdateEntity(category, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<Category>() {
+		rpcCategoryService.addOrUpdateEntity(category, new AsyncCallback<CategoryDTO>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -222,7 +221,7 @@ public class EditCategoryPresenter implements Presenter {
 					}
 
 					@Override
-					public void onSuccess(Category result) {
+					public void onSuccess(CategoryDTO result) {
 						category = result;
 						isParentLoaded = false;
 						eventBus.fireEvent(new LeftmenuEntityChangeEvent(category));

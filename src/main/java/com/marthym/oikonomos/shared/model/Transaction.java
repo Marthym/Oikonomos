@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -48,7 +47,6 @@ public class Transaction implements java.io.Serializable {
 	
 	@ManyToOne(cascade=CascadeType.PERSIST)
 	private Category category;
-	@Transient private Long categoryId;
 	
 	@Column(length=255)
 	private String accountingDocument;
@@ -65,6 +63,7 @@ public class Transaction implements java.io.Serializable {
 	public Transaction(){}
 	public Transaction(Account account) {
 		this.account = account;
+		this.currency = account.getAccountCurrency();
 	}
 	public final Account getAccount() {return account;}
 	public PaiementMeans getPaiementMean() {
@@ -73,10 +72,10 @@ public class Transaction implements java.io.Serializable {
 	public void setPaiementMean(PaiementMeans paiementMean) {
 		this.paiementMean = paiementMean;
 	}
-	public Date getDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
-	public void setDate(Date date) {
+	public void setTransactionDate(Date date) {
 		this.transactionDate = date;
 	}
 	public Payee getPayee() {
@@ -111,9 +110,6 @@ public class Transaction implements java.io.Serializable {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-	public void setCategory(Long categoryId) {
-		this.categoryId = categoryId;
-	}
 	public String getAccountingDocument() {
 		return accountingDocument;
 	}
@@ -126,10 +122,10 @@ public class Transaction implements java.io.Serializable {
 	public void setBudgetLine(BudgetaryLine budgetLine) {
 		this.budgetLine = budgetLine;
 	}
-	public String getComment() {
+	public String getTransactionComment() {
 		return transactionComment;
 	}
-	public void setComment(String comment) {
+	public void setTransactionComment(String comment) {
 		this.transactionComment = comment;
 	}
 	public Long getId() {

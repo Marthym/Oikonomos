@@ -2,9 +2,10 @@ package com.marthym.oikonomos.server.services;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -28,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
+import com.marthym.oikonomos.shared.services.AuthenticationService;
 import com.marthym.oikonomos.shared.services.CategoryService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
@@ -48,11 +50,15 @@ public class TestCategoryService {
 	
 	@BeforeClass
 	public static void initSecurityContext() {
+		Map<String, String> details = new HashMap<String, String>();
+		details.put(AuthenticationService.SESSION_DETAIL_LOCALE, "us");
+		
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
 		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+		((UsernamePasswordAuthenticationToken)auth).setDetails(details);
 		scUser = new SecurityContextImpl();
 		scUser.setAuthentication(auth);
 	}
@@ -70,7 +76,7 @@ public class TestCategoryService {
 		SecurityContextHolder.setContext(scTest);
 		
 		try {
-			categoryService.addOrUpdateEntity(null, "");
+			categoryService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -102,7 +108,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntitiesByParent(-1L, "");
+			categoryService.getEntitiesByParent(-1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -110,7 +116,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntityWithChild(-1L, "");
+			categoryService.getEntityWithChild(-1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -118,7 +124,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntityWithoutChild(-1L, "");
+			categoryService.getEntityWithoutChild(-1L);
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -126,7 +132,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntitiesByDescription("", "");
+			categoryService.getEntitiesByDescription("");
 			fail("Security breach ...");
 		} catch (AccessDeniedException e) {
 		} catch (Exception e) {
@@ -136,7 +142,7 @@ public class TestCategoryService {
 		SecurityContextHolder.clearContext();
 		
 		try {
-			categoryService.addOrUpdateEntity(null, "");
+			categoryService.addOrUpdateEntity(null);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -168,7 +174,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntitiesByParent(-1L, "");
+			categoryService.getEntitiesByParent(-1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -176,7 +182,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntityWithChild(-1L, "");
+			categoryService.getEntityWithChild(-1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -184,7 +190,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntityWithoutChild(-1L, "");
+			categoryService.getEntityWithoutChild(-1L);
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -192,7 +198,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			categoryService.getEntitiesByDescription("", "");
+			categoryService.getEntitiesByDescription("");
 			fail("Security breach ...");
 		} catch (AuthenticationCredentialsNotFoundException e) {
 		} catch (Exception e) {
@@ -205,12 +211,12 @@ public class TestCategoryService {
 	public void testAddOrUpdateEntity() {
 		SecurityContextHolder.setContext(scUser);
 		{
-			Category category = new Category();
+			CategoryDTO category = new CategoryDTO();
 			category.setEntityDescription("Test category");
 			category.setEntityOwner("test@localhost.com");
 			
 			try {
-				category = categoryService.addOrUpdateEntity(category, Locale.US.getDisplayName());
+				category = categoryService.addOrUpdateEntity(category);
 				assertNotNull(category);
 				LOGGER.info("New category id: "+category.getEntityId());
 			} catch (OikonomosException e) {
@@ -255,7 +261,7 @@ public class TestCategoryService {
 		
 		{
 			try {
-				Category category = categoryService.getEntityWithoutChild(1L, Locale.US.getDisplayName());
+				CategoryDTO category = categoryService.getEntityWithoutChild(1L);
 				assertNotNull(category);
 				assertEquals(1L, (long)category.getEntityId());
 				assertTrue(category.getChilds().isEmpty());
@@ -266,7 +272,7 @@ public class TestCategoryService {
 		
 		{
 			try {
-				Category category = categoryService.getEntityWithChild(1L, Locale.US.getDisplayName());
+				CategoryDTO category = categoryService.getEntityWithChild(1L);
 				assertNotNull(category);
 				assertEquals(1L, (long)category.getEntityId());
 				assertFalse(category.getChilds().isEmpty());
@@ -282,7 +288,7 @@ public class TestCategoryService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			List<Category> categories = categoryService.getEntitiesByParent(1L, Locale.US.getDisplayName());
+			List<CategoryDTO> categories = categoryService.getEntitiesByParent(1L);
 			assertNotNull(categories);
 			assertEquals(2, categories.size());
 		} catch (Exception e) {
@@ -297,7 +303,7 @@ public class TestCategoryService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			List<Category> categories = categoryService.getRootEntities(Locale.US.getDisplayName());
+			List<CategoryDTO> categories = categoryService.getRootEntities();
 			assertNotNull(categories);
 			assertEquals(1, categories.size());
 		} catch (Exception e) {
@@ -331,16 +337,16 @@ public class TestCategoryService {
 		SecurityContextHolder.setContext(scUser);
 		
 		try {
-			List<Category> categories = categoryService.getEntitiesByDescription("Alim", Locale.FRENCH.getLanguage().toLowerCase());
+			List<CategoryDTO> categories = categoryService.getEntitiesByDescription("Food");
 			assertNotNull(categories);
-			assertEquals(3, categories.size()); // Alimentation, Alimentation : Bar, Alimentation : Boulangerie
+			assertEquals(3, categories.size()); // Food, Food : Bar, Food : Baker
 			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
 		
 		try {
-			List<Category> categories = categoryService.getEntitiesByDescription("Ba", Locale.US.getCountry().toLowerCase());
+			List<CategoryDTO> categories = categoryService.getEntitiesByDescription("Ba");
 			assertNotNull(categories);
 			assertEquals(2, categories.size());
 			assertEquals((Long)3L, (Long)categories.get(0).getEntityId());
@@ -349,7 +355,7 @@ public class TestCategoryService {
 		}
 		
 		try {
-			List<Category> categories = categoryService.getEntitiesByDescription("alim", Locale.FRENCH.getLanguage().toLowerCase());
+			List<CategoryDTO> categories = categoryService.getEntitiesByDescription("foo");
 			assertNotNull(categories);
 			assertEquals(3, categories.size());
 			assertEquals((Long)1L, (Long)categories.get(0).getEntityId());

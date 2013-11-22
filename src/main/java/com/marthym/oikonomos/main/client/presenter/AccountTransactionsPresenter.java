@@ -10,6 +10,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,8 +21,9 @@ import com.marthym.oikonomos.shared.FieldVerifier;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.PaiementMeans;
 import com.marthym.oikonomos.shared.model.Payee;
-import com.marthym.oikonomos.shared.model.Transaction;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
+import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
+import com.marthym.oikonomos.shared.services.TransactionServiceAsync;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
@@ -32,7 +35,7 @@ public class AccountTransactionsPresenter implements Presenter {
 		Widget asWidget();
 		
 		Payee getTransactionPayee();
-		Category getTransactionCategory();
+		CategoryDTO getTransactionCategory();
 		HasValue<Date> getTransactionDate();
 		HasValue<String> getTransactionDebit();
 		HasValue<String> getTransactionCredit();
@@ -48,11 +51,12 @@ public class AccountTransactionsPresenter implements Presenter {
 	
 	private final Display display;
 	private static AccountTransactionsPresenter instance = null;
-	private Transaction transaction = null;
+	private TransactionDTO transaction = null;
 	
 	@Inject private AccountTabbedPresenter parent;
 	@Inject private OikonomosErrorMessages errorMessages;
 	@Inject private AccountTransactionsConstants constants;
+	@Inject private TransactionServiceAsync rpcTransaction;
 		
 	public static AccountTransactionsPresenter create(HasWidgets container) {
 		if (instance == null) {
@@ -97,14 +101,14 @@ public class AccountTransactionsPresenter implements Presenter {
 			errors.add(errorMessages.error_message_unexpected());
 			errors.add(errorMessages.error_message_account_notfound());
 		}
-		if (transaction == null) transaction = new Transaction(account);
+		if (transaction == null) transaction = new TransactionDTO(account);
 		
-		transaction.setDate(display.getTransactionDate().getValue());
+		transaction.setTransactionDate(display.getTransactionDate().getValue());
 		transaction.setAccountingDocument(display.getTransactionAccountingDocument().getValue());
+		transaction.setCategory(display.getTransactionCategory());
 		//transaction.setBudgetLine(budgetLine); //TODO: Implement BudgetaryLine
-		transaction.setCategory(display.getTransactionCategory().getEntityId());
 		transaction.setPayee(display.getTransactionPayee());
-		transaction.setComment(display.getTransactionComment().getValue());
+		transaction.setTransactionComment(display.getTransactionComment().getValue());
 		
 		try {
 			String credit = display.getTransactionCredit().getValue();
@@ -130,7 +134,18 @@ public class AccountTransactionsPresenter implements Presenter {
 			return;
 		}
 		
-		
+		rpcTransaction.addOrUpdateEntity(transaction, new AsyncCallback<TransactionDTO>() {
+			@Override public void onSuccess(TransactionDTO result) {
+				transaction = result;
+				History.newItem(getHistoryToken());
+				WaitingFlyer.stop();
+			}
+			
+			@Override public void onFailure(Throwable caught) {
+				WaitingFlyer.stop();
+				MessageFlyer.error(caught.getLocalizedMessage());
+			}
+		});
 		
 	}
 	
@@ -140,4 +155,7 @@ public class AccountTransactionsPresenter implements Presenter {
 		container.add(display.asWidget());
 	}
 
+	public final String getHistoryToken() {
+		return transaction.getAccount().getEntityType().name().toLowerCase()+"|"+transaction.getAccount().getEntityId()+"t"+transaction.getId();
+	}
 }

@@ -7,11 +7,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.marthym.oikonomos.client.components.MessageFlyer;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
 
 public class CategoriesSuggestOracle extends SuggestOracle {
@@ -22,16 +21,16 @@ public class CategoriesSuggestOracle extends SuggestOracle {
 	public void requestSuggestions(final Request request, final Callback callback) {
 		String categoryQuery = request.getQuery();
 		if (categoryQuery.length() > 2) {
-	    	  categoryService.getEntitiesByDescription(categoryQuery, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+	    	  categoryService.getEntitiesByDescription(categoryQuery, new AsyncCallback<List<CategoryDTO>>() {
 					
 					@Override public void onFailure(Throwable caught) {
 						MessageFlyer.error(caught.getLocalizedMessage());
 					}
 					
 					@Override
-					public void onSuccess(List<Category> result) {
+					public void onSuccess(List<CategoryDTO> result) {
 						Collection<Suggestion> list = new LinkedList<Suggestion>();
-						for (Category cat : result) {
+						for (CategoryDTO cat : result) {
 							list.add(new CategorySuggestion(cat));
 						}
 						Response response = new Response(list);

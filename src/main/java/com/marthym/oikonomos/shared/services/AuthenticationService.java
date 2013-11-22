@@ -14,9 +14,11 @@ import com.marthym.oikonomos.shared.model.User;
  */
 @RemoteServiceRelativePath("../rpc/authenticationService")
 public interface AuthenticationService extends RemoteService {
+	public static final String SESSION_DETAIL_LOCALE = "locale";
+	
 	
 	@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
-	public User authenticate(String username, String password) throws OikonomosException;
+	public User authenticate(String username, String password, String locale) throws OikonomosException;
 	public void logout();
 	
 	@Secured("ROLE_USER")

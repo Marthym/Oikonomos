@@ -3,14 +3,14 @@ package com.marthym.oikonomos.main.client.components;
 import java.io.Serializable;
 
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 
 public class CategorySuggestion implements Suggestion, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Category category;
+	private CategoryDTO category;
 	
-	public CategorySuggestion (Category category) {
+	public CategorySuggestion (CategoryDTO category) {
 		this.category = category;
 	}
 	
@@ -24,7 +24,7 @@ public class CategorySuggestion implements Suggestion, Serializable {
 		return category.getAbsoluteDescription();
 	}
 
-	public final Category getCategory() {
+	public final CategoryDTO getCategory() {
 		return category;
 	}
 

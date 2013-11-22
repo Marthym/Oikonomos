@@ -19,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
+import com.marthym.oikonomos.server.utils.SessionHelper;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
+import com.marthym.oikonomos.shared.model.Category;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.services.CategoryService;
 
 @Repository
@@ -57,15 +59,16 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Secured("ROLE_USER")
 	@Transactional
-	public List<Category> getRootEntities(String locale) throws OikonomosException {
+	public List<CategoryDTO> getRootEntities() throws OikonomosException {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 			User authentifiedUser = (User)authentication.getPrincipal();
+			String locale = SessionHelper.getSessionLocale();
 			
-			List<Category> allCategoryDto = new LinkedList<Category>();
-			for (com.marthym.oikonomos.shared.model.Category category : categoryRepository.findRootCategoriesByOwner(authentifiedUser.getUserEmail())) {
-				allCategoryDto.add(Category.create(category, locale, false));
+			List<CategoryDTO> allCategoryDto = new LinkedList<CategoryDTO>();
+			for (Category category : categoryRepository.findRootCategoriesByOwner(authentifiedUser.getUserEmail())) {
+				allCategoryDto.add(CategoryDTO.create(category, locale, false));
 			}
 			
 			return allCategoryDto;
@@ -79,7 +82,8 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Transactional
 	@Secured("ROLE_USER")
-	public Category getEntityWithChild(long entityId, String locale) throws OikonomosException {
+	public CategoryDTO getEntityWithChild(long entityId) throws OikonomosException {
+		String locale = SessionHelper.getSessionLocale();
 		return getEntity(entityId, locale, true);
 	}
 
@@ -88,23 +92,24 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Transactional
 	@Secured("ROLE_USER")
-	public Category getEntityWithoutChild(long entityId, String locale) throws OikonomosException {
+	public CategoryDTO getEntityWithoutChild(long entityId) throws OikonomosException {
+		String locale = SessionHelper.getSessionLocale();
 		return getEntity(entityId, locale, false);
 	}
 	
-	private Category getEntity(long entityId, String locale, boolean withChilds) throws OikonomosException {
+	private CategoryDTO getEntity(long entityId, String locale, boolean withChilds) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		
-		com.marthym.oikonomos.shared.model.Category dao = categoryRepository.findOne(entityId);
+		Category dao = categoryRepository.findOne(entityId);
 		
 		if (dao.getOwner() != null && !dao.getOwner().equals(authentifiedUser.getUserEmail())) {
 			throw new OikonomosException(
 					"error.message.entity.notfound", 
 					"Category "+dao.getId()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
-		Category dto = Category.create(dao, locale, withChilds);
+		CategoryDTO dto = CategoryDTO.create(dao, locale, withChilds);
 		
 		return dto;		
 	}
@@ -112,25 +117,25 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Transactional
 	@Secured("ROLE_USER")
-	public List<Category> getEntitiesByDescription(String descriptionQuery, String locale) throws OikonomosException {
+	public List<CategoryDTO> getEntitiesByDescription(String descriptionQuery) throws OikonomosException {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 			User authentifiedUser = (User)authentication.getPrincipal();
+			String locale = SessionHelper.getSessionLocale();
 			
-			Set<Category> allCategoryDto = new HashSet<Category>();
-			List<com.marthym.oikonomos.shared.model.Category> allCategoryDao = categoryRepository.findByDescription(descriptionQuery, authentifiedUser.getUserEmail(), locale);
-			for (com.marthym.oikonomos.shared.model.Category category : allCategoryDao) {
-				allCategoryDto.add(Category.create(category, locale, false));
-				for (com.marthym.oikonomos.shared.model.Category child : category.getChilds()) {
-					allCategoryDto.add(Category.create(child, locale, false));
+			Set<CategoryDTO> allCategoryDto = new HashSet<CategoryDTO>();
+			List<Category> allCategoryDao = categoryRepository.findByDescription(descriptionQuery, authentifiedUser.getUserEmail(), locale);
+			for (Category category : allCategoryDao) {
+				allCategoryDto.add(CategoryDTO.create(category, locale, false));
+				for (Category child : category.getChilds()) {
+					allCategoryDto.add(CategoryDTO.create(child, locale, false));
 				}
 			}
-			
-			List<Category> result = new ArrayList<Category>(allCategoryDto);
+			List<CategoryDTO> result = new ArrayList<CategoryDTO>(allCategoryDto);
 			Collections.sort(result);
-			
 			return result;
+			
 		} catch (Exception e) {
 			LOGGER.error(e.getClass()+": "+e.getLocalizedMessage());
 			if (LOGGER.isDebugEnabled()) LOGGER.debug("STACKTRACE", e);
@@ -141,10 +146,11 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Transactional
 	@Secured("ROLE_USER")
-	public Category addOrUpdateEntity(Category dto, String locale) throws OikonomosException {
+	public CategoryDTO addOrUpdateEntity(CategoryDTO dto) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		String locale = SessionHelper.getSessionLocale();
 		
 		if (dto.getEntityDescription() == null || dto.getEntityDescription().isEmpty()) {
 			throw new OikonomosException("error.message.category.mandatoryDescription", "Description is mandatory !");
@@ -185,7 +191,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 		dao.addDescription(locale, dto.getEntityDescription());
 		
 		dao = categoryRepository.save(dao);
-		return Category.create(dao, locale, false);
+		return CategoryDTO.create(dao, locale, false);
 	}
 
 
@@ -209,14 +215,15 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 	@Override
 	@Secured("ROLE_USER")
 	@Transactional
-	public List<Category> getEntitiesByParent(long entityId, String locale) throws OikonomosException {
+	public List<CategoryDTO> getEntitiesByParent(long entityId) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		String locale = SessionHelper.getSessionLocale();
 		
-		List<Category> allCategoryDto = new LinkedList<Category>();
+		List<CategoryDTO> allCategoryDto = new LinkedList<CategoryDTO>();
 		for (com.marthym.oikonomos.shared.model.Category category : categoryRepository.findByParentId(authentifiedUser.getUserEmail(), entityId)) {
-			allCategoryDto.add(Category.create(category, locale, false));
+			allCategoryDto.add(CategoryDTO.create(category, locale, false));
 		}
 		return allCategoryDto;
 	}

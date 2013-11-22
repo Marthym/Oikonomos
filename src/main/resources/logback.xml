@@ -19,7 +19,7 @@
 		<!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender -->
 		<File>${catalina.base}/logs/oikonomos.log</File>
 		<encoder>
-			<pattern>%d{HH:mm:ss,SSS} %-5level [%logger{0}] %m%n</pattern>
+			<pattern>%date %-5level [%logger{0}] %m%n</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>5</maxIndex>

@@ -4,29 +4,32 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.flipthebird.gwthashcodeequals.EqualsBuilder;
-import com.flipthebird.gwthashcodeequals.HashCodeBuilder;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
-public class Category extends LeftMenuEntity implements Serializable, Comparable<Category> {
-	private static final long serialVersionUID = -8492244149513545637L;
+public class CategoryDTO extends LeftMenuEntity implements Serializable, Comparable<CategoryDTO> {
+	private static final long serialVersionUID = 1L;
 
+	@NotNull
 	private Long id;
 	private String owner;
 	private Long parentId;
 	private String parentDescription;
-	private Set<Category> childs;
+	private Set<CategoryDTO> childs;
+	@Size(max=255)
 	private String description;
 	
-	public Category() {
-		childs = new HashSet<Category>();
+	public CategoryDTO() {
+		childs = new HashSet<CategoryDTO>();
 		parentId = -1L;
 		parentDescription = "";
 	}
 	
-	public static Category create(com.marthym.oikonomos.shared.model.Category dao, String locale, boolean withChilds) {
-		Category dto = new Category();
+	public static CategoryDTO create(com.marthym.oikonomos.shared.model.Category dao, String locale, boolean withChilds) {
+		CategoryDTO dto = new CategoryDTO();
 		dto.id = dao.getId();
 		dto.owner = dao.getOwner();
 		dto.parentId = -1L;
@@ -38,7 +41,7 @@ public class Category extends LeftMenuEntity implements Serializable, Comparable
 		dto.description = dao.getDescription(locale);
 		
 		if (withChilds) {
-			dto.childs = new HashSet<Category>();
+			dto.childs = new HashSet<CategoryDTO>();
 			for (com.marthym.oikonomos.shared.model.Category childDao : dao.getChilds()) {
 				dto.childs.add(create(childDao, locale, true));
 			}
@@ -51,7 +54,7 @@ public class Category extends LeftMenuEntity implements Serializable, Comparable
 	public final String getParentDescription() { return parentDescription; }
 	public void setParentId(Long parentId) {this.parentId = parentId;}
 	
-	public final Set<Category> getChilds() { return childs; } 
+	public final Set<CategoryDTO> getChilds() { return childs; } 
 	
 	@Override
 	public Long getEntityId() {
@@ -91,8 +94,8 @@ public class Category extends LeftMenuEntity implements Serializable, Comparable
 	}
 
 	@Override
-	public int compareTo(Category o) {
-		return this.getAbsoluteDescription().compareTo(o.getAbsoluteDescription());
+	public int compareTo(CategoryDTO o) {
+		return this.getAbsoluteDescription().compareToIgnoreCase(o.getAbsoluteDescription());
 	}
 	
 	@Override
@@ -101,26 +104,30 @@ public class Category extends LeftMenuEntity implements Serializable, Comparable
             return false;
         if (obj == this)
             return true;
-        if (!(obj instanceof Category))
+        if (!(obj instanceof CategoryDTO))
             return false;
 
-        Category cat = (Category) obj;
-        return new EqualsBuilder().
-            append(id, cat.id).
-            append(owner, cat.owner).
-            append(parentId, cat.parentId).
-            append(description, cat.description).
-            isEquals();
+        CategoryDTO cat = (CategoryDTO) obj;
+        
+        if (this.id != cat.id) {if (this.id == null || !this.id.equals(cat.id)) return false;}
+        if (this.owner != cat.owner) {if (this.owner == null || !this.owner.equals(cat.owner)) return false;}
+        if (this.parentId != cat.parentId) {if (this.parentId == null || !this.parentId.equals(cat.parentId)) return false;}
+        if (this.description != cat.description) {if (this.description == null || !this.description.equals(cat.description)) return false;}
+        
+        return true;        		
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().
-	            append(id).
-	            append(owner).
-	            append(parentId).
-	            append(description).
-	            toHashCode();
+	    int result = 7;
+	    final int multiplier = 17;
+	 
+	    result = multiplier*result + (id==null ? 0 : id.hashCode());
+	    result = multiplier*result + (owner==null ? 0 : owner.hashCode());
+	    result = multiplier*result + (parentId==null ? 0 : parentId.hashCode());
+	    result = multiplier*result + (description==null ? 0 : description.hashCode());
+	 
+	    return result;
 	}
 
 }

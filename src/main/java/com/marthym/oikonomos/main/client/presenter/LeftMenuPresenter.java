@@ -12,7 +12,6 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -32,7 +31,7 @@ import com.marthym.oikonomos.shared.services.PayeeServiceAsync;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.model.Payee;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.shared.view.data.HasEntityCountData;
 
@@ -135,7 +134,7 @@ public class LeftMenuPresenter implements Presenter {
 					onExpandCollapseSubentities((Anchor)event.getSource());
 				}
 			};
-			rpcCategory.getRootEntities(LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+			rpcCategory.getRootEntities(new AsyncCallback<List<CategoryDTO>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -143,7 +142,7 @@ public class LeftMenuPresenter implements Presenter {
 				}
 
 				@Override
-				public void onSuccess(List<Category> result) {
+				public void onSuccess(List<CategoryDTO> result) {
 					display.refreshEntityList(result, expandCollapseSubentitiesHandler);
 				}
 			});
@@ -185,12 +184,12 @@ public class LeftMenuPresenter implements Presenter {
 		
 			String entityId = historyToken.split(DashboardPresenter.HISTORY_PARAM_SEPARATOR)[1];
 			CategoryServiceAsync rpcCategory = CategoryServiceAsync.Util.getInstance();
-			rpcCategory.getEntitiesByParent(Long.parseLong(entityId), LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<List<Category>>() {
+			rpcCategory.getEntitiesByParent(Long.parseLong(entityId), new AsyncCallback<List<CategoryDTO>>() {
 				@Override public void onFailure(Throwable caught) {
 					LOG.severe(caught.getLocalizedMessage());
 				}
 	
-				@Override public void onSuccess(List<Category> result) {
+				@Override public void onSuccess(List<CategoryDTO> result) {
 					display.refreshEntitySublist(link, result);
 				}
 			});

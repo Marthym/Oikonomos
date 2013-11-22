@@ -38,9 +38,9 @@ public class TestTransaction {
 		
 		Transaction transac = new Transaction(accountRepository.findOne(1L));
 		transac.setAccountingDocument("accounting doc");
-		transac.setComment("Test comment");
+		transac.setTransactionComment("Test comment");
 		transac.setCredit(1000L);
-		transac.setDate(new Date());
+		transac.setTransactionDate(new Date());
 		transac.setPaiementMean(PaiementMeans.CREDIT_CARD);
 		transac.setPayee(new Payee("Me"));
 		

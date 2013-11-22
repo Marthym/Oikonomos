@@ -6,15 +6,13 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
-import com.marthym.oikonomos.shared.model.Transaction;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
 
 @RemoteServiceRelativePath("../rpc/transactionService")
 public interface TransactionService extends RemoteService {
 	public long getCount(Account account) throws OikonomosException;
-	public Transaction find(long id) throws OikonomosException;
-	public List<Transaction> findAllForAccount(Account account) throws OikonomosException;
-	public Transaction addOrUpdateEntity(Transaction transaction) throws OikonomosException;
-	public Transaction addOrUpdateEntity(Transaction transaction, Category category) throws OikonomosException;
+	public TransactionDTO find(long id) throws OikonomosException;
+	public List<TransactionDTO> findAllForAccount(Account account) throws OikonomosException;
+	public TransactionDTO addOrUpdateEntity(TransactionDTO transaction) throws OikonomosException;
 	public void delete(long id) throws OikonomosException;
 }

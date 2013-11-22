@@ -1,5 +1,8 @@
 package com.marthym.oikonomos.server.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +32,16 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
 
 	@Override
 	@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
-	public User authenticate(String username, String password) throws OikonomosException {
+	public User authenticate(String username, String password, String locale) throws OikonomosException {
 		if (password == null || password.length() < 8) {
 			throw new OikonomosException("error.message.user.unauthorized", "User not found !");
 		}
-
+		Map<String, String> details = new HashMap<String, String>();
+		if (locale != null && !locale.isEmpty()) details.put(SESSION_DETAIL_LOCALE, locale);
+		else details.put(SESSION_DETAIL_LOCALE, "us");
 		try {
-			Authentication auth = new UsernamePasswordAuthenticationToken(username, password, null);
+			Authentication auth = new UsernamePasswordAuthenticationToken(username, password);
+			((UsernamePasswordAuthenticationToken)auth).setDetails(details);
 			auth = authenticationManager.authenticate(auth);
 			SecurityContext sc = SecurityContextHolder.getContext();
 			sc.setAuthentication(auth);

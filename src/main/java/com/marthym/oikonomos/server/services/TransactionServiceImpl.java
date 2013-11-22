@@ -1,6 +1,6 @@
 package com.marthym.oikonomos.server.services;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,20 +13,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
+import com.marthym.oikonomos.server.utils.SessionHelper;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
 import com.marthym.oikonomos.shared.services.TransactionService;
 
 @Repository
-@Service("TransactionService")
+@Service("transactionService")
 public class TransactionServiceImpl extends RemoteServiceServlet implements TransactionService {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
@@ -54,14 +56,16 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Override
 	@Secured("ROLE_USER")
-	public Transaction find(long id) throws OikonomosException {
+	public TransactionDTO find(long id) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		String locale = SessionHelper.getSessionLocale();
 		
 		Transaction result = transactionRepository.findOne(id);
 		if (result != null && result.getOwner().equals(authentifiedUser.getUserEmail())) {
-			return result;
+			TransactionDTO dto = TransactionDTO.create(result, locale);
+			return dto;
 			
 		} else {
 			throw new OikonomosException(
@@ -72,10 +76,11 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Override
 	@Secured("ROLE_USER")
-	public List<Transaction> findAllForAccount(Account account) throws OikonomosException {
+	public List<TransactionDTO> findAllForAccount(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		String locale = SessionHelper.getSessionLocale();
 		
 		if (!authentifiedUser.getUserEmail().equals(account.getAccountOwner())) {
 			throw new OikonomosException(
@@ -83,57 +88,72 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
 		List<Transaction> transactions = transactionRepository.findByAccount(account, sortByDate());
-		return transactions;
+		List<TransactionDTO> dtos = new LinkedList<TransactionDTO>();
+		for (Transaction dao : transactions) {
+			dtos.add(TransactionDTO.create(dao, locale));
+		}
+		return dtos;
 	}
 
 	@Override
 	@Secured("ROLE_USER")
-	public Transaction addOrUpdateEntity(Transaction transaction) throws OikonomosException {
+	@Transactional
+	public TransactionDTO addOrUpdateEntity(TransactionDTO dto) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
+		String locale = SessionHelper.getSessionLocale();
 		
-		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
+		if (!authentifiedUser.getUserEmail().equals(dto.getAccount().getAccountOwner())) {
 			throw new OikonomosException(
 					"error.message.account.notowned", 
-					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+					"Account "+dto.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
-		return transactionRepository.save(transaction);
+		
+		Transaction dao = null;
+		com.marthym.oikonomos.shared.model.Category categoryDAO = null;
+		if (dto.getCategory() != null) {
+			categoryDAO = categoryRepository.findOne(dto.getCategory().getEntityId());
+		}
+		if (dto.getId() > 0) {
+			dao = transactionRepository.findOne(dto.getId());
+			
+			if (dao == null) {
+				throw new OikonomosException(
+						"error.message.account.notfound", 
+						"Transaction "+dto.getId()+" not fount for user "+authentifiedUser.getUserEmail());
+			}
+			
+			if (!authentifiedUser.getUserEmail().equals(dao.getOwner())) {
+				throw new OikonomosException(
+						"error.message.account.notowned", 
+						"Account "+dto.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+			}
+
+		} else {
+			dao = new Transaction(dto.getAccount());
+		}
+		
+		dao.setAccountingDocument(dto.getAccountingDocument());
+		dao.setBudgetLine(dto.getBudgetLine());
+		dao.setCategory(categoryDAO);
+		dao.setTransactionComment(dto.getTransactionComment());
+		dao.setCredit(dto.getCredit());
+		dao.setCurrency(dto.getCurrency());
+		dao.setTransactionDate(dto.getTransactionDate());
+		dao.setDebit(dto.getDebit());
+		dao.setPaiementMean(dto.getPaiementMean());
+		dao.setPayee(dto.getPayee());
+		dao.setReconciliation(dto.getReconciliation());
+
+		dao = transactionRepository.save(dao);
+		
+		return TransactionDTO.create(dao, locale);
 	}
 
 	@Override
 	@Secured("ROLE_USER")
-	public Transaction addOrUpdateEntity(Transaction transaction, Category dtoCategory) throws OikonomosException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
-		User authentifiedUser = (User)authentication.getPrincipal();
-
-		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
-			throw new OikonomosException(
-					"error.message.account.notowned", 
-					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
-		}
-		
-		if (dtoCategory.getEntityOwner() != null && !dtoCategory.getEntityOwner().equals(authentifiedUser.getUserEmail())) {
-			throw new OikonomosException(
-					"error.message.entity.notfound", 
-					"Category "+dtoCategory.getEntityId()+" must be owned by "+authentifiedUser.getUserEmail());
-		}
-		
-		com.marthym.oikonomos.shared.model.Category category = categoryRepository.findOne(dtoCategory.getEntityId());
-		if (category == null) {
-			throw new OikonomosException(
-					"error.message.category.notfound", 
-					Arrays.asList(new String[]{dtoCategory.getEntityId()+"-"+dtoCategory.getAbsoluteDescription()}),
-					"Category "+dtoCategory.getEntityId()+" not found in database !");
-		}
-		
-		transaction.setCategory(category);
-		return transactionRepository.save(transaction);
-	}
-
-	@Override
-	@Secured("ROLE_USER")
+	@Transactional
 	public void delete(long id) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");

@@ -21,7 +21,7 @@ import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.components.SingleValueListBox;
 import com.marthym.oikonomos.main.client.presenter.EditCategoryPresenter;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 
 public class EditCategoryView extends Composite implements EditCategoryPresenter.Display {
 	private static EditCategoryViewUiBinder uiBinder = GWT.create(EditCategoryViewUiBinder.class);
@@ -105,10 +105,10 @@ public class EditCategoryView extends Composite implements EditCategoryPresenter
 	}
 
 	@Override
-	public boolean populateParentList(List<Category> parents) {
+	public boolean populateParentList(List<CategoryDTO> parents) {
 		categoryParent.clear();
 		categoryParent.addItem("ROOT");
-		for (Category parent : parents) {
+		for (CategoryDTO parent : parents) {
 			categoryParent.addItem(parent.getEntityDescription(), parent.getEntityId().toString());
 		}
 		return true;

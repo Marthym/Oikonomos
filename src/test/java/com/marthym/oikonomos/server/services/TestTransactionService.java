@@ -3,8 +3,10 @@ package com.marthym.oikonomos.server.services;
 import static org.junit.Assert.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -32,8 +34,9 @@ import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.Category;
 import com.marthym.oikonomos.shared.model.Payee;
-import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
+import com.marthym.oikonomos.shared.services.AuthenticationService;
 import com.marthym.oikonomos.shared.services.TransactionService;
 
 @ContextConfiguration(locations={"classpath:/applicationContext-test.xml"})
@@ -59,11 +62,15 @@ public class TestTransactionService {
 	
 	@BeforeClass
 	public static void initSecurityContext() {
+		Map<String, String> details = new HashMap<String, String>();
+		details.put(AuthenticationService.SESSION_DETAIL_LOCALE, "us");
+		
 		User currentUser = new User("test@localhost.com", "marthym", "myhtram", "password");
 		// Create de session if user is valid
 		List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, "password", authorities);
+		((UsernamePasswordAuthenticationToken)auth).setDetails(details);
 		scUser = new SecurityContextImpl();
 		scUser.setAuthentication(auth);
 	}
@@ -120,13 +127,6 @@ public class TestTransactionService {
 			fail(e.getClass()+": "+e.getMessage());
 		}
 		
-		try {
-			transactionService.addOrUpdateEntity(null, null);
-			fail("Security breach ...");
-		} catch (AccessDeniedException e) {
-		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getMessage());
-		}
 		
 		SecurityContextHolder.clearContext();
 		
@@ -169,14 +169,7 @@ public class TestTransactionService {
 		} catch (Exception e) {
 			fail(e.getClass()+": "+e.getMessage());
 		}
-		
-		try {
-			transactionService.addOrUpdateEntity(null, null);
-			fail("Security breach ...");
-		} catch (AuthenticationCredentialsNotFoundException e) {
-		} catch (Exception e) {
-			fail(e.getClass()+": "+e.getMessage());
-		}
+
 	}
 
 	@Test
@@ -185,28 +178,15 @@ public class TestTransactionService {
 		SecurityContextHolder.setContext(scUser);
 		Account account = accountRepository.findOne(1L);
 		{
+			Category daoCategory = categoryRepository.findOne(1L);
+			com.marthym.oikonomos.shared.model.dto.CategoryDTO dtoCategory = com.marthym.oikonomos.shared.model.dto.CategoryDTO.create(daoCategory, "fr", false);
 			Payee payee = new Payee("Test Payee");
-			Transaction trans = new Transaction(account);
-			trans.setDate(new Date());
+			TransactionDTO trans = new TransactionDTO(account);
+			trans.setTransactionDate(new Date());
 			trans.setPayee(payee);
+			trans.setCategory(dtoCategory);
 			try {
 				trans = transactionService.addOrUpdateEntity(trans);
-				assertNotNull(trans);
-				LOGGER.info("New transaction id: "+trans.getId());
-			} catch (OikonomosException e) {
-				fail(e.getClass()+": "+e.getMessage());
-			}
-		}
-		
-		{
-			Category daoCategory = categoryRepository.findOne(1L);
-			com.marthym.oikonomos.shared.model.dto.Category dtoCategory = com.marthym.oikonomos.shared.model.dto.Category.create(daoCategory, "fr", false);
-			Payee payee = new Payee("Test Payee");
-			Transaction trans = new Transaction(account);
-			trans.setDate(new Date());
-			trans.setPayee(payee);
-			try {
-				trans = transactionService.addOrUpdateEntity(trans, dtoCategory);
 				assertNotNull(trans);
 				LOGGER.info("New transaction id: "+trans.getId());
 			} catch (OikonomosException e) {
@@ -221,7 +201,7 @@ public class TestTransactionService {
 	public void testFind() {
 		SecurityContextHolder.setContext(scUser);
 		try {
-			Transaction transaction = transactionService.find(1L);
+			TransactionDTO transaction = transactionService.find(1L);
 			assertNotNull(transaction);
 			assertEquals("Emy H. Tram", transaction.getPayee().getName());
 		} catch (OikonomosException e) {
@@ -236,7 +216,7 @@ public class TestTransactionService {
 		SecurityContextHolder.setContext(scUser);
 		Account account = accountRepository.findOne(1L);
 		try {
-			List<Transaction> transactions = transactionService.findAllForAccount(account);
+			List<TransactionDTO> transactions = transactionService.findAllForAccount(account);
 			assertNotNull(transactions);
 			assertEquals(2, transactions.size());
 		} catch (OikonomosException e) {

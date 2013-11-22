@@ -10,6 +10,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -82,7 +83,7 @@ public class LoginController implements Presenter, ValueChangeHandler<String> {
 		}
 		
 		WaitingFlyer.start();
-		rpcService.authenticate(login, password, new AsyncCallback<User>() {
+		rpcService.authenticate(login, password, LocaleInfo.getCurrentLocale().getLocaleName(), new AsyncCallback<User>() {
 			
 			@Override
 			public void onSuccess(User result) {

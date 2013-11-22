@@ -13,7 +13,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 	
 	@Query("select c from Category c join c.translations t where key(t) = :locale and (c.owner is null or c.owner = :owner) and LOWER(t.description) like LOWER(CONCAT('%',:description,'%'))")
 	public List<Category> findByDescription(@Param("description") String description, @Param("owner") String owner, @Param("locale") String locale);
-	
+
 	@Query("select count(c) from Category c where (c.owner is null or c.owner = :owner) and parent_id is null")
 	public Long countRootCategoriesByOwner(@Param("owner") String owner);
 	

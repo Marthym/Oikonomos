@@ -19,7 +19,7 @@ import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 import com.marthym.oikonomos.shared.model.Payee;
-import com.marthym.oikonomos.shared.model.dto.Category;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 
 public class AccountTransactionsView extends Composite implements AccountTransactionsPresenter.Display {
 	private static AccountTransactionsViewUiBinder uiBinder = GWT.create(AccountTransactionsViewUiBinder.class);
@@ -62,7 +62,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	}
 
 	@Override
-	public Category getTransactionCategory() {
+	public CategoryDTO getTransactionCategory() {
 		return transactionForm.getSelectedCategory();
 	}
 

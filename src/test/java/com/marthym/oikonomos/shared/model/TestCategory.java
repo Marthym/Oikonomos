@@ -90,15 +90,15 @@ public class TestCategory {
 		cat2 = categoryRepository.save(cat2);
 
 		{
-			com.marthym.oikonomos.shared.model.dto.Category dto = 
-					com.marthym.oikonomos.shared.model.dto.Category.create(cat1, Locale.FRENCH.getDisplayLanguage(), false);
+			com.marthym.oikonomos.shared.model.dto.CategoryDTO dto = 
+					com.marthym.oikonomos.shared.model.dto.CategoryDTO.create(cat1, Locale.FRENCH.getDisplayLanguage(), false);
 			assertNotNull(dto);
 			assertEquals("Catégorie Un", dto.getEntityDescription());
 			assertTrue(dto.getChilds().isEmpty());
 		}
 		{
-			com.marthym.oikonomos.shared.model.dto.Category dto = 
-					com.marthym.oikonomos.shared.model.dto.Category.create(cat1, Locale.US.getDisplayLanguage(), true);
+			com.marthym.oikonomos.shared.model.dto.CategoryDTO dto = 
+					com.marthym.oikonomos.shared.model.dto.CategoryDTO.create(cat1, Locale.US.getDisplayLanguage(), true);
 			assertNotNull(dto);
 			assertEquals("Category One", dto.getEntityDescription());
 			assertNotNull(dto.getChilds());
