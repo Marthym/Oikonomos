@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
+import com.marthym.oikonomos.server.repositories.PayeeRepository;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.model.Category;
@@ -52,6 +53,9 @@ public class TestTransactionService {
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private PayeeRepository payeeRepository;
 	
 	private static SecurityContext scUser;
 	
@@ -177,10 +181,27 @@ public class TestTransactionService {
 	public void testAddOrUpdateEntity() {
 		SecurityContextHolder.setContext(scUser);
 		Account account = accountRepository.findOne(1L);
+		Category daoCategory = categoryRepository.findOne(1L);
+		
 		{
-			Category daoCategory = categoryRepository.findOne(1L);
 			com.marthym.oikonomos.shared.model.dto.CategoryDTO dtoCategory = com.marthym.oikonomos.shared.model.dto.CategoryDTO.create(daoCategory, "fr", false);
 			Payee payee = new Payee("Test Payee");
+			TransactionDTO trans = new TransactionDTO(account);
+			trans.setTransactionDate(new Date());
+			trans.setPayee(payee);
+			trans.setCategory(dtoCategory);
+			try {
+				trans = transactionService.addOrUpdateEntity(trans);
+				assertNotNull(trans);
+				LOGGER.info("New transaction id: "+trans.getId());
+			} catch (OikonomosException e) {
+				fail(e.getClass()+": "+e.getMessage());
+			}
+		}
+		
+		{			
+			com.marthym.oikonomos.shared.model.dto.CategoryDTO dtoCategory = com.marthym.oikonomos.shared.model.dto.CategoryDTO.create(daoCategory, "fr", false);
+			Payee payee = payeeRepository.findOne(1L);
 			TransactionDTO trans = new TransactionDTO(account);
 			trans.setTransactionDate(new Date());
 			trans.setPayee(payee);

@@ -13,9 +13,7 @@
 		<g:HTMLPanel addStyleNames="{dashRes.style.mainView} {dashRes.style.accountsMainView}" />
 		
 		<g:VerticalPanel height="100%" width="100%" addStyleNames="{dashRes.style.scroll}" ui:field="vertical">
-		    <g:ScrollPanel addStyleNames="{dashRes.style.scroll}">
-				<c:DataGrid ui:field="transactionsGrid"/>
-			</g:ScrollPanel>
+			<c:DataGrid ui:field="transactionsGrid" height="100%"/>
 	    	<g:DisclosurePanel width="100%" addStyleNames="{dashRes.style.disclosure}" ui:field="formDisclosure">
 				<g:header><ui:text from="{constants.transactionForm}" /></g:header>
 				<nomos:EditTransactionForm ui:field="transactionForm" />

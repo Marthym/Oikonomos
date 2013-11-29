@@ -17,13 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
+import com.marthym.oikonomos.server.repositories.PayeeRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
 import com.marthym.oikonomos.server.utils.SessionHelper;
 import com.marthym.oikonomos.shared.exceptions.OikonomosException;
 import com.marthym.oikonomos.shared.exceptions.OikonomosUnauthorizedException;
 import com.marthym.oikonomos.shared.model.Account;
+import com.marthym.oikonomos.shared.model.Category;
+import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.model.Transaction;
 import com.marthym.oikonomos.shared.model.User;
+import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
 import com.marthym.oikonomos.shared.services.TransactionService;
 
@@ -38,6 +42,9 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private PayeeRepository payeeRepository;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -56,6 +63,7 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Override
 	@Secured("ROLE_USER")
+	@Transactional
 	public TransactionDTO find(long id) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
@@ -76,6 +84,7 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 
 	@Override
 	@Secured("ROLE_USER")
+	@Transactional
 	public List<TransactionDTO> findAllForAccount(Account account) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
@@ -111,10 +120,6 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		}
 		
 		Transaction dao = null;
-		com.marthym.oikonomos.shared.model.Category categoryDAO = null;
-		if (dto.getCategory() != null) {
-			categoryDAO = categoryRepository.findOne(dto.getCategory().getEntityId());
-		}
 		if (dto.getId() > 0) {
 			dao = transactionRepository.findOne(dto.getId());
 			
@@ -134,6 +139,18 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 			dao = new Transaction(dto.getAccount());
 		}
 		
+		Category categoryDAO = dao.getCategory();
+		if (isCategoryMustBeReloaded(dto.getCategory(), dao.getCategory())) {
+			categoryDAO = categoryRepository.findOne(dto.getCategory().getEntityId());
+		}
+		
+		Payee payeeDAO = dao.getPayee();
+		if (isPayeeMustBeReloaded(dto.getPayee(), dao.getPayee())){
+			payeeDAO = payeeRepository.findOne(dto.getPayee().getEntityId());
+		} else {
+			payeeDAO = dto.getPayee();
+		}
+		
 		dao.setAccountingDocument(dto.getAccountingDocument());
 		dao.setBudgetLine(dto.getBudgetLine());
 		dao.setCategory(categoryDAO);
@@ -143,7 +160,7 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		dao.setTransactionDate(dto.getTransactionDate());
 		dao.setDebit(dto.getDebit());
 		dao.setPaiementMean(dto.getPaiementMean());
-		dao.setPayee(dto.getPayee());
+		dao.setPayee(payeeDAO);
 		dao.setReconciliation(dto.getReconciliation());
 
 		dao = transactionRepository.save(dao);
@@ -177,4 +194,19 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		return new Sort(Direction.ASC, "transactionDate");
 	}
 
+	private static boolean isCategoryMustBeReloaded(CategoryDTO dto, Category dao) {
+		if (dto == null) return false;
+		else if (dto.getEntityId() == null || dto.getEntityId() < 0) return false;
+		else if (dto != null && dao == null) return true;
+		else if (dto.getEntityId() != dao.getId()) return true;
+		else return false;
+	}
+	
+	private static boolean isPayeeMustBeReloaded(Payee dto, Payee dao) {
+		if (dto == null) return false;
+		else if (dto.getEntityId() == null || dto.getEntityId() < 0) return false;
+		else if (dto != null && dao == null) return true;
+		else if (dto.getEntityId() != dao.getEntityId()) return true;
+		else return false;
+	}
 }

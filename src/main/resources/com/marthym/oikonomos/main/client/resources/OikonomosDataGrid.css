@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+
+.dataGridHeader {
+  padding: 3px 2px;
+}
+
+.dataGridCell {
+  padding: 2px;
+}

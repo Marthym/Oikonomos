@@ -1,6 +1,7 @@
 package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,10 +106,6 @@ public class AccountTransactionsPresenter implements Presenter {
 		});
 	}
 	
-	private void updateTransactionGridFromData() {
-		
-	}
-	
 	private void updateTransactionFormFromData() {
 		display.reset();
 	}
@@ -163,8 +160,12 @@ public class AccountTransactionsPresenter implements Presenter {
 			@Override public void onSuccess(TransactionDTO result) {
 				if (currentTransactionIndex < 0) {
 					transactions.add(result);
-					currentTransactionIndex = transactions.size()-1;
+					currentTransactionIndex = -1;
+					display.reset();
 				}
+				List<TransactionDTO> transactions = Arrays.asList(new TransactionDTO[]{result});
+				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(transactions));
+				
 				History.newItem(getHistoryToken());
 				WaitingFlyer.stop();
 			}

@@ -10,8 +10,8 @@ public class PayeeSuggestion implements Suggestion, Serializable {
 
 	private Payee payee;
 	
-	public PayeeSuggestion (Payee category) {
-		this.payee = category;
+	public PayeeSuggestion (Payee payee) {
+		this.payee = payee;
 	}
 	
 	@Override

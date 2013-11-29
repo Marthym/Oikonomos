@@ -102,7 +102,8 @@ public class EditTransactionForm extends Composite {
 		if (selectedPayee != null && selectedPayee.getName().equals(value)) {
 			return selectedPayee;			
 		} else if (!value.trim().isEmpty()) {
-			return new Payee(value);
+			selectedPayee = new Payee(value);
+			return selectedPayee;
 		} else {
 			return null;
 		}

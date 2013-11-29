@@ -2,6 +2,7 @@ package com.marthym.oikonomos.main.client.view;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -31,11 +32,13 @@ import com.marthym.oikonomos.main.client.components.EditTransactionForm;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
+import com.marthym.oikonomos.main.client.resources.OikonomosDataGridResource;
 import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
 
 public class AccountTransactionsView extends Composite implements AccountTransactionsPresenter.Display {
+	private static final Logger LOG = Logger.getLogger(AccountTransactionsView.class.getName());
 	private static AccountTransactionsViewUiBinder uiBinder = GWT.create(AccountTransactionsViewUiBinder.class);
 
 	interface AccountTransactionsViewUiBinder extends UiBinder<Widget, AccountTransactionsView> {}
@@ -56,8 +59,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		this.constants = constants;
 		this.oConstants = oConstants;
 		MainFormViewResource.INSTANCE.style().ensureInjected();
+		OikonomosDataGridResource.INSTANCE.dataGridStyle().ensureInjected();
 		
-		transactionsGrid = new DataGrid<TransactionDTO>(TransactionDTO.KEY_PROVIDER);
+		transactionsGrid = new DataGrid<TransactionDTO>(100, OikonomosDataGridResource.INSTANCE, TransactionDTO.KEY_PROVIDER);
 		transactionsGrid.setAutoHeaderRefreshDisabled(true);
 		transactionsGrid.setEmptyTableWidget(new Label(constants.grid_empty_label()));
 	    //final SelectionModel<TransactionDTO> selectionModel = new MultiSelectionModel<TransactionDTO>(TransactionDTO.KEY_PROVIDER);
@@ -70,6 +74,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	}
 
 	private void initTableColumns() {
+		
 		DateTimeFormat format = DateTimeFormat.getFormat(oConstants.dateFormat());
 		NumberFormat numberFormat = NumberFormat.getFormat("#,##0.##");
 
@@ -82,7 +87,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 					}
 				};
 		transactionsGrid.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("R"));
-		transactionsGrid.setColumnWidth(checkColumn, 20, Unit.PX);
+		transactionsGrid.setColumnWidth(checkColumn, 30, Unit.PX);
 
 		// Accounting Document
 		Column<TransactionDTO, String> accountingDocumentColumn =
@@ -93,7 +98,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 					}
 				};
 		transactionsGrid.addColumn(accountingDocumentColumn, constants.placeholder_accountingDocument());
-		transactionsGrid.setColumnWidth(accountingDocumentColumn, 100, Unit.PX);
+		transactionsGrid.setColumnWidth(accountingDocumentColumn, 145, Unit.PX);
 
 		// Date
 		Column<TransactionDTO, Date> transactionDateColumn =
@@ -104,7 +109,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 					}
 				};
 		transactionsGrid.addColumn(transactionDateColumn, constants.placeholder_date());
-		transactionsGrid.setColumnWidth(transactionDateColumn, 50, Unit.PX);
+		transactionsGrid.setColumnWidth(transactionDateColumn, 95, Unit.PX);
 
 		// Payee
 		Column<TransactionDTO, String> payeeColumn =
@@ -115,7 +120,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 					}
 				};
 		transactionsGrid.addColumn(payeeColumn, constants.placeholder_payee());
-		//transactionsGrid.setColumnWidth(payeeColumn, 50, Unit.PX);
+		transactionsGrid.setColumnWidth(payeeColumn, 100, Unit.PCT);
 
 		// Credit
 		Column<TransactionDTO, Number> creditColumn =
@@ -125,8 +130,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return object.getCredit();
 					}
 				};
+		creditColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
 		transactionsGrid.addColumn(creditColumn, constants.placeholder_credit());
-		transactionsGrid.setColumnWidth(creditColumn, 70, Unit.PX);
+		transactionsGrid.setColumnWidth(creditColumn, 100, Unit.PX);
 		
 		// Debit
 		Column<TransactionDTO, Number> debitColumn =
@@ -136,8 +142,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return object.getDebit();
 					}
 				};
-		transactionsGrid.addColumn(debitColumn, constants.placeholder_credit());
-		transactionsGrid.setColumnWidth(debitColumn, 70, Unit.PX);
+		debitColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
+		transactionsGrid.addColumn(debitColumn, constants.placeholder_debit());
+		transactionsGrid.setColumnWidth(debitColumn, 100, Unit.PX);
 
 		// Balance
 		Column<TransactionDTO, Number> balanceColumn =
@@ -147,19 +154,26 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return object.getCredit()-object.getDebit();
 					}
 				};
+		balanceColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
 		transactionsGrid.addColumn(balanceColumn, constants.grid_headed_balance());
-		transactionsGrid.setColumnWidth(debitColumn, 70, Unit.PX);
+		transactionsGrid.setColumnWidth(balanceColumn, 100, Unit.PX);
+		
 	}
 	  
 	@Override
 	public void addTransactionGridLine(List<TransactionDTO> newTransactions) {
+		LOG.finer("addTransactionGridLine ...");
+		
 		if (dataProvider == null) { 
 			dataProvider = new ListDataProvider<TransactionDTO>(newTransactions);
+			dataProvider.addDataDisplay(transactionsGrid);
 			return;
 		}
 		List<TransactionDTO> transactions = dataProvider.getList();
 		transactions.removeAll(newTransactions);
 		transactions.addAll(newTransactions);
+		
+		LOG.finer("... addTransactionGridLine");
 	}
 
 	@Override
