@@ -15,11 +15,11 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasValue;
@@ -31,8 +31,10 @@ import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.components.EditTransactionForm;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
 import com.marthym.oikonomos.main.client.presenter.AccountTransactionsPresenter;
+import com.marthym.oikonomos.main.client.resources.DashboardViewResource;
 import com.marthym.oikonomos.main.client.resources.MainFormViewResource;
 import com.marthym.oikonomos.main.client.resources.OikonomosDataGridResource;
+import com.marthym.oikonomos.main.client.resources.OikonomosDataGridResource.OikonomosDataGridCss;
 import com.marthym.oikonomos.shared.model.Payee;
 import com.marthym.oikonomos.shared.model.dto.CategoryDTO;
 import com.marthym.oikonomos.shared.model.dto.TransactionDTO;
@@ -51,6 +53,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	
 	private AccountTransactionsConstants constants;
 	private OikonomosConstants oConstants;
+	private static final OikonomosDataGridCss DATA_GRID_CSS = OikonomosDataGridResource.INSTANCE.dataGridStyle();
 	
 	private ListDataProvider<TransactionDTO> dataProvider;
 		
@@ -58,8 +61,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	public AccountTransactionsView(AccountTransactionsConstants constants, OikonomosConstants oConstants) {
 		this.constants = constants;
 		this.oConstants = oConstants;
+		DashboardViewResource.INSTANCE.style().ensureInjected();
 		MainFormViewResource.INSTANCE.style().ensureInjected();
-		OikonomosDataGridResource.INSTANCE.dataGridStyle().ensureInjected();
+		DATA_GRID_CSS.ensureInjected();
 		
 		transactionsGrid = new DataGrid<TransactionDTO>(100, OikonomosDataGridResource.INSTANCE, TransactionDTO.KEY_PROVIDER);
 		transactionsGrid.setAutoHeaderRefreshDisabled(true);
@@ -86,7 +90,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return (object.getReconciliation()!=null);
 					}
 				};
-		transactionsGrid.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("R"));
+		TextHeader hCheckColumn = new TextHeader("R");
+		hCheckColumn.setHeaderStyleNames(DATA_GRID_CSS.center());
+		transactionsGrid.addColumn(checkColumn, hCheckColumn);
 		transactionsGrid.setColumnWidth(checkColumn, 30, Unit.PX);
 
 		// Accounting Document
@@ -130,8 +136,10 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return object.getCredit();
 					}
 				};
+		TextHeader hCreditColumn = new TextHeader(constants.placeholder_credit());
+		hCreditColumn.setHeaderStyleNames(DATA_GRID_CSS.right());
 		creditColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
-		transactionsGrid.addColumn(creditColumn, constants.placeholder_credit());
+		transactionsGrid.addColumn(creditColumn, hCreditColumn);
 		transactionsGrid.setColumnWidth(creditColumn, 100, Unit.PX);
 		
 		// Debit
@@ -142,8 +150,10 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 						return object.getDebit();
 					}
 				};
+		TextHeader hDebitColumn = new TextHeader(constants.placeholder_debit());
+		hDebitColumn.setHeaderStyleNames(DATA_GRID_CSS.right());
 		debitColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
-		transactionsGrid.addColumn(debitColumn, constants.placeholder_debit());
+		transactionsGrid.addColumn(debitColumn, hDebitColumn);
 		transactionsGrid.setColumnWidth(debitColumn, 100, Unit.PX);
 
 		// Balance
@@ -151,11 +161,15 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {
 					@Override
 					public Number getValue(TransactionDTO object) {
-						return object.getCredit()-object.getDebit();
+						long debit = (object.getDebit()==null)?0:object.getDebit();
+						long credit = (object.getCredit()==null)?0:object.getCredit();
+						return credit-debit;
 					}
 				};
+		TextHeader hBalanceColumn = new TextHeader(constants.grid_headed_balance());
+		hBalanceColumn.setHeaderStyleNames(DATA_GRID_CSS.right());
 		balanceColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
-		transactionsGrid.addColumn(balanceColumn, constants.grid_headed_balance());
+		transactionsGrid.addColumn(balanceColumn, hBalanceColumn);
 		transactionsGrid.setColumnWidth(balanceColumn, 100, Unit.PX);
 		
 	}

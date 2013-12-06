@@ -166,7 +166,7 @@ public class AccountTransactionsPresenter implements Presenter {
 				List<TransactionDTO> transactions = Arrays.asList(new TransactionDTO[]{result});
 				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(transactions));
 				
-				History.newItem(getHistoryToken());
+				History.newItem(getHistoryToken(result));
 				WaitingFlyer.stop();
 			}
 			
@@ -184,8 +184,7 @@ public class AccountTransactionsPresenter implements Presenter {
 		container.add(display.asWidget());
 	}
 
-	public final String getHistoryToken() {
-		TransactionDTO transaction = transactions.get(currentTransactionIndex);
+	public final String getHistoryToken(TransactionDTO transaction) {
 		return transaction.getAccount().getEntityType().name().toLowerCase()+"|"+transaction.getAccount().getEntityId()+"|t"+transaction.getId();
 	}
 }

@@ -68,7 +68,7 @@ public interface DashboardViewResource extends ClientBundleWithLookup {
 	      @ClassName("payess-main-view") String payeesMainView();
 	      
 	      String transactionsView();
-	      String scroll();
+	      String datagrid();
 	      String disclosure();
 	   }
 

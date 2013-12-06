@@ -7,6 +7,8 @@ public interface OikonomosDataGridResource extends DataGrid.Resources {
 	public OikonomosDataGridResource INSTANCE = GWT.create(OikonomosDataGridResource.class);
 
 	public interface OikonomosDataGridCss extends DataGrid.Style {
+		String center();
+		String right();
 	}
 
 	@Source({ DataGrid.Style.DEFAULT_CSS, "OikonomosDataGrid.css" })

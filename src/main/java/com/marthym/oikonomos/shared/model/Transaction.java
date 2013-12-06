@@ -88,14 +88,14 @@ public class Transaction implements java.io.Serializable {
 		return credit;
 	}
 	public void setCredit(Long credit) {
-		this.debit = 0L;
+		if (credit != null) this.debit = null;
 		this.credit = credit;
 	}
 	public Long getDebit() {
 		return debit;
 	}
 	public void setDebit(Long debit) {
-		this.credit = 0L;
+		if (debit != null) this.credit = null;
 		this.debit = debit;
 	}
 	public String getCurrency() {
