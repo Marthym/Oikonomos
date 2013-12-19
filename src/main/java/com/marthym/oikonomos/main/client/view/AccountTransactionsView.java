@@ -177,22 +177,20 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	@Override
 	public void addTransactionGridLine(List<TransactionDTO> newTransactions) {
 		LOG.finer("addTransactionGridLine ...");
-		
 		if (dataProvider == null) { 
-			dataProvider = new ListDataProvider<TransactionDTO>(newTransactions);
+			LOG.finer("create AccountTransactionsView ListDataProvider ...");
+			dataProvider = new ListDataProvider<TransactionDTO>();
 			dataProvider.addDataDisplay(transactionsGrid);
-			return;
 		}
-		List<TransactionDTO> transactions = dataProvider.getList();
-		transactions.removeAll(newTransactions);
-		transactions.addAll(newTransactions);
-		
-		LOG.finer("... addTransactionGridLine");
+
+		List<TransactionDTO> list = dataProvider.getList();
+		list.removeAll(newTransactions);
+		list.addAll(newTransactions);
 	}
 
 	@Override
 	public void reset() {
-		transactionForm.getForm().reset();
+		transactionForm.reset();
 	}
 
 	@Override

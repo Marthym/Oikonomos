@@ -134,7 +134,8 @@ public class EditTransactionForm extends Composite {
 		return resetButton;
 	}
 
-	public FormPanel getForm() {
-		return formTransaction;
+	public void reset() {
+		formTransaction.reset();
+		transactionDate.setValue(new Date());
 	}
 }

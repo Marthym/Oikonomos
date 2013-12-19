@@ -1,10 +1,10 @@
 package com.marthym.oikonomos.main.client.presenter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
@@ -34,6 +34,7 @@ import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTransactionsPresenter implements Presenter {
+	private static final Logger LOG = Logger.getLogger(AccountTransactionsPresenter.class.getName());
 	
 	public interface Display {
 		Widget asWidget();
@@ -101,6 +102,7 @@ public class AccountTransactionsPresenter implements Presenter {
 		eventBus.addHandler(AccountTransactionsDataLoadedEvent.TYPE, new AccountTransactionsDataLoadedEventHandler() {
 			@Override public void onAccountTransactionsDataLoaded(AccountTransactionsDataLoadedEvent event) {
 				transactions = event.getTransactions();
+				LOG.finer("AccountTransactionsDataLoadedEvent -> transactions.size: "+transactions.size());
 				display.addTransactionGridLine(transactions);
 			}
 		});
@@ -158,12 +160,12 @@ public class AccountTransactionsPresenter implements Presenter {
 		
 		rpcTransaction.addOrUpdateEntity(transaction, new AsyncCallback<TransactionDTO>() {
 			@Override public void onSuccess(TransactionDTO result) {
+				LOG.finer("onSuccess !");
 				if (currentTransactionIndex < 0) {
 					transactions.add(result);
 					currentTransactionIndex = -1;
 					display.reset();
 				}
-				List<TransactionDTO> transactions = Arrays.asList(new TransactionDTO[]{result});
 				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(transactions));
 				
 				History.newItem(getHistoryToken(result));
