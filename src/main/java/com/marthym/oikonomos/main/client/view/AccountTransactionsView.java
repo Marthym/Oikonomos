@@ -9,12 +9,15 @@ import javax.inject.Inject;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.NumberCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
@@ -118,16 +121,26 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		transactionsGrid.setColumnWidth(transactionDateColumn, 95, Unit.PX);
 
 		// Payee
-		Column<TransactionDTO, String> payeeColumn =
-				new Column<TransactionDTO, String>(new TextCell()) {
+		Column<TransactionDTO, SafeHtml> payeeColumn =
+				new Column<TransactionDTO, SafeHtml>(new SafeHtmlCell()) {
 					@Override
-					public String getValue(TransactionDTO object) {
-						return object.getPayee().getEntityDescription();
+					public SafeHtml getValue(TransactionDTO object) {
+						SafeHtmlBuilder safeHtmlBuilder = new SafeHtmlBuilder().appendEscaped(object.getPayee().getEntityDescription());
+						if (object.getTransactionComment() != null && !object.getTransactionComment().isEmpty()) {
+							safeHtmlBuilder.appendHtmlConstant("<span class=\"hint--right hint--rounded "+DATA_GRID_CSS.info()+"\" data-hint=\"")
+									.appendEscaped(object.getTransactionComment())
+									.appendHtmlConstant("\">&nbsp;</span>");
+						}
+						safeHtmlBuilder.appendHtmlConstant("<br/>")
+								.appendHtmlConstant("<span class=\""+DATA_GRID_CSS.category()+"\">")
+								.appendEscaped(object.getCategory().getAbsoluteDescription())
+								.appendHtmlConstant("</span>");
+						return safeHtmlBuilder.toSafeHtml();
 					}
 				};
 		transactionsGrid.addColumn(payeeColumn, constants.placeholder_payee());
 		transactionsGrid.setColumnWidth(payeeColumn, 100, Unit.PCT);
-
+		
 		// Credit
 		Column<TransactionDTO, Number> creditColumn =
 				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {

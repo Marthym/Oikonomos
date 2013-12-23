@@ -6,7 +6,10 @@
 
 .dataGridCell {
   padding: 2px;
+  overflow-y:visible;
 }
 
 .center{text-align:center;}
 .right{text-align:right;}
+.category{font-style:italic;font-size:9pt;margin-left:15px;}
+@sprite .info{height:16px;width:16px;gwt-image:"hintIcon";overflow:visible;}
