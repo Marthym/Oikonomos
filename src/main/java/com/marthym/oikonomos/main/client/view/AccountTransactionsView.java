@@ -1,5 +1,7 @@
 package com.marthym.oikonomos.main.client.view;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,6 +32,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.main.client.components.EditTransactionForm;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
@@ -54,9 +58,22 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	@UiField EditTransactionForm transactionForm;
 	@UiField VerticalPanel vertical;
 	
+	private SingleSelectionModel<TransactionDTO> selectionModel;
 	private AccountTransactionsConstants constants;
 	private OikonomosConstants oConstants;
 	private static final OikonomosDataGridCss DATA_GRID_CSS = OikonomosDataGridResource.INSTANCE.dataGridStyle();
+	private static final Comparator<TransactionDTO> transactionDateComparator = new Comparator<TransactionDTO>() {
+		@Override public int compare(TransactionDTO t1, TransactionDTO t2) {
+			if (t1 == null) return -1;
+			if (t2 == null) return 1;
+			
+			int compareDate = t1.getTransactionDate().compareTo(t2.getTransactionDate());
+			if (compareDate == 0) {
+				compareDate = (int) (t1.getId() - t2.getId());
+			}
+			return compareDate;
+		}
+	};
 	
 	private ListDataProvider<TransactionDTO> dataProvider;
 		
@@ -71,8 +88,8 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		transactionsGrid = new DataGrid<TransactionDTO>(100, OikonomosDataGridResource.INSTANCE, TransactionDTO.KEY_PROVIDER);
 		transactionsGrid.setAutoHeaderRefreshDisabled(true);
 		transactionsGrid.setEmptyTableWidget(new Label(constants.grid_empty_label()));
-	    //final SelectionModel<TransactionDTO> selectionModel = new MultiSelectionModel<TransactionDTO>(TransactionDTO.KEY_PROVIDER);
-	    //transactionsGrid.setSelectionModel(selectionModel, DefaultSelectionEventManager.<TransactionDTO> createCheckboxManager());
+	    selectionModel = new SingleSelectionModel<TransactionDTO>(TransactionDTO.KEY_PROVIDER);
+	    transactionsGrid.setSelectionModel(selectionModel);
 		initTableColumns();
 		
 		initWidget(uiBinder.createAndBindUi(this));
@@ -141,20 +158,6 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		transactionsGrid.addColumn(payeeColumn, constants.placeholder_payee());
 		transactionsGrid.setColumnWidth(payeeColumn, 100, Unit.PCT);
 		
-		// Credit
-		Column<TransactionDTO, Number> creditColumn =
-				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {
-					@Override
-					public Number getValue(TransactionDTO object) {
-						return object.getCredit();
-					}
-				};
-		TextHeader hCreditColumn = new TextHeader(constants.placeholder_credit());
-		hCreditColumn.setHeaderStyleNames(DATA_GRID_CSS.right());
-		creditColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
-		transactionsGrid.addColumn(creditColumn, hCreditColumn);
-		transactionsGrid.setColumnWidth(creditColumn, 100, Unit.PX);
-		
 		// Debit
 		Column<TransactionDTO, Number> debitColumn =
 				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {
@@ -168,6 +171,20 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		debitColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
 		transactionsGrid.addColumn(debitColumn, hDebitColumn);
 		transactionsGrid.setColumnWidth(debitColumn, 100, Unit.PX);
+		
+		// Credit
+		Column<TransactionDTO, Number> creditColumn =
+				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {
+					@Override
+					public Number getValue(TransactionDTO object) {
+						return object.getCredit();
+					}
+				};
+		TextHeader hCreditColumn = new TextHeader(constants.placeholder_credit());
+		hCreditColumn.setHeaderStyleNames(DATA_GRID_CSS.right());
+		creditColumn.setHorizontalAlignment(Column.ALIGN_RIGHT);
+		transactionsGrid.addColumn(creditColumn, hCreditColumn);
+		transactionsGrid.setColumnWidth(creditColumn, 100, Unit.PX);
 
 		// Balance
 		Column<TransactionDTO, Number> balanceColumn =
@@ -199,6 +216,8 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		List<TransactionDTO> list = dataProvider.getList();
 		list.removeAll(newTransactions);
 		list.addAll(newTransactions);
+
+		Collections.sort(list, transactionDateComparator);
 	}
 
 	@Override
@@ -222,8 +241,18 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	}
 
 	@Override
+	public void setTransactionPayee(Payee payee) {
+		transactionForm.setSeletedPayee(payee);
+	}
+	
+	@Override
 	public CategoryDTO getTransactionCategory() {
 		return transactionForm.getSelectedCategory();
+	}
+	
+	@Override
+	public void setTransactionCategory(CategoryDTO category) {
+		transactionForm.setSelectedCategory(category);
 	}
 
 	@Override
@@ -259,6 +288,29 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 	@Override
 	public HasValue<String> getTransactionBudgetaryLine() {
 		return transactionForm.getTransactionBudgetaryLine();
+	}
+
+	@Override
+	public HasSelectionChangedHandlers getTransactionsSelectionModel() {
+		return selectionModel;
+	}
+
+	@Override
+	public TransactionDTO getSelectedTransaction() {
+		return selectionModel.getSelectedObject();
+	}
+
+	@Override
+	public void setTransactionFormVisisble(boolean isVisible) {
+		formDisclosure.setOpen(isVisible);
+	}
+
+	@Override
+	public void setSelectedTransaction(TransactionDTO item) {
+		if (item != null)
+			selectionModel.setSelected(item, true);
+		else 
+			selectionModel.clear();
 	}
 
 }

@@ -147,8 +147,6 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		Payee payeeDAO = dao.getPayee();
 		if (isPayeeMustBeReloaded(dto.getPayee(), dao.getPayee())){
 			payeeDAO = payeeRepository.findOne(dto.getPayee().getEntityId());
-		} else {
-			payeeDAO = dto.getPayee();
 		}
 		
 		dao.setAccountingDocument(dto.getAccountingDocument());

@@ -12,11 +12,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEvent;
 import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEventHandler;
@@ -48,12 +49,18 @@ public class AccountTransactionsPresenter implements Presenter {
 		HasValue<String> getTransactionAccountingDocument();
 		HasValue<String> getTransactionComment();
 		HasValue<String> getTransactionBudgetaryLine();
+		TransactionDTO getSelectedTransaction();
+		void setSelectedTransaction(TransactionDTO object);
 		
 		void addTransactionGridLine(List<TransactionDTO> transaction);
+		void setTransactionCategory(CategoryDTO category);
+		void setTransactionPayee(Payee payee);
+		void setTransactionFormVisisble(boolean isVisible);
 		
 		void reset();
 		HasClickHandlers getValidateButton();
 		HasClickHandlers getResetButton();
+		HasSelectionChangedHandlers getTransactionsSelectionModel();
 	}
 	
 	private final Display display;
@@ -95,7 +102,17 @@ public class AccountTransactionsPresenter implements Presenter {
 
 		this.display.getResetButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				updateTransactionFormFromData();
+				display.reset();
+				display.setSelectedTransaction(null);
+				currentTransactionIndex = -1;
+			}
+		});
+		
+		this.display.getTransactionsSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+			@Override public void onSelectionChange(SelectionChangeEvent event) {
+				LOG.fine("Select line ...");
+				updateTransactionFormFromData(display.getSelectedTransaction());
+				display.setTransactionFormVisisble(true);
 			}
 		});
 		
@@ -108,8 +125,24 @@ public class AccountTransactionsPresenter implements Presenter {
 		});
 	}
 	
-	private void updateTransactionFormFromData() {
+	private void updateTransactionFormFromData(TransactionDTO transaction) {
 		display.reset();
+		currentTransactionIndex = -1;
+		if (transaction != null) {
+			display.getTransactionDate().setValue(transaction.getTransactionDate());
+			display.getTransactionAccountingDocument().setValue(transaction.getAccountingDocument());
+			display.setTransactionCategory(transaction.getCategory());
+			display.setTransactionPayee(transaction.getPayee());
+			display.getTransactionComment().setValue(transaction.getTransactionComment());
+			if (transaction.getCredit() != null)
+				display.getTransactionCredit().setValue(Long.toString(transaction.getCredit()));
+			if (transaction.getDebit() != null)
+				display.getTransactionDebit().setValue(Long.toString(transaction.getDebit()));
+			display.getTransactionPaiementMean().setValue(transaction.getPaiementMean().name());
+			
+			currentTransactionIndex = transactions.indexOf(transaction);
+			LOG.finer("Find index "+currentTransactionIndex+" pour "+transaction.getId());
+		}
 	}
 	
 	private void saveTransactionFormFromView() {
@@ -148,7 +181,7 @@ public class AccountTransactionsPresenter implements Presenter {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.placeholder_debit()));
 		}
 
-		final PaiementMeans paiementMean = PaiementMeans.valueOf(display.getTransactionPaiementMean().getValue());
+		PaiementMeans paiementMean = PaiementMeans.valueOf(display.getTransactionPaiementMean().getValue());
 		transaction.setPaiementMean(paiementMean);
 		
 		errors.addAll(FieldVerifier.validate(transaction));
@@ -168,7 +201,6 @@ public class AccountTransactionsPresenter implements Presenter {
 				}
 				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(transactions));
 				
-				History.newItem(getHistoryToken(result));
 				WaitingFlyer.stop();
 			}
 			
@@ -184,9 +216,5 @@ public class AccountTransactionsPresenter implements Presenter {
 	public void go(HasWidgets container) {
 		container.clear();
 		container.add(display.asWidget());
-	}
-
-	public final String getHistoryToken(TransactionDTO transaction) {
-		return transaction.getAccount().getEntityType().name().toLowerCase()+"|"+transaction.getAccount().getEntityId()+"|t"+transaction.getId();
 	}
 }

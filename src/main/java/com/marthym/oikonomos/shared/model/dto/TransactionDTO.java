@@ -113,7 +113,8 @@ public class TransactionDTO implements Serializable {
 		return credit;
 	}
 
-	public void setCredit(long credit) {
+	public void setCredit(Long credit) {
+		if (credit != null) this.debit = null;
 		this.credit = credit;
 	}
 
@@ -121,7 +122,8 @@ public class TransactionDTO implements Serializable {
 		return debit;
 	}
 
-	public void setDebit(long debit) {
+	public void setDebit(Long debit) {
+		if (debit != null) this.credit = null;
 		this.debit = debit;
 	}
 

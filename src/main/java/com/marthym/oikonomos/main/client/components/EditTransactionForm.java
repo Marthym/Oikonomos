@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -95,6 +97,18 @@ public class EditTransactionForm extends Composite {
 				selectedPayee = suggestion.getPayee();
 			}
 		});
+		
+		transactionDebit.addChangeHandler(new ChangeHandler() {
+			@Override public void onChange(ChangeEvent event) {
+				if (!transactionDebit.getValue().isEmpty()) transactionCredit.setValue("");
+			}
+		});
+		
+		transactionCredit.addChangeHandler(new ChangeHandler() {
+			@Override public void onChange(ChangeEvent event) {
+				if (!transactionCredit.getValue().isEmpty()) transactionDebit.setValue("");
+			}
+		});
 	}
 	
 	public Payee getSeletedPayee() {
@@ -108,6 +122,11 @@ public class EditTransactionForm extends Composite {
 			return null;
 		}
 	}
+
+	public void setSeletedPayee(Payee payee) {
+		selectedPayee = payee;
+		transactionPayee.setValue(selectedPayee.getName());
+	}
 	
 	public CategoryDTO getSelectedCategory() {
 		String value = transactionCategory.getValue();
@@ -116,6 +135,11 @@ public class EditTransactionForm extends Composite {
 		} else {
 			return null;
 		}
+	}
+
+	public void setSelectedCategory(CategoryDTO category) {
+		selectedCategory = category;
+		transactionCategory.setValue(selectedCategory.getAbsoluteDescription());
 	}
 	
 	public final HasValue<Date> getTransactionDate() {return transactionDate;}
