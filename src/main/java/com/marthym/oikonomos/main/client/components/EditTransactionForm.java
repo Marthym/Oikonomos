@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -47,6 +48,7 @@ public class EditTransactionForm extends Composite {
 	@UiField TextBox transactionAccountingDocument;
 	@UiField TextBox transactionComment;
 	@UiField TextBox transactionBudgetaryLine;
+	@UiField Button deleteButton;
 	@UiField Button resetButton;
 	@UiField Button submitButton;
 	
@@ -150,16 +152,21 @@ public class EditTransactionForm extends Composite {
 	public final HasValue<String> getTransactionComment() {return transactionComment;}
 	public final HasValue<String> getTransactionBudgetaryLine() {return transactionBudgetaryLine;}
 
-	public HasClickHandlers getValidateButton() {
-		return submitButton;
+	public HandlerRegistration addSubmitHandler(FormPanel.SubmitHandler handler) {
+		return formTransaction.addSubmitHandler(handler);
 	}
-
+	
 	public HasClickHandlers getResetButton() {
 		return resetButton;
+	}
+	
+	public Button getDeleteButton() {
+		return deleteButton;
 	}
 
 	public void reset() {
 		formTransaction.reset();
 		transactionDate.setValue(new Date());
+		deleteButton.setVisible(false);
 	}
 }

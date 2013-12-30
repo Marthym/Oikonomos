@@ -16,6 +16,7 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -25,8 +26,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -219,21 +222,40 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 
 		Collections.sort(list, transactionDateComparator);
 	}
+	
+	@Override
+	public void removeTransactionGridLine(List<TransactionDTO> transactions) {
+		if (dataProvider == null) { 
+			LOG.finer("create AccountTransactionsView ListDataProvider ...");
+			dataProvider = new ListDataProvider<TransactionDTO>();
+			dataProvider.addDataDisplay(transactionsGrid);
+		}
+
+		List<TransactionDTO> list = dataProvider.getList();
+		list.removeAll(transactions);
+	}
+
 
 	@Override
 	public void reset() {
 		transactionForm.reset();
 	}
-
+	
 	@Override
-	public HasClickHandlers getValidateButton() {
-		return transactionForm.getValidateButton();
+	public HandlerRegistration addSubmitHandler(FormPanel.SubmitHandler handler) {
+		return transactionForm.addSubmitHandler(handler);
 	}
 
 	@Override
 	public HasClickHandlers getResetButton() {
 		return transactionForm.getResetButton();
 	}
+	
+	@Override
+	public Button getDeleteButton() {
+		return transactionForm.getDeleteButton();
+	}
+
 
 	@Override
 	public Payee getTransactionPayee() {

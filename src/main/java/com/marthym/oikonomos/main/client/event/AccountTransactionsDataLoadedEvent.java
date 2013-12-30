@@ -9,8 +9,16 @@ public class AccountTransactionsDataLoadedEvent extends GwtEvent<AccountTransact
 	public static Type<AccountTransactionsDataLoadedEventHandler> TYPE = new Type<AccountTransactionsDataLoadedEventHandler>();
 
 	private final List<TransactionDTO> transactions;
+	private final boolean isDeleted;
+	
 	public AccountTransactionsDataLoadedEvent(List<TransactionDTO> transactions) {
 		this.transactions = transactions;
+		this.isDeleted = false;
+	}
+	
+	public AccountTransactionsDataLoadedEvent(List<TransactionDTO> transactions, boolean isDeleted) {
+		this.transactions = transactions;
+		this.isDeleted = isDeleted;
 	}
 	
 	@Override
@@ -25,5 +33,9 @@ public class AccountTransactionsDataLoadedEvent extends GwtEvent<AccountTransact
 	
 	public final List<TransactionDTO> getTransactions() {
 		return transactions;
+	}
+	
+	public final boolean isDeleted() {
+		return isDeleted;
 	}
 }

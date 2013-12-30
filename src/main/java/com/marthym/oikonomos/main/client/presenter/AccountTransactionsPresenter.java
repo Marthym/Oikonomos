@@ -12,7 +12,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,15 +56,17 @@ public class AccountTransactionsPresenter implements Presenter {
 		TransactionDTO getSelectedTransaction();
 		void setSelectedTransaction(TransactionDTO object);
 		
-		void addTransactionGridLine(List<TransactionDTO> transaction);
+		void addTransactionGridLine(List<TransactionDTO> transactions);
+		void removeTransactionGridLine(List<TransactionDTO> transactions);
 		void setTransactionCategory(CategoryDTO category);
 		void setTransactionPayee(Payee payee);
 		void setTransactionFormVisisble(boolean isVisible);
 		
 		void reset();
-		HasClickHandlers getValidateButton();
+		Button getDeleteButton();
 		HasClickHandlers getResetButton();
 		HasSelectionChangedHandlers getTransactionsSelectionModel();
+		HandlerRegistration addSubmitHandler(SubmitHandler handler);
 	}
 	
 	private final Display display;
@@ -94,9 +100,15 @@ public class AccountTransactionsPresenter implements Presenter {
 	}
 	
 	private void bind() {
-		this.display.getValidateButton().addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		this.display.addSubmitHandler(new SubmitHandler() {
+			@Override public void onSubmit(SubmitEvent event) {
 				saveTransactionFormFromView();
+			}
+		});
+		
+		this.display.getDeleteButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				deleteCurrentTransaction();
 			}
 		});
 
@@ -119,8 +131,8 @@ public class AccountTransactionsPresenter implements Presenter {
 		eventBus.addHandler(AccountTransactionsDataLoadedEvent.TYPE, new AccountTransactionsDataLoadedEventHandler() {
 			@Override public void onAccountTransactionsDataLoaded(AccountTransactionsDataLoadedEvent event) {
 				transactions = event.getTransactions();
-				LOG.finer("AccountTransactionsDataLoadedEvent -> transactions.size: "+transactions.size());
-				display.addTransactionGridLine(transactions);
+				if (event.isDeleted())  display.removeTransactionGridLine(transactions);
+				else 					display.addTransactionGridLine(transactions);
 			}
 		});
 	}
@@ -140,7 +152,10 @@ public class AccountTransactionsPresenter implements Presenter {
 				display.getTransactionDebit().setValue(Long.toString(transaction.getDebit()));
 			display.getTransactionPaiementMean().setValue(transaction.getPaiementMean().name());
 			
+			display.getDeleteButton().setVisible(true);
+
 			currentTransactionIndex = transactions.indexOf(transaction);
+			
 			LOG.finer("Find index "+currentTransactionIndex+" pour "+transaction.getId());
 		}
 	}
@@ -210,6 +225,32 @@ public class AccountTransactionsPresenter implements Presenter {
 			}
 		});
 		
+	}
+	
+	private void deleteCurrentTransaction() {
+		final TransactionDTO transaction = transactions.get(currentTransactionIndex);
+		if (transaction == null) {
+			updateTransactionFormFromData(null);
+			return;
+		}
+		rpcTransaction.delete(transaction.getId(), new AsyncCallback<Void>() {
+
+			@Override public void onFailure(Throwable caught) {
+				WaitingFlyer.stop();
+				MessageFlyer.error(caught.getLocalizedMessage());
+			}
+
+			@Override public void onSuccess(Void result) {
+				transactions.remove(transaction);
+				
+				LOG.finer("delete onSuccess !");
+				updateTransactionFormFromData(null);
+				List<TransactionDTO> deletedTransactions = new LinkedList<TransactionDTO>();
+				deletedTransactions.add(transaction);
+				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(deletedTransactions, true));
+				WaitingFlyer.stop();
+			}
+		});
 	}
 	
 	@Override

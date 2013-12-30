@@ -1,7 +1,6 @@
 package com.marthym.oikonomos.login.client.components;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -42,10 +41,6 @@ public class ConnectionForm extends Composite {
 		
 		email.getElement().setAttribute("placeholder", constants.email());
 		password.getElement().setAttribute("placeholder", constants.password());
-	}
-
-	public HasClickHandlers getLoginButton() {
-		return btnConnect;
 	}
 	
 	public TextBox getEmail() {

@@ -1,6 +1,5 @@
 package com.marthym.oikonomos.login.client.presenter;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -12,7 +11,6 @@ import com.marthym.oikonomos.login.client.event.LoginEvent;
 
 public class WelcomePresenter implements Presenter {
 	public interface Display {
-		HasClickHandlers getLoginButton();
 		TextBox getEmailAddress();
 		TextBox getPassword();
 		FormPanel getLoginForm();

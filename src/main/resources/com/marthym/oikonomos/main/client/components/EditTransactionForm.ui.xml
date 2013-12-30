@@ -39,7 +39,10 @@
 				
 				<g:HTMLPanel addStyleNames="{res.style.actions}">
 					<g:Button text="{nomosconstants.resetButtonLabel}" ui:field="resetButton"/>
-					<g:Button text="{nomosconstants.submitButtonLabel}" ui:field="submitButton"/>
+					<g:SubmitButton text="{nomosconstants.submitButtonLabel}" ui:field="submitButton"/>
+				</g:HTMLPanel>
+				<g:HTMLPanel>
+					<g:Button visible="false" addStyleNames="{res.style.deleteButton}" text="{nomosconstants.deleteButtonLabel}" ui:field="deleteButton"/>
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:FormPanel>

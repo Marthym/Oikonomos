@@ -1,7 +1,6 @@
 package com.marthym.oikonomos.login.client.view;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -20,11 +19,6 @@ public class WelcomeView extends Composite implements WelcomePresenter.Display {
 	
 	public WelcomeView() {
 		initWidget(uiBinder.createAndBindUi(this));				
-	}
-
-	@Override
-	public HasClickHandlers getLoginButton() {
-		return connectionForm.getLoginButton();
 	}
 
 	@Override
