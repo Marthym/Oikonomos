@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet author="Marthym" context="TEST" id="oikonomos-data-1">
+        <insert tableName="USER">
+            <column name="ID" valueNumeric="1"/>
+            <column name="USER_EMAIL" value="marthym@gmail.com"/>
+            <column name="USER_FIRSTNAME" value="Frédéric"/>
+            <column name="USER_PASSWORD" value="$2a$10$YXowhlFZ4BXlGOl9SgQFMuAHP8neYJb.dvmaLVsgZRZoMlJC.6cbK"/>
+            <column name="USER_LASTLOGIN_DATE" valueDate="2013-09-04 14:22:22.772"/>
+            <column name="USER_LASTNAME" value="Combes"/>
+            <column name="USER_PROFILE" value="ADMIN"/>
+            <column name="USER_REGISTRATION_DATE" valueDate="2013-09-04 14:22:22.772"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="Marthym" context="TEST" id="oikonomos-data-2">
+        <insert tableName="ACCOUNT">
+            <column name="ID" valueNumeric="1"/>
+            <column name="CURRENCY" value="EUR"/>
+            <column name="ACCOUNT_KEY" valueNumeric="-1"/>
+            <column name="NAME" value="Compte courant"/>
+            <column name="ACCOUNT_NUMBER" valueNumeric="-1"/>
+            <column name="OWNER" value="marthym@gmail.com"/>
+            <column name="TYPE" value="BANK_ACCOUNT"/>
+            <column name="BANK_CODE" valueNumeric="-1"/>
+            <column name="BANK_DESK" valueNumeric="-1"/>
+            <column name="BANK_NAME" value="Banque Populaire"/>
+            <column name="CURRENT_AMOUNT" valueNumeric="1911.0"/>
+            <column name="INITIAL_AMOUNT" valueNumeric="2000.0"/>
+            <column name="CLOSED" valueBoolean="false"/>
+            <column name="MAXIMAL_AMOUNT" valueNumeric="-1.0"/>
+            <column name="MINIMAL_AMOUNT" valueNumeric="-1.0"/>
+            <column name="POINTED_AMOUNT" valueNumeric="0.0"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="Marthym" context="TEST" id="oikonomos-data-3">
+        <insert tableName="PAYEE">
+            <column name="ID" valueNumeric="2"/>
+            <column name="NAME" value="John Smith"/>
+        </insert>
+
+        <insert tableName="PAYEE">
+            <column name="ID" valueNumeric="3"/>
+            <column name="NAME" value="Jacques Martin"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="Marthym" context="TEST" id="oikonomos-data-4">
+        <insert tableName="TRANSACTION">
+            <column name="ID" valueNumeric="1"/>
+            <column name="ACCOUNTINGDOCUMENT" value=""/>
+            <column name="CREDIT"/>
+            <column name="CURRENCY" value="EUR"/>
+            <column name="DEBIT" valueNumeric="145"/>
+            <column name="PAIEMENTMEAN" value="CREDIT_CARD"/>
+            <column name="TRANSACTIONCOMMENT" value="Commentaire de la première transaction"/>
+            <column name="TRANSACTIONDATE" valueDate="2013-12-04"/>
+            <column name="ACCOUNT_ID" valueNumeric="1"/>
+            <column name="BUDGETLINE_ID"/>
+            <column name="CATEGORY_ID" valueNumeric="2"/>
+            <column name="PAYEE_ID" valueNumeric="2"/>
+            <column name="RECONCILIATION_ID"/>
+        </insert>
+
+        <insert tableName="TRANSACTION">
+            <column name="ID" valueNumeric="2"/>
+            <column name="ACCOUNTINGDOCUMENT" value=""/>
+            <column name="CREDIT"/>
+            <column name="CURRENCY" value="EUR"/>
+            <column name="DEBIT" valueNumeric="187"/>
+            <column name="PAIEMENTMEAN" value="CREDIT_CARD"/>
+            <column name="TRANSACTIONCOMMENT" value="Commentaire de la deuxième transaction"/>
+            <column name="TRANSACTIONDATE" valueDate="2013-12-04"/>
+            <column name="ACCOUNT_ID" valueNumeric="1"/>
+            <column name="BUDGETLINE_ID"/>
+            <column name="CATEGORY_ID" valueNumeric="134"/>
+            <column name="PAYEE_ID" valueNumeric="2"/>
+            <column name="RECONCILIATION_ID"/>
+        </insert>
+
+        <insert tableName="TRANSACTION">
+            <column name="ID" valueNumeric="3"/>
+            <column name="ACCOUNTINGDOCUMENT" value="100254"/>
+            <column name="CREDIT" valueNumeric="78"/>
+            <column name="CURRENCY" value="EUR"/>
+            <column name="DEBIT"/>
+            <column name="PAIEMENTMEAN" value="CREDIT_CARD"/>
+            <column name="TRANSACTIONCOMMENT" value="Chèque pour le remboursement du parking à Avoriaz"/>
+            <column name="TRANSACTIONDATE" valueDate="2013-12-04"/>
+            <column name="ACCOUNT_ID" valueNumeric="1"/>
+            <column name="BUDGETLINE_ID"/>
+            <column name="CATEGORY_ID" valueNumeric="26"/>
+            <column name="PAYEE_ID" valueNumeric="3"/>
+            <column name="RECONCILIATION_ID"/>
+        </insert>
+
+        <insert tableName="TRANSACTION">
+            <column name="ID" valueNumeric="4"/>
+            <column name="ACCOUNTINGDOCUMENT" value=""/>
+            <column name="CREDIT" valueNumeric="165"/>
+            <column name="CURRENCY" value="EUR"/>
+            <column name="DEBIT"/>
+            <column name="PAIEMENTMEAN" value="CREDIT_CARD"/>
+            <column name="TRANSACTIONCOMMENT" value="Divers Course"/>
+            <column name="TRANSACTIONDATE" valueDate="2013-11-24"/>
+            <column name="ACCOUNT_ID" valueNumeric="1"/>
+            <column name="BUDGETLINE_ID"/>
+            <column name="CATEGORY_ID" valueNumeric="134"/>
+            <column name="PAYEE_ID" valueNumeric="2"/>
+            <column name="RECONCILIATION_ID"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

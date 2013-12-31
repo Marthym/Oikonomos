@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="liquibase-docs" id="oikonomos-0">
+		<sql splitStatements="true" stripComments="true">
+			SET TABLE DATABASECHANGELOG TYPE CACHED;
+		</sql>
+	</changeSet>
+
+    <changeSet author="Marthym" id="oikonomos-1">
+        <createTable tableName="ACCOUNT">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_ACCO_ID"/>
+            </column>
+            <column name="CURRENCY" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_KEY" type="INT"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NUMBER" type="BIGINT"/>
+            <column name="OWNER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BANK_CODE" type="INT"/>
+            <column name="BANK_DESK" type="INT"/>
+            <column name="BANK_NAME" type="VARCHAR(80)"/>
+            <column name="CURRENT_AMOUNT" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INITIAL_AMOUNT" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="CLOSED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MAXIMAL_AMOUNT" type="DOUBLE"/>
+            <column name="MINIMAL_AMOUNT" type="DOUBLE"/>
+            <column name="POINTED_AMOUNT" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-2">
+        <createTable tableName="BUDGETARY_LINE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_BULI_ID"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="OWNER" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-3">
+        <createTable tableName="CATEGORY">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_CATE_ID"/>
+            </column>
+            <column name="OWNER" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-4">
+        <createTable tableName="CATEGORY_TRANSLATION">
+            <column name="ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="LOCALE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="ID, LOCALE" constraintName="PK_CATR_ID_LOCALE" tableName="CATEGORY_TRANSLATION"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-5">
+        <createTable tableName="PAYEE">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_PAYE_ID"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-6">
+        <createTable tableName="RECONCILIATION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_RECO_ID"/>
+            </column>
+            <column name="BEGINAMOUNT" type="BIGINT"/>
+            <column name="BEGINDATE" type="TIMESTAMP"/>
+            <column name="ENDAMOUNT" type="BIGINT"/>
+            <column name="ENDDATE" type="TIMESTAMP"/>
+            <column name="LABEL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OWNER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POINTEDAMOUNT" type="BIGINT"/>
+            <column name="VALIDATE" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-7">
+        <createTable tableName="TRANSACTION">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_TRNS_ID"/>
+            </column>
+            <column name="ACCOUNTINGDOCUMENT" type="VARCHAR(255)"/>
+            <column name="CREDIT" type="BIGINT"/>
+            <column name="CURRENCY" type="VARCHAR(3)"/>
+            <column name="DEBIT" type="BIGINT"/>
+            <column name="PAIEMENTMEAN" type="VARCHAR(20)"/>
+            <column name="TRANSACTIONCOMMENT" type="VARCHAR(255)"/>
+            <column name="TRANSACTIONDATE" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUDGETLINE_ID" type="BIGINT"/>
+            <column name="CATEGORY_ID" type="BIGINT"/>
+            <column name="PAYEE_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RECONCILIATION_ID" type="BIGINT"/>
+        </createTable>
+        <modifySql>
+			<replace replace="CREATE" with="CREATE CACHED"/>
+		</modifySql>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-8">
+        <createTable tableName="USER">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_USER_ID"/>
+            </column>
+            <column name="USER_EMAIL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_FIRSTNAME" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_PASSWORD" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_LASTLOGIN_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_LASTNAME" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_PROFILE" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_REGISTRATION_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-9">
+        <addForeignKeyConstraint baseColumnNames="BUDGETLINE_ID" baseTableName="TRANSACTION" constraintName="FK_TRNS_BULI_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="BUDGETARY_LINE"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-10">
+        <addForeignKeyConstraint baseColumnNames="ACCOUNT_ID" baseTableName="TRANSACTION" constraintName="FK_TRNS_ACCO_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="ACCOUNT"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-11">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORY_TRANSLATION" constraintName="FK_CATR_CATE_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="CATEGORY"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-12">
+        <addForeignKeyConstraint baseColumnNames="PAYEE_ID" baseTableName="TRANSACTION" constraintName="FK_TRNS_PAYE_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="PAYEE"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-13">
+        <addForeignKeyConstraint baseColumnNames="RECONCILIATION_ID" baseTableName="TRANSACTION" constraintName="FK_TRNS_RECO_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="RECONCILIATION"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-14">
+        <addForeignKeyConstraint baseColumnNames="PARENT_ID" baseTableName="CATEGORY" constraintName="FK_CATE_CATE_PARENT_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="CATEGORY"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-15">
+        <addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="TRANSACTION" constraintName="FK_TRNS_CATE_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="CATEGORY"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-16">
+        <addForeignKeyConstraint baseColumnNames="PARENT_ID" baseTableName="BUDGETARY_LINE" constraintName="FK_BULI_BULI_PARENT_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="BUDGETARY_LINE"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-17">
+        <addUniqueConstraint columnNames="USER_EMAIL" constraintName="UK_USER_EMAIL" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USER"/>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-18">
+        <createIndex indexName="IDX_CATE_PARENT_ID" tableName="CATEGORY" unique="false">
+            <column name="PARENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-19">
+        <createIndex indexName="IDX_CATR_ID" tableName="CATEGORY_TRANSLATION" unique="false">
+            <column name="ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-20">
+        <createIndex indexName="IDX_BULI_PARENT_ID" tableName="BUDGETARY_LINE" unique="false">
+            <column name="PARENT_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Marthym" id="oikonomos-db-21">
+        <createIndex indexName="IDX_TRNS_ACCOUNT_ID" tableName="TRANSACTION" unique="false">
+            <column name="ACCOUNT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
