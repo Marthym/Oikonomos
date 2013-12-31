@@ -30,8 +30,9 @@ public class TransactionDTO implements Serializable {
 	
 	@NotNull
 	private Payee payee;
-	private Long credit;
-	private Long debit;
+	private Double credit;
+	private Double debit;
+	private Double balance;
 	
 	@Size(min=3, max=3)
 	private String currency;
@@ -109,23 +110,26 @@ public class TransactionDTO implements Serializable {
 		this.payee = payee;
 	}
 
-	public Long getCredit() {
+	public Double getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Long credit) {
+	public void setCredit(Double credit) {
 		if (credit != null) this.debit = null;
 		this.credit = credit;
 	}
 
-	public Long getDebit() {
+	public Double getDebit() {
 		return debit;
 	}
 
-	public void setDebit(Long debit) {
+	public void setDebit(Double debit) {
 		if (debit != null) this.credit = null;
 		this.debit = debit;
 	}
+	
+	public void setBalance(Double balance) {this.balance = balance;}
+	public Double getBalance() {return this.balance;}
 
 	public String getCurrency() {
 		return currency;
@@ -177,5 +181,21 @@ public class TransactionDTO implements Serializable {
 
 	public long getId() {
 		return id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        TransactionDTO t = (TransactionDTO)obj;
+		return this.id.equals(t.id);
 	}
 }

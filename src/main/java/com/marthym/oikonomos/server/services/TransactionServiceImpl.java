@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.marthym.oikonomos.server.repositories.AccountRepository;
 import com.marthym.oikonomos.server.repositories.CategoryRepository;
 import com.marthym.oikonomos.server.repositories.PayeeRepository;
 import com.marthym.oikonomos.server.repositories.TransactionRepository;
@@ -45,6 +46,9 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 	
 	@Autowired
 	private PayeeRepository payeeRepository;
+	
+	@Autowired
+	private AccountRepository accountRepository;
 	
 	@Override
 	@Secured("ROLE_USER")
@@ -120,6 +124,7 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		}
 		
 		Transaction dao = null;
+		double oldTransactionAmount = 0;
 		if (dto.getId() > 0) {
 			dao = transactionRepository.findOne(dto.getId());
 			
@@ -134,9 +139,15 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 						"error.message.account.notowned", 
 						"Account "+dto.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 			}
+			
+			Double credit = dao.getCredit();
+			if (credit == null) credit = 0D;
+			Double debit = dao.getDebit();
+			if (debit == null) debit = 0D;
+			oldTransactionAmount = debit-credit;
 
 		} else {
-			dao = new Transaction(dto.getAccount());
+			dao = new Transaction(dto.getAccount());			
 		}
 		
 		Category categoryDAO = dao.getCategory();
@@ -148,6 +159,10 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		if (isPayeeMustBeReloaded(dto.getPayee(), dao.getPayee())){
 			payeeDAO = payeeRepository.findOne(dto.getPayee().getEntityId());
 		}
+		
+		Account account = dao.getAccount();
+		double currentAmount = account.getCurrentAmount();
+		currentAmount += oldTransactionAmount;
 		
 		dao.setAccountingDocument(dto.getAccountingDocument());
 		dao.setBudgetLine(dto.getBudgetLine());
@@ -161,6 +176,14 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 		dao.setPayee(payeeDAO);
 		dao.setReconciliation(dto.getReconciliation());
 
+		Double credit = dao.getCredit();
+		if (credit == null) credit = 0D;
+		Double debit = dao.getDebit();
+		if (debit == null) debit = 0D;
+		currentAmount += credit-debit;
+		account.setCurrentAmount(currentAmount);
+		
+		account = accountRepository.save(account);
 		dao = transactionRepository.save(dao);
 		
 		return TransactionDTO.create(dao, locale);
@@ -169,23 +192,36 @@ public class TransactionServiceImpl extends RemoteServiceServlet implements Tran
 	@Override
 	@Secured("ROLE_USER")
 	@Transactional
-	public void delete(long id) throws OikonomosException {
+	public Account delete(long id) throws OikonomosException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null) throw new OikonomosUnauthorizedException("error.message.user.unauthorized", "No authentification found !");
 		User authentifiedUser = (User)authentication.getPrincipal();
 		
 		Transaction transaction = transactionRepository.findOne(id);
+		Account account = transaction.getAccount();
 		if (!authentifiedUser.getUserEmail().equals(transaction.getOwner())) {
 			throw new OikonomosException(
 					"error.message.account.notowned", 
-					"Account "+transaction.getAccount().getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
+					"Account "+account.getAccountName()+" must be owned by "+authentifiedUser.getUserEmail());
 		}
 		
 		if (transaction.getReconciliation() != null) {
 			LOGGER.warn("{} delete transaction '{}' which is reconciliate !", authentifiedUser.getUserEmail(), transaction.getId());
 		}
 		
+		// Update account current amount
+		double currentAmount = account.getCurrentAmount();
+		Double credit = transaction.getCredit();
+		if (credit == null) credit = 0D;
+		Double debit = transaction.getDebit();
+		if (debit == null) debit = 0D;
+		currentAmount -= credit-debit;
+		account.setCurrentAmount(currentAmount);
+		account = accountRepository.save(account);
+
 		transactionRepository.delete(transaction);
+		
+		return account;
 	}
 
 	private static final Sort sortByDate() {

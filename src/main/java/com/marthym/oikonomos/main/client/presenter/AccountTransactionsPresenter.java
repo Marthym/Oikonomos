@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 import com.marthym.oikonomos.main.client.NomosInjector;
+import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
 import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEvent;
 import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEventHandler;
 import com.marthym.oikonomos.main.client.i18n.AccountTransactionsConstants;
@@ -103,6 +104,7 @@ public class AccountTransactionsPresenter implements Presenter {
 		this.display.addSubmitHandler(new SubmitHandler() {
 			@Override public void onSubmit(SubmitEvent event) {
 				saveTransactionFormFromView();
+				event.cancel();
 			}
 		});
 		
@@ -130,9 +132,14 @@ public class AccountTransactionsPresenter implements Presenter {
 		
 		eventBus.addHandler(AccountTransactionsDataLoadedEvent.TYPE, new AccountTransactionsDataLoadedEventHandler() {
 			@Override public void onAccountTransactionsDataLoaded(AccountTransactionsDataLoadedEvent event) {
-				transactions = event.getTransactions();
-				if (event.isDeleted())  display.removeTransactionGridLine(transactions);
-				else 					display.addTransactionGridLine(transactions);
+				transactions.removeAll(event.getTransactions());
+
+				if (event.isDeleted()){
+					display.removeTransactionGridLine(event.getTransactions());
+				} else {
+					transactions.addAll(event.getTransactions());
+					display.addTransactionGridLine(event.getTransactions());
+				}
 			}
 		});
 	}
@@ -147,9 +154,9 @@ public class AccountTransactionsPresenter implements Presenter {
 			display.setTransactionPayee(transaction.getPayee());
 			display.getTransactionComment().setValue(transaction.getTransactionComment());
 			if (transaction.getCredit() != null)
-				display.getTransactionCredit().setValue(Long.toString(transaction.getCredit()));
+				display.getTransactionCredit().setValue(Double.toString(transaction.getCredit()));
 			if (transaction.getDebit() != null)
-				display.getTransactionDebit().setValue(Long.toString(transaction.getDebit()));
+				display.getTransactionDebit().setValue(Double.toString(transaction.getDebit()));
 			display.getTransactionPaiementMean().setValue(transaction.getPaiementMean().name());
 			
 			display.getDeleteButton().setVisible(true);
@@ -184,14 +191,14 @@ public class AccountTransactionsPresenter implements Presenter {
 		
 		try {
 			String credit = display.getTransactionCredit().getValue();
-			if (!credit.isEmpty()) transaction.setCredit(Long.parseLong(credit));
+			if (!credit.isEmpty()) transaction.setCredit(Double.parseDouble(credit));
 		} catch (NumberFormatException e) {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.placeholder_credit()));
 		}
 		
 		try {
 			String debit = display.getTransactionDebit().getValue();
-			if (!debit.isEmpty()) transaction.setDebit(Long.parseLong(debit));
+			if (!debit.isEmpty()) transaction.setDebit(Double.parseDouble(debit));
 		} catch (NumberFormatException e) {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.placeholder_debit()));
 		}
@@ -210,12 +217,13 @@ public class AccountTransactionsPresenter implements Presenter {
 			@Override public void onSuccess(TransactionDTO result) {
 				LOG.finer("onSuccess !");
 				if (currentTransactionIndex < 0) {
-					transactions.add(result);
 					currentTransactionIndex = -1;
 					display.reset();
 				}
-				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(transactions));
-				
+				List<TransactionDTO> newTransactions = new LinkedList<TransactionDTO>();
+				newTransactions.add(result);
+				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(newTransactions));
+				eventBus.fireEvent(new AccountDataUpdateEvent(result.getAccount()));
 				WaitingFlyer.stop();
 			}
 			
@@ -233,21 +241,21 @@ public class AccountTransactionsPresenter implements Presenter {
 			updateTransactionFormFromData(null);
 			return;
 		}
-		rpcTransaction.delete(transaction.getId(), new AsyncCallback<Void>() {
+		rpcTransaction.delete(transaction.getId(), new AsyncCallback<Account>() {
 
 			@Override public void onFailure(Throwable caught) {
 				WaitingFlyer.stop();
 				MessageFlyer.error(caught.getLocalizedMessage());
 			}
 
-			@Override public void onSuccess(Void result) {
-				transactions.remove(transaction);
-				
+			@Override public void onSuccess(Account result) {				
 				LOG.finer("delete onSuccess !");
 				updateTransactionFormFromData(null);
+				transaction.setAccount(result);
 				List<TransactionDTO> deletedTransactions = new LinkedList<TransactionDTO>();
 				deletedTransactions.add(transaction);
 				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(deletedTransactions, true));
+				eventBus.fireEvent(new AccountDataUpdateEvent(result));
 				WaitingFlyer.stop();
 			}
 		});

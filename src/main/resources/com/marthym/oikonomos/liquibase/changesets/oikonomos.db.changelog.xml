@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
-	<changeSet author="liquibase-docs" id="oikonomos-0">
+	<changeSet author="liquibase-docs" id="oikonomos-db-0">
 		<sql splitStatements="true" stripComments="true">
 			SET TABLE DATABASECHANGELOG TYPE CACHED;
 		</sql>
 	</changeSet>
 
-    <changeSet author="Marthym" id="oikonomos-1">
+    <changeSet author="Marthym" id="oikonomos-db-1">
         <createTable tableName="ACCOUNT">
             <column autoIncrement="true" name="ID" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="PK_ACCO_ID"/>
@@ -209,5 +209,18 @@
         <createIndex indexName="IDX_TRNS_ACCOUNT_ID" tableName="TRANSACTION" unique="false">
             <column name="ACCOUNT_ID"/>
         </createIndex>
+    </changeSet>
+    
+    <changeSet author="Marthym" id="oikonomos-db-22">
+    	<comment>FIX: Update TRANSACTION DEBIT and CREDIT datatype to correct data type (BIGINT -> DOUBLE) ...</comment>
+	    <modifyDataType
+	            tableName="TRANSACTION"
+	            columnName="DEBIT"
+	            newDataType="DOUBLE"/>
+	            
+	   	<modifyDataType
+	            tableName="TRANSACTION"
+	            columnName="CREDIT"
+	            newDataType="DOUBLE"/>
     </changeSet>
 </databaseChangeLog>

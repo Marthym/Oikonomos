@@ -14,5 +14,5 @@ public interface TransactionService extends RemoteService {
 	public TransactionDTO find(long id) throws OikonomosException;
 	public List<TransactionDTO> findAllForAccount(Account account) throws OikonomosException;
 	public TransactionDTO addOrUpdateEntity(TransactionDTO transaction) throws OikonomosException;
-	public void delete(long id) throws OikonomosException;
+	public Account delete(long id) throws OikonomosException;
 }

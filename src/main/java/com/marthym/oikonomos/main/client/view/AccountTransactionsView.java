@@ -194,9 +194,7 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 				new Column<TransactionDTO, Number>(new NumberCell(numberFormat)) {
 					@Override
 					public Number getValue(TransactionDTO object) {
-						long debit = (object.getDebit()==null)?0:object.getDebit();
-						long credit = (object.getCredit()==null)?0:object.getCredit();
-						return credit-debit;
+						return object.getBalance();
 					}
 				};
 		TextHeader hBalanceColumn = new TextHeader(constants.grid_headed_balance());
@@ -221,8 +219,28 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		list.addAll(newTransactions);
 
 		Collections.sort(list, transactionDateComparator);
+		
+		if (!newTransactions.isEmpty()) {
+			LOG.finer("current amount: "+newTransactions.get(0).getAccount().getCurrentAmount());
+			calculBalanceForDatagrid(newTransactions.get(0).getAccount().getCurrentAmount());
+		}
 	}
 	
+	private void calculBalanceForDatagrid(double currentAmount) {
+		List<TransactionDTO> list = dataProvider.getList();
+		double balance = currentAmount;
+		for (int i = list.size()-1; i >= 0; i--) {
+			TransactionDTO transaction = list.get(i);
+
+			transaction.setBalance(balance);
+			Double debit = transaction.getDebit();
+			if (debit == null) debit = 0D;
+			Double credit = transaction.getCredit();
+			if (credit == null) credit = 0D;
+			balance -= credit.doubleValue() - debit.doubleValue() ; 
+		}
+	}
+
 	@Override
 	public void removeTransactionGridLine(List<TransactionDTO> transactions) {
 		if (dataProvider == null) { 
@@ -233,6 +251,11 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 
 		List<TransactionDTO> list = dataProvider.getList();
 		list.removeAll(transactions);
+		
+		if (!transactions.isEmpty()) {
+			calculBalanceForDatagrid(transactions.get(0).getAccount().getCurrentAmount());
+		}
+
 	}
 
 

@@ -39,8 +39,8 @@ public class Transaction implements java.io.Serializable {
 	@NotNull @ManyToOne(cascade=CascadeType.PERSIST, optional=false)
 	private Payee payee;
 	
-	private Long credit;
-	private Long debit;
+	private Double credit;
+	private Double debit;
 	
 	@Column(length = 3)
 	private String currency;
@@ -84,17 +84,17 @@ public class Transaction implements java.io.Serializable {
 	public void setPayee(Payee payee) {
 		this.payee = payee;
 	}
-	public Long getCredit() {
+	public Double getCredit() {
 		return credit;
 	}
-	public void setCredit(Long credit) {
+	public void setCredit(Double credit) {
 		if (credit != null) this.debit = null;
 		this.credit = credit;
 	}
-	public Long getDebit() {
+	public Double getDebit() {
 		return debit;
 	}
-	public void setDebit(Long debit) {
+	public void setDebit(Double debit) {
 		if (debit != null) this.credit = null;
 		this.debit = debit;
 	}
