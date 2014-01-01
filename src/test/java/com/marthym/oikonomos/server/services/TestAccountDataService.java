@@ -156,7 +156,7 @@ public class TestAccountDataService {
 	@Test
 	@Transactional
 	public void testAddOrUpdateEntity() {
-		Account newAccount = new Account("test@localhost.com");
+		Account newAccount = new Account("test@localhost.com",200.0);
 		newAccount.setAccountName("Test Account");
 		newAccount.setAccountCurrency("EUR");
 		newAccount.setAccountKey(12);
@@ -164,7 +164,6 @@ public class TestAccountDataService {
 		newAccount.setAccountType(AccountType.BANK_ACCOUNT);
 		newAccount.setCurrentAmount(1000.0);
 		newAccount.setPointedAmount(900.0);
-		newAccount.setInitialAmount(200.0);
 		
 		SecurityContextHolder.setContext(scUser);
 		try {

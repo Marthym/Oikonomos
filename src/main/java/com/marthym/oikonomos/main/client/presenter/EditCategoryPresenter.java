@@ -27,6 +27,7 @@ import com.marthym.oikonomos.shared.services.CategoryServiceAsync;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
+import com.marthym.oikonomos.client.i18n.OikonomosConstants;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
@@ -55,6 +56,7 @@ public class EditCategoryPresenter implements Presenter {
 	private boolean isParentLoaded = false;
 	
 	@Inject private OikonomosErrorMessages errorMessages;
+	@Inject private OikonomosConstants constants;
 	@Inject private CategoryServiceAsync rpcCategoryService;
 
 	public static void createAsync(final Presenter.Callback callback) {
@@ -196,7 +198,7 @@ public class EditCategoryPresenter implements Presenter {
 	
 	private void saveDataFromView() {
 		if (display.getCategoryDescription().getValue().isEmpty()) {
-			MessageFlyer.error(errorMessages.error_message_mandatoryDescription());
+			MessageFlyer.error(errorMessages.error_message_field_mandatory().replace("{0}", constants.view_editcategory_label()));
 		}
 		if (!OikonomosController.getAuthentifiedUser().getUserEmail().equals(category.getEntityOwner())) {
 			MessageFlyer.error(errorMessages.error_message_category_publicNotUpdatable());

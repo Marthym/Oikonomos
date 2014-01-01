@@ -12,7 +12,6 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.marthym.oikonomos.shared.exceptions.OikonomosRuntimeException;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
 @Entity
@@ -72,8 +71,10 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	
 	@Deprecated
 	public Account(){}
-	public Account(String owner) {
+	public Account(String owner, double initialAmount) {
 		this.accountOwner = owner;
+		this.initialAmount = initialAmount;
+		this.currentAmount = initialAmount;
 	}
 	
 	public String getAccountOwner() {
@@ -166,11 +167,7 @@ public class Account extends LeftMenuEntity implements java.io.Serializable {
 	public double getInitialAmount() {
 		return initialAmount;
 	}
-	public void setInitialAmount(double initialAmount) {
-		if (this.initialAmount > -1) throw new OikonomosRuntimeException("Initial amount is read-only !"); //TODO: Translate !
-		this.initialAmount = initialAmount;
-		this.currentAmount = this.initialAmount;
-	}
+
 	@Override
 	public Long getEntityId() {
 		return getId();

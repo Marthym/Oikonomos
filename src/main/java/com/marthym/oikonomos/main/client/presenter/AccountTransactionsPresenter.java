@@ -175,6 +175,7 @@ public class AccountTransactionsPresenter implements Presenter {
 			errors.add(errorMessages.error_message_unexpected());
 			errors.add(errorMessages.error_message_account_notfound());
 		}
+
 		TransactionDTO transaction = null;
 		if (currentTransactionIndex < 0) {
 			transaction = new TransactionDTO(account);

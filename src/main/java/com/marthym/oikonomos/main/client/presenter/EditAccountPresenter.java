@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
+import com.marthym.oikonomos.main.client.OikonomosController;
 import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
 import com.marthym.oikonomos.main.client.event.AccountDataUpdateEventHandler;
 import com.marthym.oikonomos.main.client.event.LeftmenuEntityChangeEvent;
@@ -134,6 +135,18 @@ public class EditAccountPresenter implements Presenter {
 		List<String> errors = new LinkedList<String>();
 		
 		Account account = parent.getCurrentAccount();
+		if (account == null) {
+			try {
+				String initialAmount = display.getInitialAmount().getValue();
+				if (!initialAmount.trim().isEmpty()) {
+					account = new Account(OikonomosController.getAuthentifiedUser().getUserEmail(), Double.parseDouble(initialAmount));
+				} else {
+					errors.add(errorMessages.error_message_field_mandatory().replace("{0}", constants.initialAmountLabel()));
+				}
+			} catch (NumberFormatException e) {
+				errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.minimalAmountLabel()));
+			}
+		}
 		
 		account.setAccountName(display.getAccountName().getValue());
 		
@@ -170,14 +183,6 @@ public class EditAccountPresenter implements Presenter {
 				account.setAccountKey(Integer.parseInt(accountKey));
 		} catch (NumberFormatException e) {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.accountNumberKey()));
-		}
-
-		try{
-			long initialAmount = Long.parseLong(display.getInitialAmount().getValue());
-			if (account.getInitialAmount() < 0)
-				account.setInitialAmount(initialAmount);
-		} catch (NumberFormatException e) {
-			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.initialAmountLabel()));
 		}
 
 		try {
