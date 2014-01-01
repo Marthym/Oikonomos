@@ -25,10 +25,10 @@ public class TransactionDTO implements Serializable {
 	private Account account;
 	private PaiementMeans paiementMean;
 	
-	@NotNull
+	@NotNull(message="validator.message.transaction.notnull.date")
 	private Date transactionDate;
 	
-	@NotNull
+	@NotNull(message="validator.message.transaction.notnull.payee")
 	private Payee payee;
 	private Double credit;
 	private Double debit;

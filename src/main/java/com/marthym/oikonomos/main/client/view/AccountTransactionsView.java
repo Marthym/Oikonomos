@@ -151,10 +151,12 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 									.appendEscaped(object.getTransactionComment())
 									.appendHtmlConstant("\">&nbsp;</span>");
 						}
-						safeHtmlBuilder.appendHtmlConstant("<br/>")
-								.appendHtmlConstant("<span class=\""+DATA_GRID_CSS.category()+"\">")
-								.appendEscaped(object.getCategory().getAbsoluteDescription())
-								.appendHtmlConstant("</span>");
+						if (object.getCategory() != null) {
+							safeHtmlBuilder.appendHtmlConstant("<br/>")
+									.appendHtmlConstant("<span class=\""+DATA_GRID_CSS.category()+"\">")
+									.appendEscaped(object.getCategory().getAbsoluteDescription())
+									.appendHtmlConstant("</span>");
+						}
 						return safeHtmlBuilder.toSafeHtml();
 					}
 				};
@@ -232,6 +234,9 @@ public class AccountTransactionsView extends Composite implements AccountTransac
 		for (int i = list.size()-1; i >= 0; i--) {
 			TransactionDTO transaction = list.get(i);
 
+			if (transaction.getBalance() != null && transaction.getBalance().equals(balance)) {
+				break;
+			}
 			transaction.setBalance(balance);
 			Double debit = transaction.getDebit();
 			if (debit == null) debit = 0D;

@@ -37,6 +37,7 @@ import com.marthym.oikonomos.shared.services.TransactionServiceAsync;
 import com.marthym.oikonomos.client.components.MessageFlyer;
 import com.marthym.oikonomos.client.components.WaitingFlyer;
 import com.marthym.oikonomos.client.i18n.OikonomosErrorMessages;
+import com.marthym.oikonomos.client.i18n.ValidatorMessages;
 import com.marthym.oikonomos.client.presenter.Presenter;
 
 public class AccountTransactionsPresenter implements Presenter {
@@ -78,6 +79,7 @@ public class AccountTransactionsPresenter implements Presenter {
 	
 	@Inject private AccountTabbedPresenter parent;
 	@Inject private OikonomosErrorMessages errorMessages;
+	@Inject private ValidatorMessages validatorMessages;
 	@Inject private AccountTransactionsConstants constants;
 	@Inject private TransactionServiceAsync rpcTransaction;
 		
@@ -203,11 +205,13 @@ public class AccountTransactionsPresenter implements Presenter {
 		} catch (NumberFormatException e) {
 			errors.add(errorMessages.error_message_numberformat().replace("{0}", constants.placeholder_debit()));
 		}
-
+		
 		PaiementMeans paiementMean = PaiementMeans.valueOf(display.getTransactionPaiementMean().getValue());
 		transaction.setPaiementMean(paiementMean);
 		
-		errors.addAll(FieldVerifier.validate(transaction));
+		for (String message : FieldVerifier.validate(transaction)) {
+			errors.add(validatorMessages.getString(message.replaceAll("\\.+","_")));
+		}
 		if (!errors.isEmpty()) {
 			WaitingFlyer.stop();
 			MessageFlyer.error(errors);

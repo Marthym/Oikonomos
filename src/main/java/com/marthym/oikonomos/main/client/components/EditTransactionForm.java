@@ -141,7 +141,8 @@ public class EditTransactionForm extends Composite {
 
 	public void setSelectedCategory(CategoryDTO category) {
 		selectedCategory = category;
-		transactionCategory.setValue(selectedCategory.getAbsoluteDescription());
+		if (selectedCategory != null)
+			transactionCategory.setValue(selectedCategory.getAbsoluteDescription());
 	}
 	
 	public final HasValue<Date> getTransactionDate() {return transactionDate;}

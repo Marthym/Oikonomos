@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.marthym.oikonomos.main.client.NomosInjector;
 import com.marthym.oikonomos.main.client.event.AccountDataUpdateEvent;
+import com.marthym.oikonomos.main.client.event.AccountDataUpdateEventHandler;
 import com.marthym.oikonomos.main.client.event.AccountTransactionsDataLoadedEvent;
 import com.marthym.oikonomos.shared.model.Account;
 import com.marthym.oikonomos.shared.services.ViewsDataServiceAsync;
@@ -35,9 +36,9 @@ public class AccountTabbedPresenter implements Presenter {
 	private final Display display;
 	private static AccountTabbedPresenter instance = null;
 	private Account account;
+	private EventBus eventBus;
 	
 	@Inject private ViewsDataServiceAsync rpcViewsData;
-	@Inject private EventBus eventBus;
 	
 	public static void createAsync(final Presenter.Callback callback) {
 		GWT.runAsync(new RunAsyncCallback() {
@@ -68,13 +69,19 @@ public class AccountTabbedPresenter implements Presenter {
 	}
 	
 	@Inject
-	private AccountTabbedPresenter(Display display) {
+	private AccountTabbedPresenter(EventBus eventBus, Display display) {
 		this.display = display;
+		this.eventBus = eventBus;
 		
 		bind();
 	}
 	
 	private void bind() {
+		eventBus.addHandler(AccountDataUpdateEvent.TYPE, new AccountDataUpdateEventHandler() {
+			@Override public void onAccountDataUpdate(AccountDataUpdateEvent event) {
+				account = event.getAccount();
+			}
+		});
 	}
 
 	
@@ -85,10 +92,9 @@ public class AccountTabbedPresenter implements Presenter {
 		rpcViewsData.getAccountTabbedData(accountId, new AsyncCallback<AccountTabbedData>() {
 			@Override
 			public void onSuccess(AccountTabbedData data) {
-				account = data.getAccount();
-				LOG.finer("Account loaded: "+account.getId());
+				LOG.finer("Account loaded: "+data.getAccount().getId());
 				WaitingFlyer.stop();
-				eventBus.fireEvent(new AccountDataUpdateEvent(account));
+				eventBus.fireEvent(new AccountDataUpdateEvent(data.getAccount()));
 				eventBus.fireEvent(new AccountTransactionsDataLoadedEvent(data.getTransactions()));
 			}
 			

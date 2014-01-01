@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.marthym.oikonomos.shared.model.Category;
 import com.marthym.oikonomos.shared.model.LeftMenuEntity;
 import com.marthym.oikonomos.shared.view.data.EntityType;
 
@@ -28,7 +29,9 @@ public class CategoryDTO extends LeftMenuEntity implements Serializable, Compara
 		parentDescription = "";
 	}
 	
-	public static CategoryDTO create(com.marthym.oikonomos.shared.model.Category dao, String locale, boolean withChilds) {
+	public static CategoryDTO create(Category dao, String locale, boolean withChilds) {
+		if (dao == null) return null;
+		
 		CategoryDTO dto = new CategoryDTO();
 		dto.id = dao.getId();
 		dto.owner = dao.getOwner();
@@ -42,7 +45,7 @@ public class CategoryDTO extends LeftMenuEntity implements Serializable, Compara
 		
 		if (withChilds) {
 			dto.childs = new HashSet<CategoryDTO>();
-			for (com.marthym.oikonomos.shared.model.Category childDao : dao.getChilds()) {
+			for (Category childDao : dao.getChilds()) {
 				dto.childs.add(create(childDao, locale, true));
 			}
 		}
